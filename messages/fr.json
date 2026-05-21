@@ -1,0 +1,41 @@
+﻿{
+  "site": {
+    "name": "Fluxteka",
+    "tagline": "La bibliothèque européenne de l'automatisation et de l'IA",
+    "description": "Trouve et applique des workflows N8N, Make, Zapier et LangChain. Des recettes gratuites en français."
+  },
+  "nav": {
+    "home": "Accueil",
+    "search": "Recherche",
+    "carte": "Carte",
+    "submit": "Soumettre",
+    "login": "Connexion",
+    "signup": "Inscription",
+    "admin": "Administration",
+    "partners": "Partenaires",
+    "premium": "Premium",
+    "mission": "Mission sur mesure"
+  },
+  "footer": {
+    "privacy": "Politique de confidentialité",
+    "legal": "Mentions légales",
+    "submit": "Soumettre",
+    "contact": "Contact",
+    "languages_soon": "Bientôt disponible"
+  },
+  "cookies": {
+    "message": "Fluxteka utilise des cookies pour les publicités et l'analyse.",
+    "accept": "Accepter",
+    "refuse": "Refuser"
+  },
+  "categories": {
+    "email": "Email & Communication",
+    "crm": "Ventes & CRM",
+    "content": "Contenu & SEO",
+    "data": "Data & Rapports",
+    "ai-agents": "Agents IA",
+    "ecommerce": "E-commerce",
+    "hr": "RH & Recrutement",
+    "finance": "Finance & Facturation"
+  }
+}
