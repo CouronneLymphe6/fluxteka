@@ -4,24 +4,16 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-// PostgreSQL via Supabase — pooled URL pour le runtime
-const DB_URL = process.env.POSTGRES_PRISMA_URL || process.env.POSTGRES_URL || '';
-
 function getPrismaClient(): PrismaClient {
-  if (!DB_URL) {
-    throw new Error('POSTGRES_PRISMA_URL not configured');
-  }
   if (!globalForPrisma.prisma) {
-    globalForPrisma.prisma = new PrismaClient({
-      datasourceUrl: DB_URL,
-    });
+    globalForPrisma.prisma = new PrismaClient();
   }
   return globalForPrisma.prisma;
 }
 
 /** Returns true if the database is configured and reachable */
 export function isDbConnected(): boolean {
-  return !!DB_URL;
+  return !!(process.env.POSTGRES_PRISMA_URL || process.env.DATABASE_URL);
 }
 
 export const prisma = {
