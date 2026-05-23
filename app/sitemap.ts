@@ -8,6 +8,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: siteUrl, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
     { url: `${siteUrl}/recherche`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
+    // Platform pages — high SEO value
+    { url: `${siteUrl}/plateforme/n8n`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${siteUrl}/plateforme/make`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${siteUrl}/plateforme/zapier`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${siteUrl}/plateforme/langchain`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${siteUrl}/carte`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${siteUrl}/soumettre`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${siteUrl}/connexion`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.4 },

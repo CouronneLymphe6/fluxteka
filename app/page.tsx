@@ -5,17 +5,20 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ArrowRight, Zap, Globe, Gift, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Zap, Globe, Gift, Sparkles, CheckCircle, ChevronRight } from 'lucide-react';
 import SearchBar from '@/components/search/SearchBar';
 import WorkflowCard, { type WorkflowData } from '@/components/workflows/WorkflowCard';
 import { SkeletonGrid } from '@/components/shared/SkeletonCard';
+
+// ── Data ──────────────────────────────────────────────────────────────────────
 
 const suggestions = [
   { emoji: '📧', label: 'Email auto', query: 'email automatisation' },
   { emoji: '💰', label: 'Notifier Stripe', query: 'stripe notification' },
   { emoji: '📝', label: 'Publier LinkedIn', query: 'linkedin publication' },
   { emoji: '🤖', label: 'Résumer PDF', query: 'résumer pdf ia' },
+  { emoji: '📊', label: 'Rapport auto', query: 'rapport automatique' },
 ];
 
 const categories = [
@@ -29,49 +32,143 @@ const categories = [
   { emoji: '💰', label: 'Finance & Admin',         slug: 'finance-admin',      color: 'from-yellow-50 to-amber-50 border-yellow-200 hover:border-yellow-400' },
 ];
 
-const steps = [
-  { emoji: '🔍', title: 'Décris ton besoin', description: 'Recherche par mots-clés ou explore les catégories.' },
-  { emoji: '⚡', title: 'Fluxteka trouve la recette', description: 'Notre moteur indexe les meilleurs workflows du web.' },
-  { emoji: '🚀', title: 'Applique ou télécharge', description: 'Utilise directement ou adapte à ton cas.' },
+const platforms = [
+  {
+    slug: 'n8n',
+    name: 'n8n',
+    emoji: '🔶',
+    tagline: 'Open-source & self-hosted',
+    color: 'from-orange-50 to-red-50',
+    border: 'border-orange-200 hover:border-orange-400',
+    text: 'text-orange-700',
+    badge: 'bg-orange-100 text-orange-700',
+    commission: '30% affilié',
+  },
+  {
+    slug: 'make',
+    name: 'Make',
+    emoji: '🟣',
+    tagline: 'Visuel & puissant',
+    color: 'from-purple-50 to-violet-50',
+    border: 'border-purple-200 hover:border-purple-400',
+    text: 'text-purple-700',
+    badge: 'bg-purple-100 text-purple-700',
+    commission: '35% affilié',
+  },
+  {
+    slug: 'zapier',
+    name: 'Zapier',
+    emoji: '⚡',
+    tagline: 'Le plus simple',
+    color: 'from-amber-50 to-yellow-50',
+    border: 'border-amber-200 hover:border-amber-400',
+    text: 'text-amber-700',
+    badge: 'bg-amber-100 text-amber-700',
+    commission: '8 000+ apps',
+  },
+  {
+    slug: 'langchain',
+    name: 'LangChain',
+    emoji: '🦜',
+    tagline: 'Agents IA avancés',
+    color: 'from-emerald-50 to-teal-50',
+    border: 'border-emerald-200 hover:border-emerald-400',
+    text: 'text-emerald-700',
+    badge: 'bg-emerald-100 text-emerald-700',
+    commission: 'Open-source',
+  },
 ];
+
+const steps = [
+  { emoji: '🔍', title: 'Décris ton besoin', description: 'Recherche par mots-clés ou explore les catégories métier.' },
+  { emoji: '⚡', title: 'Fluxteka trouve la recette', description: 'Notre moteur indexe les meilleurs workflows du web.' },
+  { emoji: '🚀', title: 'Applique ou télécharge', description: 'Utilise directement ou adapte à ton cas en quelques minutes.' },
+];
+
+// ── Onboarding profiles ───────────────────────────────────────────────────────
+
+const profiles = [
+  {
+    id: 'beginner',
+    emoji: '🌱',
+    title: 'Débutant',
+    description: 'Je découvre l\'automatisation',
+    query: '/recherche?tool=zapier&tri=score',
+    tip: 'On te recommande de commencer avec Zapier — le plus simple à prendre en main.',
+    platform: 'zapier',
+  },
+  {
+    id: 'business',
+    emoji: '🏢',
+    title: 'PME / Agence',
+    description: 'J\'automatise mes process métier',
+    query: '/recherche?tool=make&tri=score',
+    tip: 'Make est parfait pour les PMEs et agences — puissant et flexible.',
+    platform: 'make',
+  },
+  {
+    id: 'developer',
+    emoji: '💻',
+    title: 'Développeur',
+    description: 'Je veux du contrôle et de la flexibilité',
+    query: '/recherche?tool=n8n&tri=score',
+    tip: 'n8n est fait pour toi — open-source, self-hostable, et ultra-puissant.',
+    platform: 'n8n',
+  },
+  {
+    id: 'ai',
+    emoji: '🤖',
+    title: 'Passionné IA',
+    description: 'Je construis des agents autonomes',
+    query: '/recherche?categorie=ai-agents&tri=score',
+    tip: 'LangChain et les agents IA n8n sont tes meilleurs alliés.',
+    platform: 'langchain',
+  },
+];
+
+// ── Component ─────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
   const [trending, setTrending] = useState<WorkflowData[]>([]);
   const [loading, setLoading] = useState(true);
   const [workflowCount, setWorkflowCount] = useState<number | null>(null);
+  const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
+  const [email, setEmail] = useState('');
+  const [newsletterSent, setNewsletterSent] = useState(false);
 
   useEffect(() => {
-    // Fetch trending workflows
     fetch('/api/trending')
       .then((res) => res.ok ? res.json() : { workflows: [] })
       .then((data) => setTrending(data.workflows || []))
       .catch(() => setTrending([]))
       .finally(() => setLoading(false));
 
-    // Fetch real stats
     fetch('/api/stats')
       .then((res) => res.ok ? res.json() : null)
-      .then((data) => {
-        if (data?.workflows) setWorkflowCount(data.workflows);
-      })
+      .then((data) => { if (data?.workflows) setWorkflowCount(data.workflows); })
       .catch(() => {});
   }, []);
 
-  const formattedCount = workflowCount
-    ? workflowCount.toLocaleString('fr-FR')
-    : '—';
-
+  const formattedCount = workflowCount ? workflowCount.toLocaleString('fr-FR') : '—';
   const stats = [
     { value: formattedCount, label: 'Workflows indexés', icon: Zap },
     { value: '6', label: 'Plateformes', icon: Globe },
     { value: '100%', label: 'Gratuit', icon: Gift },
   ];
 
+  const activeProfile = profiles.find((p) => p.id === selectedProfile);
+
+  const handleNewsletter = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email.trim()) {
+      setNewsletterSent(true);
+    }
+  };
+
   return (
     <div className="min-h-screen">
       {/* ═══════════ HERO ═══════════ */}
       <section className="relative overflow-hidden bg-gradient-to-b from-primary-50 via-white to-white pb-16 pt-12 md:pb-24 md:pt-20">
-        {/* Decorative elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary-100/40 blur-3xl" />
           <div className="absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-accent-100/30 blur-3xl" />
@@ -105,7 +202,6 @@ export default function HomePage() {
             </span>
           </motion.h1>
 
-          {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -150,17 +246,14 @@ export default function HomePage() {
 
       {/* ═══════════ STATS ═══════════ */}
       <section className="relative border-y border-border bg-white py-8">
-        {/* Subtle gradient connector */}
         <div className="absolute -top-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-200 to-transparent" />
         <div className="container-page">
           <div className="grid grid-cols-3 gap-4">
             {stats.map((stat) => (
               <div key={stat.label} className="flex flex-col items-center gap-1">
                 <stat.icon className="h-5 w-5 text-primary-500 mb-1" />
-                <span className="text-2xl font-heading font-bold text-text-primary md:text-3xl">
-                  {stat.value}
-                </span>
-                <span className="text-xs text-text-secondary md:text-sm">{stat.label}</span>
+                <span className="text-2xl font-heading font-bold text-text-primary md:text-3xl">{stat.value}</span>
+                <span className="text-center text-xs text-text-secondary md:text-sm">{stat.label}</span>
               </div>
             ))}
           </div>
@@ -168,20 +261,126 @@ export default function HomePage() {
         <div className="absolute -bottom-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-200 to-transparent" />
       </section>
 
-      {/* ═══════════ TRENDING ═══════════ */}
-      <section className="relative py-12 md:py-16">
-        {/* Soft gradient transition from stats */}
-        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white to-transparent pointer-events-none" />
+      {/* ═══════════ ONBOARDING QUIZ "Je suis..." ═══════════ */}
+      <section className="py-12 md:py-16 bg-gradient-to-b from-white to-gray-50">
+        <div className="container-page">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <h2 className="text-2xl font-heading font-bold text-text-primary">
+              Je suis…
+            </h2>
+            <p className="mt-2 text-sm text-text-secondary">
+              Sélectionne ton profil pour des recommandations personnalisées
+            </p>
+          </motion.div>
 
-        <div className="container-page relative">
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 md:gap-4">
+            {profiles.map((profile, i) => (
+              <motion.button
+                key={profile.id}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                onClick={() => setSelectedProfile(selectedProfile === profile.id ? null : profile.id)}
+                className={`flex flex-col items-center gap-2 rounded-2xl border-2 p-5 text-center transition-all duration-200 hover:shadow-md ${
+                  selectedProfile === profile.id
+                    ? 'border-primary-500 bg-primary-50 shadow-md'
+                    : 'border-border bg-white hover:border-primary-300'
+                }`}
+              >
+                <span className="text-3xl">{profile.emoji}</span>
+                <span className="font-heading font-semibold text-text-primary text-sm">{profile.title}</span>
+                <span className="text-xs text-text-secondary leading-tight">{profile.description}</span>
+              </motion.button>
+            ))}
+          </div>
+
+          <AnimatePresence mode="wait">
+            {activeProfile && (
+              <motion.div
+                key={activeProfile.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="mt-6 rounded-2xl border border-primary-200 bg-primary-50 p-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="h-5 w-5 text-primary-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-primary-900 text-sm">{activeProfile.tip}</p>
+                  </div>
+                </div>
+                <Link
+                  href={activeProfile.query}
+                  className="flex-shrink-0 inline-flex items-center gap-1.5 rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-primary-700 active:scale-[0.98]"
+                >
+                  Voir les workflows
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </section>
+
+      {/* ═══════════ PLATFORMS ═══════════ */}
+      <section className="bg-gray-50 py-12 md:py-16 border-t border-border">
+        <div className="container-page">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <h2 className="text-2xl font-heading font-bold text-text-primary">
+              Toutes les plateformes, un seul endroit
+            </h2>
+            <p className="mt-2 text-sm text-text-secondary">
+              Comparez n8n, Make, Zapier et LangChain pour chaque besoin métier
+            </p>
+          </motion.div>
+
+          <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+            {platforms.map((p, i) => (
+              <motion.div
+                key={p.slug}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+              >
+                <Link
+                  href={`/plateforme/${p.slug}`}
+                  className={`group flex flex-col items-center gap-3 rounded-2xl border-2 bg-gradient-to-br p-5 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 ${p.color} ${p.border}`}
+                  id={`platform-${p.slug}`}
+                >
+                  <span className="text-4xl transition-transform group-hover:scale-110">{p.emoji}</span>
+                  <div className="text-center">
+                    <div className="font-heading font-bold text-text-primary">{p.name}</div>
+                    <div className="text-xs text-text-secondary mt-0.5">{p.tagline}</div>
+                  </div>
+                  <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${p.badge}`}>
+                    {p.commission}
+                  </span>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════ TRENDING ═══════════ */}
+      <section className="relative py-12 md:py-16 bg-white border-t border-border">
+        <div className="container-page">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-2xl font-heading font-bold text-text-primary">
-                🔥 Tendances
-              </h2>
-              <p className="mt-1 text-sm text-text-secondary">
-                Les workflows les plus populaires cette semaine
-              </p>
+              <h2 className="text-2xl font-heading font-bold text-text-primary">🔥 Tendances</h2>
+              <p className="mt-1 text-sm text-text-secondary">Les workflows les plus populaires cette semaine</p>
             </div>
             <Link
               href="/recherche?tri=score"
@@ -194,7 +393,7 @@ export default function HomePage() {
           {loading ? (
             <SkeletonGrid count={3} />
           ) : trending.length > 0 ? (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {trending.slice(0, 6).map((w, i) => (
                 <motion.div
                   key={w.id}
@@ -215,34 +414,34 @@ export default function HomePage() {
               </p>
             </div>
           )}
+
+          <div className="mt-6 flex justify-center sm:hidden">
+            <Link
+              href="/recherche?tri=score"
+              className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700"
+            >
+              Voir tous les workflows <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* ═══════════ SECTION DIVIDER ═══════════ */}
-      <div className="relative h-16">
-        <div className="absolute inset-x-0 bottom-0 h-full bg-gradient-to-b from-transparent to-white pointer-events-none" />
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary-300 to-transparent" />
-        </div>
-      </div>
-
       {/* ═══════════ CATEGORIES ═══════════ */}
-      <section className="bg-white py-12 md:py-16">
+      <section className="bg-gray-50 py-12 md:py-16 border-t border-border">
         <div className="container-page">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
           >
             <h2 className="text-2xl font-heading font-bold text-text-primary text-center">
-              Explore par catégorie
+              Explorer par catégorie
             </h2>
             <p className="mt-2 text-center text-sm text-text-secondary">
               Trouve le workflow adapté à ton métier
             </p>
           </motion.div>
-          <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 md:gap-4">
             {categories.map((cat, i) => (
               <motion.div
                 key={cat.slug}
@@ -253,11 +452,11 @@ export default function HomePage() {
               >
                 <Link
                   href={`/recherche?categorie=${cat.slug}`}
-                  className={`group flex flex-col items-center gap-2 rounded-xl border bg-gradient-to-br p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 ${cat.color}`}
+                  className={`group flex flex-col items-center gap-2 rounded-xl border bg-gradient-to-br p-4 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 ${cat.color}`}
                   id={`category-${cat.slug}`}
                 >
                   <span className="text-3xl transition-transform group-hover:scale-110">{cat.emoji}</span>
-                  <span className="text-center text-sm font-medium text-text-primary">{cat.label}</span>
+                  <span className="text-center text-xs font-medium text-text-primary leading-tight">{cat.label}</span>
                 </Link>
               </motion.div>
             ))}
@@ -265,29 +464,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════ SECTION DIVIDER ═══════════ */}
-      <div className="relative h-16 bg-white">
-        <div className="absolute inset-x-0 bottom-0 h-full bg-gradient-to-b from-white via-gray-50/50 to-transparent pointer-events-none" />
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary-300 to-transparent" />
-        </div>
-      </div>
-
       {/* ═══════════ HOW IT WORKS ═══════════ */}
-      <section className="py-12 md:py-16">
+      <section className="py-12 md:py-16 bg-white border-t border-border">
         <div className="container-page">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
           >
-            <h2 className="text-2xl font-heading font-bold text-text-primary text-center">
-              Comment ça marche
-            </h2>
-            <p className="mt-2 text-center text-sm text-text-secondary">
-              En 3 étapes simples
-            </p>
+            <h2 className="text-2xl font-heading font-bold text-text-primary text-center">Comment ça marche</h2>
+            <p className="mt-2 text-center text-sm text-text-secondary">En 3 étapes simples</p>
           </motion.div>
           <div className="mt-10 grid gap-8 md:grid-cols-3">
             {steps.map((step, i) => (
@@ -306,22 +492,82 @@ export default function HomePage() {
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-600 text-xs font-bold text-white">
                     {i + 1}
                   </span>
-                  <h3 className="font-heading font-semibold text-text-primary">
-                    {step.title}
-                  </h3>
+                  <h3 className="font-heading font-semibold text-text-primary">{step.title}</h3>
                 </div>
-                <p className="mt-2 text-sm text-text-secondary max-w-xs">
-                  {step.description}
-                </p>
+                <p className="mt-2 text-sm text-text-secondary max-w-xs">{step.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* ═══════════ NEWSLETTER ═══════════ */}
+      <section className="py-12 md:py-16 bg-gradient-to-b from-gray-50 to-white border-t border-border">
+        <div className="container-page">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mx-auto max-w-xl text-center"
+          >
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700 mb-4">
+              📬 Newsletter gratuite
+            </span>
+            <h2 className="text-2xl font-heading font-bold text-text-primary">
+              Workflow de la semaine
+            </h2>
+            <p className="mt-2 text-sm text-text-secondary">
+              Chaque semaine, reçois le meilleur workflow du moment — expliqué simplement, applicable immédiatement.
+            </p>
+
+            <AnimatePresence mode="wait">
+              {newsletterSent ? (
+                <motion.div
+                  key="sent"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5"
+                >
+                  <CheckCircle className="mx-auto h-8 w-8 text-emerald-500" />
+                  <p className="mt-2 font-medium text-emerald-800">Tu es inscrit(e) ! 🎉</p>
+                  <p className="mt-1 text-sm text-emerald-700">On t&apos;envoie le prochain workflow dès qu&apos;il est prêt.</p>
+                </motion.div>
+              ) : (
+                <motion.form
+                  key="form"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  onSubmit={handleNewsletter}
+                  className="mt-6 flex flex-col gap-3 sm:flex-row"
+                >
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="toi@example.com"
+                    className="flex-1 rounded-xl border border-border px-4 py-3 text-sm transition-all focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:outline-none"
+                    id="newsletter-email"
+                  />
+                  <button
+                    type="submit"
+                    className="rounded-xl bg-primary-600 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-primary-700 active:scale-[0.98] whitespace-nowrap"
+                  >
+                    Je m&apos;inscris →
+                  </button>
+                </motion.form>
+              )}
+            </AnimatePresence>
+
+            <p className="mt-3 text-xs text-text-secondary">
+              Gratuit · Pas de spam · Désinscription en 1 clic
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ═══════════ CTA ═══════════ */}
       <section className="relative overflow-hidden">
-        {/* Smooth transition into CTA */}
         <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-transparent to-primary-600 pointer-events-none" />
         <div className="bg-gradient-to-r from-primary-600 to-primary-700 py-12 md:py-16 pt-20 md:pt-24">
           <div className="container-page text-center">
@@ -334,13 +580,13 @@ export default function HomePage() {
             <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <Link
                 href="/recherche"
-                className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-lg transition-all hover:bg-primary-50 active:scale-[0.98]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-lg transition-all hover:bg-primary-50 active:scale-[0.98]"
               >
                 🔍 Rechercher un workflow
               </Link>
               <Link
                 href="/soumettre"
-                className="inline-flex items-center gap-2 rounded-xl border-2 border-white/30 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/30 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10"
               >
                 📤 Soumettre le mien
               </Link>

@@ -65,6 +65,9 @@ model Workflow {
   status              String    @default("pending")
   file_url            String?
   thumbnail_url       String?
+  difficulty          String    @default("beginner") // beginner | intermediate | advanced
+  setup_time_minutes  Int?      // estimated setup time
+  monthly_cost_eur    Float?    // estimated monthly cost
   views               Int       @default(0)
   downloads           Int       @default(0)
   indexing_source     String?
