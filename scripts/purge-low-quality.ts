@@ -39,7 +39,7 @@ async function main() {
     where: {
       status: 'active',
       indexing_source: 'n8n-community',
-      description_fr: { not: null },
+      description_fr: { not: '' },
     },
     select: { id: true, description_fr: true },
   });
