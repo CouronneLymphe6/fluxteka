@@ -12,6 +12,7 @@ export default defineConfig({
     path: 'prisma/migrations',
   },
   datasource: {
-    url: env('DATABASE_URL'),
+    // URL directe (non-poolée) pour les migrations Prisma
+    url: env('POSTGRES_URL_NON_POOLING'),
   },
 });

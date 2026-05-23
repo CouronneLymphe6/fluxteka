@@ -1,12 +1,12 @@
-// Flowteka — Prisma Schema
-// SQLite for local dev, PostgreSQL for production
+// Fluxteka — Prisma Schema
+// PostgreSQL (Supabase) — production & local dev
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model User {
@@ -44,9 +44,9 @@ model Workflow {
   how_to_use          String?
   prerequisites       String?
   tool                String
-  tools_connected     String    @default("[]") // JSON array stored as string
+  tools_connected     Json      @default("[]") // JSON array
   category            String
-  tags                String    @default("[]") // JSON array stored as string
+  tags                Json      @default("[]") // JSON array
   source_url          String?
   source_type         String?
   source_stars        Int       @default(0)

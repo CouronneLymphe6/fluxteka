@@ -1,19 +1,20 @@
 import { PrismaClient } from '@prisma/client';
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-const DB_URL = process.env.DATABASE_URL || '';
+// PostgreSQL via Supabase — pooled URL pour le runtime
+const DB_URL = process.env.POSTGRES_PRISMA_URL || process.env.POSTGRES_URL || '';
 
 function getPrismaClient(): PrismaClient {
   if (!DB_URL) {
-    throw new Error('DATABASE_URL not configured');
+    throw new Error('POSTGRES_PRISMA_URL not configured');
   }
   if (!globalForPrisma.prisma) {
-    const adapter = new PrismaBetterSqlite3({ url: DB_URL });
-    globalForPrisma.prisma = new PrismaClient({ adapter });
+    globalForPrisma.prisma = new PrismaClient({
+      datasourceUrl: DB_URL,
+    });
   }
   return globalForPrisma.prisma;
 }
