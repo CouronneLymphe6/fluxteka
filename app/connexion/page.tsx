@@ -1,13 +1,13 @@
-﻿'use client';
+'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Loader2, CheckCircle, Sparkles } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
-export default function AuthPage() {
+function AuthPageContent() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState<'google' | 'github' | 'magic' | null>(null);
   const [magicSent, setMagicSent] = useState(false);
@@ -241,5 +241,17 @@ export default function AuthPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
+      </div>
+    }>
+      <AuthPageContent />
+    </Suspense>
   );
 }
