@@ -44,8 +44,8 @@ export async function middleware(request: NextRequest) {
 
   // Admin routes — require admin role
   if (pathname.startsWith('/admin') && user) {
-    // Check role via user metadata (set in Supabase dashboard or via trigger)
-    const role = user.user_metadata?.role || 'buyer';
+    // Check role via app_metadata (server-side only, not editable by user)
+    const role = user.app_metadata?.role || 'buyer';
     if (role !== 'admin') {
       return NextResponse.redirect(new URL('/', request.url));
     }
