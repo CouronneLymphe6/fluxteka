@@ -8,16 +8,18 @@ const globalForPrisma = globalThis as unknown as {
 
 function getPrismaClient(): PrismaClient {
   if (!globalForPrisma.prisma) {
-    const connectionString =
-      process.env.POSTGRES_PRISMA_URL ??
-      process.env.DATABASE_URL ??
-      process.env.POSTGRES_URL_NON_POOLING ??
-      '';
-
-    // Supabase uses a self-signed cert in its chain — disable strict verification
+    // Use individual params to have explicit SSL control
+    // (connection string ?sslmode=require overrides ssl object in pg)
     const pool = new Pool({
-      connectionString,
+      host: process.env.POSTGRES_HOST ?? 'db.pvobrdawlczsegaaysgu.supabase.co',
+      port: 5432,
+      user: process.env.POSTGRES_USER ?? 'postgres',
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DATABASE ?? 'postgres',
       ssl: { rejectUnauthorized: false },
+      max: 1, // Serverless: limit concurrent connections
+      idleTimeoutMillis: 10000,
+      connectionTimeoutMillis: 10000,
     });
 
     const adapter = new PrismaPg(pool);
@@ -28,7 +30,7 @@ function getPrismaClient(): PrismaClient {
 
 /** Returns true if the database is configured and reachable */
 export function isDbConnected(): boolean {
-  return !!(process.env.POSTGRES_PRISMA_URL || process.env.DATABASE_URL);
+  return !!(process.env.POSTGRES_PASSWORD || process.env.POSTGRES_PRISMA_URL || process.env.DATABASE_URL);
 }
 
 export const prisma = {
