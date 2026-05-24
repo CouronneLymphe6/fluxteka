@@ -18,6 +18,13 @@ function getResend(): Resend {
   return resendClient;
 }
 
+// ── Escape HTML to prevent injection in email templates ──
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 const FROM = 'Fluxteka <noreply@fluxteka.com>';
 
 // ── Email de bienvenue ──
@@ -34,7 +41,7 @@ export async function sendWelcomeEmail(to: string, name: string) {
           <span style="font-size: 28px;">📚⚡</span>
         </div>
         <h1 style="font-size: 22px; color: #1a1a2e; text-align: center; margin-bottom: 8px;">
-          Bienvenue ${name} !
+          Bienvenue ${escapeHtml(name)} !
         </h1>
         <p style="font-size: 14px; color: #64748b; text-align: center; line-height: 1.6;">
           Ton compte Fluxteka est prêt. Explore 24 000+ workflows d'automatisation gratuitement.
@@ -66,7 +73,7 @@ export async function sendWorkflowApprovedEmail(to: string, name: string, workfl
   return resend.emails.send({
     from: FROM,
     to,
-    subject: `Ton workflow "${workflowTitle}" a été approuvé ✅`,
+    subject: `Ton workflow "${escapeHtml(workflowTitle)}" a été approuvé ✅`,
     html: `
       <div style="font-family: 'Inter', -apple-system, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 16px;">
         <div style="text-align: center; margin-bottom: 24px;">
@@ -76,10 +83,10 @@ export async function sendWorkflowApprovedEmail(to: string, name: string, workfl
           Workflow approuvé !
         </h1>
         <p style="font-size: 14px; color: #64748b; text-align: center; line-height: 1.6;">
-          ${name}, ton workflow <strong>"${workflowTitle}"</strong> est maintenant visible par toute la communauté.
+          ${escapeHtml(name)}, ton workflow <strong>"${escapeHtml(workflowTitle)}"</strong> est maintenant visible par toute la communauté.
         </p>
         <div style="text-align: center; margin: 28px 0;">
-          <a href="https://fluxteka.com/workflow/${workflowSlug}"
+          <a href="https://fluxteka.com/workflow/${escapeHtml(workflowSlug)}"
             style="display: inline-block; background: #6366f1; color: white; padding: 12px 28px; border-radius: 12px; text-decoration: none; font-size: 14px; font-weight: 600;">
             Voir mon workflow
           </a>
@@ -106,10 +113,10 @@ export async function sendDataExportEmail(to: string, name: string, downloadUrl:
           📦 Tes données sont prêtes
         </h1>
         <p style="font-size: 14px; color: #64748b; text-align: center; line-height: 1.6;">
-          ${name}, voici l'export de toutes tes données personnelles Fluxteka au format JSON.
+          ${escapeHtml(name)}, voici l'export de toutes tes données personnelles Fluxteka au format JSON.
         </p>
         <div style="text-align: center; margin: 28px 0;">
-          <a href="${downloadUrl}"
+          <a href="${escapeHtml(downloadUrl)}"
             style="display: inline-block; background: #6366f1; color: white; padding: 12px 28px; border-radius: 12px; text-decoration: none; font-size: 14px; font-weight: 600;">
             Télécharger l'export
           </a>
