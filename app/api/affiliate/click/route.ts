@@ -4,6 +4,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
     // Hash IP for privacy
     const forwarded = request.headers.get('x-forwarded-for');
     const ip = forwarded?.split(',')[0]?.trim() || 'unknown';
-    const ipHash = Buffer.from(ip).toString('base64').substring(0, 16);
+    const ipHash = crypto.createHash('sha256').update(ip + (process.env.CRON_SECRET || 'salt')).digest('hex');
 
     // Log click
     await prisma.affiliateClick.create({
