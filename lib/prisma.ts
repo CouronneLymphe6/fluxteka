@@ -8,16 +8,26 @@ const globalForPrisma = globalThis as unknown as {
 
 function getPrismaClient(): PrismaClient {
   if (!globalForPrisma.prisma) {
-    // Use individual params to have explicit SSL control
-    // (connection string ?sslmode=require overrides ssl object in pg)
+    const rawUrl =
+      process.env.POSTGRES_PRISMA_URL ??
+      process.env.DATABASE_URL ??
+      '';
+
+    // Strip sslmode & pgbouncer params from URL so pg respects our ssl object
+    let cleanUrl = rawUrl;
+    try {
+      const u = new URL(rawUrl);
+      u.searchParams.delete('sslmode');
+      u.searchParams.delete('pgbouncer');
+      cleanUrl = u.toString();
+    } catch {
+      // If URL parsing fails, use raw URL as-is
+    }
+
     const pool = new Pool({
-      host: process.env.POSTGRES_HOST ?? 'db.pvobrdawlczsegaaysgu.supabase.co',
-      port: 5432,
-      user: process.env.POSTGRES_USER ?? 'postgres',
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DATABASE ?? 'postgres',
+      connectionString: cleanUrl,
       ssl: { rejectUnauthorized: false },
-      max: 1, // Serverless: limit concurrent connections
+      max: 1,
       idleTimeoutMillis: 10000,
       connectionTimeoutMillis: 10000,
     });
@@ -30,7 +40,7 @@ function getPrismaClient(): PrismaClient {
 
 /** Returns true if the database is configured and reachable */
 export function isDbConnected(): boolean {
-  return !!(process.env.POSTGRES_PASSWORD || process.env.POSTGRES_PRISMA_URL || process.env.DATABASE_URL);
+  return !!(process.env.POSTGRES_PRISMA_URL || process.env.DATABASE_URL);
 }
 
 export const prisma = {
