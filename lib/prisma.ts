@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -12,7 +13,14 @@ function getPrismaClient(): PrismaClient {
       process.env.DATABASE_URL ??
       process.env.POSTGRES_URL_NON_POOLING ??
       '';
-    const adapter = new PrismaPg({ connectionString });
+
+    // Supabase uses a self-signed cert in its chain — disable strict verification
+    const pool = new Pool({
+      connectionString,
+      ssl: { rejectUnauthorized: false },
+    });
+
+    const adapter = new PrismaPg(pool);
     globalForPrisma.prisma = new PrismaClient({ adapter });
   }
   return globalForPrisma.prisma;
