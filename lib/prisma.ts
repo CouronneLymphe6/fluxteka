@@ -6,7 +6,9 @@ const globalForPrisma = globalThis as unknown as {
 
 function getPrismaClient(): PrismaClient {
   if (!globalForPrisma.prisma) {
-    globalForPrisma.prisma = new PrismaClient();
+    globalForPrisma.prisma = new PrismaClient({
+      datasourceUrl: process.env.POSTGRES_PRISMA_URL ?? process.env.DATABASE_URL,
+    });
   }
   return globalForPrisma.prisma;
 }
