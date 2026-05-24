@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -6,9 +7,13 @@ const globalForPrisma = globalThis as unknown as {
 
 function getPrismaClient(): PrismaClient {
   if (!globalForPrisma.prisma) {
-    globalForPrisma.prisma = new PrismaClient({
-      datasourceUrl: process.env.POSTGRES_PRISMA_URL ?? process.env.DATABASE_URL,
-    });
+    const connectionString =
+      process.env.POSTGRES_PRISMA_URL ??
+      process.env.DATABASE_URL ??
+      process.env.POSTGRES_URL_NON_POOLING ??
+      '';
+    const adapter = new PrismaPg({ connectionString });
+    globalForPrisma.prisma = new PrismaClient({ adapter });
   }
   return globalForPrisma.prisma;
 }
