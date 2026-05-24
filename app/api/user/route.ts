@@ -1,4 +1,4 @@
-﻿/**
+/**
  * GET  /api/user/export — Export RGPD de toutes les données utilisateur (JSON)
  * DELETE /api/user — Supprimer le compte et toutes les données
  */
@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser } from '@/lib/auth';
+import { createClient } from '@supabase/supabase-js';
 
 // ── GET /api/user — Export RGPD ──
 export async function GET(request: NextRequest) {
@@ -82,8 +83,12 @@ export async function DELETE(request: NextRequest) {
       await prisma.user.delete({ where: { id: dbUser.id } });
     }
 
-    // Note: Supabase user deletion requires admin API (service_role key)
-    // The user will be signed out client-side
+    // Delete user from Supabase Auth for complete RGPD compliance
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+    await supabaseAdmin.auth.admin.deleteUser(user.id);
 
     return NextResponse.json({ deleted: true });
   } catch (error) {
