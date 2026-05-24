@@ -34,9 +34,19 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code');
   const token_hash = searchParams.get('token_hash');
   const type = searchParams.get('type');
-  const next = searchParams.get('next') ?? '/';
+  const next = searchParams.get('next');
 
-  const destination = next === '/' ? '/compte' : next;
+  // Sanitize redirect to prevent open redirect attacks
+  function sanitizeRedirect(next: string | null): string {
+    if (!next || !next.startsWith('/') || next.startsWith('//')) return '/compte';
+    try {
+      const url = new URL(next, 'http://dummy');
+      if (url.hostname !== 'dummy') return '/compte';
+    } catch { return '/compte'; }
+    return next;
+  }
+
+  const destination = sanitizeRedirect(next);
 
   // ── OAuth flow (GitHub / Google) — code exchange ──────────────────────────
   if (code) {
