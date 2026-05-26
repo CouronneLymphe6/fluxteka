@@ -3,9 +3,37 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Eye, Bookmark, Flag, Clock, Zap, CheckCircle, TrendingUp, Sparkles } from 'lucide-react';
+import { Eye, Bookmark, Flag, Clock, Zap, CheckCircle, TrendingUp, Sparkles, ExternalLink } from 'lucide-react';
 import ScoreBadge from './ScoreBadge';
 import { getPlatform } from '@/lib/platforms';
+
+// Plateformes avec affiliation — suggérées sur les cartes des autres
+const AFFILIATE_SUGGESTIONS = [
+  { key: 'zapier', label: 'Zapier', emoji: '⚡', url: 'https://zapier.com/?utm_source=fluxteka&utm_medium=affiliate', color: 'text-orange-600 bg-orange-50 border-orange-200 hover:bg-orange-100' },
+  { key: 'make',   label: 'Make',   emoji: '🟣', url: 'https://www.make.com/en/register?utm_source=fluxteka&utm_medium=affiliate', color: 'text-purple-600 bg-purple-50 border-purple-200 hover:bg-purple-100' },
+];
+const FREE_PLATFORMS = new Set(['n8n', 'activepieces', 'pipedream', 'flowise', 'langchain']);
+
+function CrossPlatformBadge({ tool, workflowId }: { tool: string; workflowId: string }) {
+  if (!FREE_PLATFORMS.has(tool)) return null;
+  const trackAndOpen = async (key: string, url: string, e: React.MouseEvent) => {
+    e.preventDefault(); e.stopPropagation();
+    try { await fetch('/api/affiliate/click', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tool: key, workflow_id: workflowId }) }); } catch {}
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+  return (
+    <div className="mt-2 flex items-center gap-1.5 flex-wrap">
+      <span className="text-[10px] text-text-secondary font-medium">Aussi sur :</span>
+      {AFFILIATE_SUGGESTIONS.map(aff => (
+        <button key={aff.key} onClick={e => trackAndOpen(aff.key, aff.url, e)}
+          className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-semibold transition-colors ${aff.color}`}>
+          {aff.emoji} {aff.label} <ExternalLink className="h-2 w-2" />
+        </button>
+      ))}
+    </div>
+  );
+}
+
 
 export interface WorkflowData {
   id: string;
@@ -212,6 +240,9 @@ export default function WorkflowCard({
               )}
             </div>
           )}
+
+          {/* Cross-platform affiliate suggestions */}
+          <CrossPlatformBadge tool={workflow.tool} workflowId={workflow.id} />
 
           {/* Spacer */}
           <div className="flex-1" />
