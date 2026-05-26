@@ -1,37 +1,45 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-import createIntlMiddleware from 'next-intl/middleware';
+import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/navigation';
 
 // Create the next-intl middleware handler
-const intlMiddleware = createIntlMiddleware(routing);
+const intlMiddleware = createMiddleware(routing);
+
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // ── Step 1: i18n locale detection ──────────────────────────────────────────
-  // Run intl middleware first to set locale cookie and handle locale prefixes.
-  // Skip for API routes, Next.js internals, and static files.
   const isApiRoute = pathname.startsWith('/api/');
   const isNextInternal = pathname.startsWith('/_next/') || pathname === '/favicon.ico';
   const isStaticFile = /\.(png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|css|js)$/.test(pathname);
 
+  let intlCookiesToForward: string[] = [];
+
   if (!isApiRoute && !isNextInternal && !isStaticFile) {
     const intlResponse = intlMiddleware(request);
-    // If next-intl wants to redirect (e.g. to add/remove locale prefix), let it
-    if (intlResponse.status !== 200 || intlResponse.headers.get('location')) {
+    // If next-intl wants to redirect (locale prefix handling), let it
+    if (intlResponse.headers.get('location')) {
       return intlResponse;
     }
+    // Collect locale cookie to forward to the final response
+    const setCookie = intlResponse.headers.get('set-cookie');
+    if (setCookie) intlCookiesToForward = [setCookie];
   }
 
   // ── Step 2: Auth checks (Supabase) ─────────────────────────────────────────
-  // Skip auth checks if Supabase isn't configured
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return NextResponse.next();
   }
 
   const response = NextResponse.next({
     request: { headers: request.headers },
+  });
+
+  // Forward locale cookies from next-intl
+  intlCookiesToForward.forEach(cookie => {
+    response.headers.append('set-cookie', cookie);
   });
 
   const supabase = createServerClient(
@@ -55,7 +63,6 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
 
   // Strip locale prefix for protected route matching
-  // e.g. /en/account → /account, /compte → /compte
   const pathnameWithoutLocale = pathname.replace(/^\/(en|es|de)/, '') || '/';
 
   // Protected routes — redirect to /connexion if not authenticated
@@ -70,14 +77,13 @@ export async function middleware(request: NextRequest) {
 
   // Admin routes — require admin role
   if (pathnameWithoutLocale.startsWith('/admin') && user) {
-    // Check role via app_metadata (server-side only, not editable by user)
     const role = user.app_metadata?.role || 'buyer';
     if (role !== 'admin') {
       return NextResponse.redirect(new URL('/', request.url));
     }
   }
 
-  // If logged in and visiting /connexion (any locale), redirect to /compte
+  // If logged in and visiting login page (any locale), redirect to /compte
   const loginPaths = ['/connexion', '/login', '/iniciar-sesion', '/anmelden'];
   if (loginPaths.some(p => pathnameWithoutLocale === p) && user) {
     return NextResponse.redirect(new URL('/compte', request.url));
@@ -85,6 +91,7 @@ export async function middleware(request: NextRequest) {
 
   return response;
 }
+
 
 export const config = {
   matcher: [

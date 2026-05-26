@@ -1,4 +1,8 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { locales, localeNames, localeFlags, defaultLocale, type Locale } from '@/i18n/config';
 
 const footerLinks = [
   { href: '/recherche', label: 'Explorer' },
@@ -15,12 +19,53 @@ const legalLinks = [
   { href: 'mailto:contact@fluxteka.com', label: 'Contact' },
 ];
 
-const languages = [
-  { flag: '🇫🇷', label: 'Français', active: true },
-  { flag: '🇪🇸', label: 'Español', active: false },
-  { flag: '🇩🇪', label: 'Deutsch', active: false },
-  { flag: '🇮🇹', label: 'Italiano', active: false },
-];
+function LanguageSwitcher() {
+  const pathname = usePathname();
+  const router = useRouter();
+
+  // Detect current locale from URL prefix
+  const currentLocale = (locales.find(l => pathname.startsWith(`/${l}/`) || pathname === `/${l}`) || defaultLocale) as Locale;
+
+  const switchLocale = (locale: Locale) => {
+    if (locale === currentLocale) return;
+
+    if (locale === defaultLocale) {
+      // Going to default locale: strip the current locale prefix
+      const stripped = pathname.replace(/^\/(en|es|de)(\/|$)/, '/') || '/';
+      router.push(stripped);
+    } else {
+      // Going to a non-default locale: add the prefix
+      const pathWithoutLocale = pathname.replace(/^\/(en|es|de)(\/|$)/, '/');
+      const newPath = `/${locale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
+      router.push(newPath);
+    }
+  };
+
+  return (
+    <div className="mt-4 flex items-center gap-3" aria-label="Sélecteur de langue">
+      {locales.map((locale) => {
+        const isActive = locale === currentLocale;
+        return (
+          <button
+            key={locale}
+            onClick={() => switchLocale(locale)}
+            disabled={isActive}
+            title={isActive ? localeNames[locale] : `${localeNames[locale]} — Changer de langue`}
+            className={`text-xl transition-all duration-200 ${
+              isActive
+                ? 'cursor-default scale-110'
+                : 'opacity-50 grayscale cursor-pointer hover:opacity-100 hover:grayscale-0 hover:scale-110'
+            }`}
+            aria-label={`Changer la langue en ${localeNames[locale]}`}
+            aria-current={isActive ? 'true' : undefined}
+          >
+            {localeFlags[locale]}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function Footer() {
   return (
@@ -48,22 +93,8 @@ export default function Footer() {
                 La bibliothèque européenne de l&apos;automatisation et de l&apos;IA. Trouvez et appliquez des workflows N8N, Make, Zapier et LangChain.
               </p>
 
-              {/* Language flags */}
-              <div className="mt-4 flex items-center gap-3">
-                {languages.map((lang) => (
-                  <span
-                    key={lang.label}
-                    className={`text-xl transition-all ${
-                      lang.active
-                        ? 'cursor-default'
-                        : 'opacity-40 grayscale cursor-not-allowed'
-                    }`}
-                    title={lang.active ? lang.label : `${lang.label} — Bientôt disponible`}
-                  >
-                    {lang.flag}
-                  </span>
-                ))}
-              </div>
+              {/* Language switcher — now functional */}
+              <LanguageSwitcher />
             </div>
 
             {/* Navigation */}
