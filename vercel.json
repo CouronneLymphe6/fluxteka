@@ -3,6 +3,14 @@
     {
       "path": "/api/pipeline/run",
       "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/cron/sync-integrations?source=zapier",
+      "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/cron/sync-integrations?source=make",
+      "schedule": "0 5 * * *"
     }
   ]
 }
