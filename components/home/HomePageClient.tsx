@@ -12,7 +12,6 @@ import { SkeletonGrid } from '@/components/shared/SkeletonCard';
 import { useTranslations } from 'next-intl';
 import NewsletterForm from '@/components/home/NewsletterForm';
 import OnboardingQuiz from '@/components/home/OnboardingQuiz';
-import { useTranslations } from 'next-intl';
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 

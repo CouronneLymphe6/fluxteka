@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Eye, Bookmark, Flag, Clock, Zap, CheckCircle, TrendingUp, Sparkles, ExternalLink, Github } from 'lucide-react';
+import { Eye, Bookmark, Flag, Clock, Zap, CheckCircle, TrendingUp, Sparkles, ExternalLink, Globe } from 'lucide-react';
 import ScoreBadge from './ScoreBadge';
 import { getPlatform } from '@/lib/platforms';
 import { useTranslations } from 'next-intl';
@@ -174,7 +174,7 @@ export default function WorkflowCard({
                   rel="noopener noreferrer"
                   className="relative z-20 inline-flex items-center gap-1 rounded-lg bg-gray-100 border border-gray-200 px-2 py-1 text-[10px] font-bold text-gray-700 hover:bg-gray-200 transition-colors"
                 >
-                  <Github className="h-3 w-3" /> GitHub
+                  <Globe className="h-3 w-3" /> GitHub
                 </a>
               )}
             </div>
