@@ -13,45 +13,36 @@ const ReviewSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    const rl = checkRateLimit(request, 'reviews', 5, 60_000);
+    const rl = await checkRateLimit(request, 'reviews', 5, 60_000);
     if (rl) return rl;
 
     const body = await request.json();
     const data = ReviewSchema.parse(body);
 
-    // Get user from session or use anonymous fallback
     const authUser = await getAuthUser(request);
-    let userId: string;
-
-    if (authUser) {
-      const dbUser = await prisma.user.findUnique({
-        where: { email: authUser.email! },
-        select: { id: true },
-      });
-      userId = dbUser?.id ?? '';
-    } else {
-      // Anonymous review — use a shared anonymous user
-      let anonUser = await prisma.user.findFirst({ where: { email: 'anonymous@Fluxteka.fr' } });
-      if (!anonUser) {
-        anonUser = await prisma.user.create({
-          data: { email: 'anonymous@Fluxteka.fr', name: 'Anonyme', role: 'buyer', email_verified: false },
-        });
-      }
-      userId = anonUser.id;
+    
+    if (!authUser || !authUser.email) {
+      return NextResponse.json({ error: 'Tu dois être connecté pour donner ton avis' }, { status: 401 });
     }
 
-    if (!userId) {
+    const dbUser = await prisma.user.findUnique({
+      where: { email: authUser.email },
+      select: { id: true },
+    });
+
+    if (!dbUser) {
       return NextResponse.json({ error: 'Utilisateur introuvable' }, { status: 400 });
     }
+    
+    const userId = dbUser.id;
 
     // Prevent duplicate reviews from same authenticated user
-    if (authUser) {
-      const existing = await prisma.review.findFirst({
-        where: { workflow_id: data.workflow_id, user_id: userId },
-      });
-      if (existing) {
-        return NextResponse.json({ error: 'Tu as déjà laissé un avis sur ce workflow.' }, { status: 409 });
-      }
+    const existing = await prisma.review.findFirst({
+      where: { workflow_id: data.workflow_id, user_id: userId },
+    });
+    
+    if (existing) {
+      return NextResponse.json({ error: 'Tu as déjà laissé un avis sur ce workflow.' }, { status: 409 });
     }
 
     const review = await prisma.review.create({

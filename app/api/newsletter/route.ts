@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
+import { checkRateLimit } from '@/lib/rateLimit';
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Resend audience ID — create one in Resend dashboard and set here
@@ -8,6 +10,9 @@ const AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID || '';
 
 export async function POST(request: NextRequest) {
   try {
+    const rl = await checkRateLimit(request, 'newsletter', 3, 60_000);
+    if (rl) return rl;
+
     const body = await request.json();
     const { email } = body;
 

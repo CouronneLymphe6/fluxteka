@@ -7,17 +7,17 @@ import { z } from 'zod';
 
 const TOOLS = ['N8N', 'Make', 'Zapier', 'LangChain', 'Autre'];
 const CATEGORIES = [
-  { value: 'sales-prospection', label: '🎯 Ventes & Prospection' },
-  { value: 'marketing-content', label: '📣 Marketing & Contenu' },
-  { value: 'ai-agents', label: '🤖 Agents IA' },
-  { value: 'operations', label: '⚙️ Opérations & Gestion' },
-  { value: 'customer-success', label: '🤝 Relation Client' },
-  { value: 'data-analytics', label: '📊 Data & Analytics' },
-  { value: 'communication', label: '💬 Communication' },
-  { value: 'dev-tech', label: '🛠️ Dev & Tech' },
-  { value: 'finance-admin', label: '💰 Finance & Admin' },
-  { value: 'ecommerce', label: '🛒 E-commerce' },
-  { value: 'hr-recrutement', label: '👥 RH & Recrutement' },
+  { value: 'sales-prospection', label: 'Ventes & Prospection' },
+  { value: 'marketing-content', label: 'Marketing & Contenu' },
+  { value: 'ai-agents', label: 'Agents IA' },
+  { value: 'operations', label: 'Opérations & Gestion' },
+  { value: 'customer-success', label: 'Relation Client' },
+  { value: 'data-analytics', label: 'Data & Analytics' },
+  { value: 'communication', label: 'Communication' },
+  { value: 'dev-tech', label: 'Dev & Tech' },
+  { value: 'finance-admin', label: 'Finance & Admin' },
+  { value: 'ecommerce', label: 'E-commerce' },
+  { value: 'hr-recrutement', label: 'RH & Recrutement' },
 ];
 
 const SubmitSchema = z.object({
@@ -60,8 +60,20 @@ export default function SoumettreWorkflowPage() {
 
     setLoading(true);
     try {
-      // POST to API when ready
-      await new Promise(r => setTimeout(r, 900));
+      const res = await fetch('/api/workflows/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...form,
+          source_url: form.source_url || undefined,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Erreur lors de la soumission');
+      }
+
       setSuccess(true);
     } catch {
       setErrors({ _: 'Erreur serveur. Réessaie.' });

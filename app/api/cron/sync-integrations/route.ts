@@ -18,7 +18,12 @@ export async function GET(request: NextRequest) {
   const auth = request.headers.get('authorization');
   const secret = process.env.CRON_SECRET;
 
-  if (secret && auth !== `Bearer ${secret}`) {
+  if (!secret) {
+    console.error('[Cron] CRON_SECRET is not defined in environment variables');
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+
+  if (auth !== `Bearer ${secret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, SlidersHorizontal, X, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { Search, SlidersHorizontal, X, ChevronLeft, ChevronRight, Sparkles, Target, Megaphone, Bot, Settings, Users, BarChart, MessageSquare, Wrench, Coins, ShoppingCart, Briefcase } from 'lucide-react';
 import WorkflowCard, { type WorkflowData } from '@/components/workflows/WorkflowCard';
 import FilterBar from '@/components/workflows/FilterBar';
 import { SkeletonGrid } from '@/components/shared/SkeletonCard';
@@ -17,18 +17,18 @@ function RechercheContent() {
   const t = useTranslations('search');
 
   const CATEGORIES = [
-    { value: '', label: tCat('all') },
-    { value: 'sales-prospection', label: `🎯 ${tCat('salesProspection')}` },
-    { value: 'marketing-content', label: `📣 ${tCat('marketingContent')}` },
-    { value: 'ai-agents', label: `🤖 ${tCat('aiAgents')}` },
-    { value: 'operations', label: `⚙️ ${tCat('operations')}` },
-    { value: 'customer-success', label: `🤝 ${tCat('customerSuccess')}` },
-    { value: 'data-analytics', label: `📊 ${tCat('dataAnalytics')}` },
-    { value: 'communication', label: `💬 ${tCat('communication')}` },
-    { value: 'dev-tech', label: `🛠️ ${tCat('devTech')}` },
-    { value: 'finance-admin', label: `💰 ${tCat('financeAdmin')}` },
-    { value: 'ecommerce', label: `🛒 ${tCat('ecommerce')}` },
-    { value: 'hr-recrutement', label: `👥 ${tCat('hrRecruitment')}` },
+    { value: '', label: tCat('all'), icon: null },
+    { value: 'sales-prospection', label: tCat('salesProspection'), icon: <Target className="h-3.5 w-3.5" /> },
+    { value: 'marketing-content', label: tCat('marketingContent'), icon: <Megaphone className="h-3.5 w-3.5" /> },
+    { value: 'ai-agents', label: tCat('aiAgents'), icon: <Bot className="h-3.5 w-3.5" /> },
+    { value: 'operations', label: tCat('operations'), icon: <Settings className="h-3.5 w-3.5" /> },
+    { value: 'customer-success', label: tCat('customerSuccess'), icon: <Users className="h-3.5 w-3.5" /> },
+    { value: 'data-analytics', label: tCat('dataAnalytics'), icon: <BarChart className="h-3.5 w-3.5" /> },
+    { value: 'communication', label: tCat('communication'), icon: <MessageSquare className="h-3.5 w-3.5" /> },
+    { value: 'dev-tech', label: tCat('devTech'), icon: <Wrench className="h-3.5 w-3.5" /> },
+    { value: 'finance-admin', label: tCat('financeAdmin'), icon: <Coins className="h-3.5 w-3.5" /> },
+    { value: 'ecommerce', label: tCat('ecommerce'), icon: <ShoppingCart className="h-3.5 w-3.5" /> },
+    { value: 'hr-recrutement', label: tCat('hrRecruitment'), icon: <Briefcase className="h-3.5 w-3.5" /> },
   ];
 
   const [inputValue, setInputValue] = useState(searchParams.get('q') || '');
@@ -145,10 +145,10 @@ function RechercheContent() {
                     {CATEGORIES.map((cat) => (
                       <button key={cat.value} onClick={() => pushParams({ categorie: cat.value })}
                         id={`filter-cat-${cat.value || 'all'}`}
-                        className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+                        className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
                           category === cat.value ? 'bg-primary-600 text-white' : 'bg-gray-100 text-text-secondary hover:bg-primary-50 hover:text-primary-600'
                         }`}>
-                        {cat.label}
+                        {cat.icon} {cat.label}
                       </button>
                     ))}
                   </div>
@@ -198,7 +198,7 @@ function RechercheContent() {
             )}
             {category && (
               <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-700">
-                {CATEGORIES.find(c => c.value === category)?.label}
+                {CATEGORIES.find(c => c.value === category)?.icon} {CATEGORIES.find(c => c.value === category)?.label}
                 <button onClick={() => pushParams({ categorie: '' })}><X className="h-3 w-3" /></button>
               </span>
             )}

@@ -9,7 +9,7 @@ import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
-    const rl = checkRateLimit(request, 'affiliate-click', 20, 60_000);
+    const rl = await checkRateLimit(request, 'affiliate-click', 20, 60_000);
     if (rl) return rl;
 
     const { tool, workflow_id } = await request.json();

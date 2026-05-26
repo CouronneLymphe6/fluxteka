@@ -2,23 +2,7 @@
 // Uses a Map to track requests per key within a sliding window.
 // Note: resets on each serverless cold start — use Upstash Redis for persistent limits.
 
-interface RateLimitRecord {
-  count: number;
-  resetTime: number;
-}
-
-const rateLimitMap = new Map<string, RateLimitRecord>();
-
-// Clean up expired entries periodically to prevent memory leaks
-let lastCleanup = Date.now();
-function maybeCleanup() {
-  const now = Date.now();
-  if (now - lastCleanup < 60_000) return; // Only clean every 60s
-  lastCleanup = now;
-  for (const [key, record] of rateLimitMap.entries()) {
-    if (now > record.resetTime) rateLimitMap.delete(key);
-  }
-}
+import { prisma } from '@/lib/prisma';
 
 /**
  * Returns true if the request is allowed, false if rate-limited.
@@ -26,18 +10,30 @@ function maybeCleanup() {
  * @param maxReqs   Maximum requests allowed in the window
  * @param windowMs  Window size in milliseconds
  */
-export function rateLimit(key: string, maxReqs: number, windowMs: number): boolean {
-  maybeCleanup();
-  const now = Date.now();
-  const record = rateLimitMap.get(key);
+export async function rateLimit(key: string, maxReqs: number, windowMs: number): Promise<boolean> {
+  const now = new Date();
+  
+  // Clean up expired (optimistic, don't await)
+  prisma.rateLimit.deleteMany({ where: { reset_time: { lt: now } } }).catch(() => {});
 
-  if (!record || now > record.resetTime) {
-    rateLimitMap.set(key, { count: 1, resetTime: now + windowMs });
+  const record = await prisma.rateLimit.findUnique({ where: { key } });
+
+  if (!record || now > record.reset_time) {
+    await prisma.rateLimit.upsert({
+      where: { key },
+      create: { key, count: 1, reset_time: new Date(Date.now() + windowMs) },
+      update: { count: 1, reset_time: new Date(Date.now() + windowMs) }
+    });
     return true;
   }
 
   if (record.count >= maxReqs) return false;
-  record.count++;
+  
+  await prisma.rateLimit.update({
+    where: { key },
+    data: { count: record.count + 1 }
+  });
+  
   return true;
 }
 
@@ -51,14 +47,14 @@ export function getClientIp(request: Request): string {
 }
 
 /** Convenience: check rate limit and return a 429 Response if exceeded */
-export function checkRateLimit(
+export async function checkRateLimit(
   request: Request,
   namespace: string,
   maxReqs: number,
   windowMs: number,
-): Response | null {
+): Promise<Response | null> {
   const ip = getClientIp(request);
-  const allowed = rateLimit(`${ip}:${namespace}`, maxReqs, windowMs);
+  const allowed = await rateLimit(`${ip}:${namespace}`, maxReqs, windowMs);
   if (!allowed) {
     return new Response(
       JSON.stringify({ error: 'Trop de requêtes. Réessayez dans quelques instants.' }),

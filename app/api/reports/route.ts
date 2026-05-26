@@ -16,7 +16,7 @@ const ReportSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    const rl = checkRateLimit(request, 'reports', 3, 60_000);
+    const rl = await checkRateLimit(request, 'reports', 3, 60_000);
     if (rl) return rl;
 
     const user = await getAuthUser(request);

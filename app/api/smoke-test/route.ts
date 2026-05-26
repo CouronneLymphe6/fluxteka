@@ -16,7 +16,7 @@ const LeadSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    const rl = checkRateLimit(request, 'smoke-test', 3, 60_000);
+    const rl = await checkRateLimit(request, 'smoke-test', 3, 60_000);
     if (rl) return rl;
 
     const body = await request.json();

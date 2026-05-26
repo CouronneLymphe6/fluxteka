@@ -42,11 +42,6 @@ export async function GET(
       return NextResponse.json({ error: 'Workflow introuvable' }, { status: 404 });
     }
 
-    // Increment views async (fire-and-forget)
-    prisma.workflow.update({
-      where: { slug },
-      data: { views: { increment: 1 } },
-    }).catch(() => {});
 
     // Parse JSON string fields → arrays before sending to frontend
     const toolsConnected = safeParseJson(workflow.tools_connected);

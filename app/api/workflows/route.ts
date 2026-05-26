@@ -22,10 +22,8 @@ export async function GET(request: NextRequest) {
 
     if (q) {
       where.OR = [
-        { title: { contains: q } },
-        { description_fr: { contains: q } },
-        // SQLite: tags stored as JSON string, search with contains
-        { tags: { contains: q.toLowerCase() } },
+        { title: { contains: q, mode: 'insensitive' } },
+        { description_fr: { contains: q, mode: 'insensitive' } },
       ];
     }
 

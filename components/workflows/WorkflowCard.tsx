@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Eye, Bookmark, Flag, Clock, Zap, CheckCircle, TrendingUp, Sparkles, ExternalLink } from 'lucide-react';
+import { Eye, Bookmark, Flag, Clock, Zap, CheckCircle, TrendingUp, Sparkles, ExternalLink, Github } from 'lucide-react';
 import ScoreBadge from './ScoreBadge';
 import { getPlatform } from '@/lib/platforms';
 import { useTranslations } from 'next-intl';
@@ -27,7 +27,7 @@ function CrossPlatformBadge({ tool, workflowId }: { tool: string; workflowId: st
       <span className="text-[10px] text-text-secondary font-medium">Aussi sur :</span>
       {AFFILIATE_SUGGESTIONS.map(aff => (
         <button key={aff.key} onClick={e => trackAndOpen(aff.key, aff.url, e)}
-          className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-semibold transition-colors ${aff.color}`}>
+          className={`relative z-20 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-semibold transition-colors ${aff.color}`}>
           {aff.emoji} {aff.label} <ExternalLink className="h-2 w-2" />
         </button>
       ))}
@@ -47,6 +47,7 @@ export interface WorkflowData {
   category: string;
   tags?: string[];
   source_type?: string;
+  source_url?: string;
   status: string;
   score_total: number;
   score_users?: number;
@@ -121,16 +122,11 @@ export default function WorkflowCard({
     : { type: 'spring' as const, stiffness: 300, damping: 20 };
 
   return (
-    <Link
-      href={`/workflow/${workflow.slug}`}
-      className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded-2xl"
-      id={`workflow-card-${workflow.slug}`}
+    <motion.article
+      whileHover={hoverAnimation}
+      transition={springTransition}
+      className="group relative flex flex-col rounded-2xl border border-border bg-white shadow-sm transition-all duration-200 hover:border-primary-300 hover:shadow-lg hover:shadow-primary-100/50 overflow-hidden h-full focus-within:ring-2 focus-within:ring-primary-500 focus-within:ring-offset-2"
     >
-      <motion.article
-        whileHover={hoverAnimation}
-        transition={springTransition}
-        className="group relative flex flex-col rounded-2xl border border-border bg-white shadow-sm transition-all duration-200 hover:border-primary-300 hover:shadow-lg hover:shadow-primary-100/50 overflow-hidden h-full"
-      >
         {/* Top accent bar — platform gradient (Supercard v1) */}
         <div
           className="h-3 w-full"
@@ -171,6 +167,16 @@ export default function WorkflowCard({
                   📖 Tuto
                 </span>
               )}
+              {(workflow.source_type === 'github' || workflow.source_url?.includes('github.com')) && (
+                <a 
+                  href={workflow.source_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="relative z-20 inline-flex items-center gap-1 rounded-lg bg-gray-100 border border-gray-200 px-2 py-1 text-[10px] font-bold text-gray-700 hover:bg-gray-200 transition-colors"
+                >
+                  <Github className="h-3 w-3" /> GitHub
+                </a>
+              )}
             </div>
 
             {/* Views */}
@@ -184,7 +190,13 @@ export default function WorkflowCard({
           <h3
             className="mt-3 text-base font-heading font-semibold text-text-primary transition-colors group-hover:text-primary-600 line-clamp-2 leading-snug min-h-[2.75rem]"
           >
-            {workflow.title}
+            <Link 
+              href={`/workflow/${workflow.slug}`} 
+              className="before:absolute before:inset-0 before:z-10 focus:outline-none"
+              id={`workflow-card-${workflow.slug}`}
+            >
+              {workflow.title}
+            </Link>
           </h3>
 
           {/* Description */}
@@ -265,13 +277,9 @@ export default function WorkflowCard({
             >
               {t('viewWorkflow')}
             </span>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 relative z-20">
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  setSaved(!saved);
-                }}
+                onClick={() => setSaved(!saved)}
                 className={`rounded-lg p-1.5 transition-colors ${saved ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-primary-50 hover:text-primary-600'}`}
                 title={t('save')}
                 aria-label={t('save')}
@@ -279,10 +287,7 @@ export default function WorkflowCard({
                 <Bookmark className={`h-4 w-4 ${saved ? 'fill-current' : ''}`} />
               </button>
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                }}
+                onClick={() => {}}
                 className="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-danger-50 hover:text-danger-600"
                 title={t('report')}
                 aria-label={t('report')}
@@ -292,7 +297,6 @@ export default function WorkflowCard({
             </div>
           </div>
         </div>
-      </motion.article>
-    </Link>
+    </motion.article>
   );
 }

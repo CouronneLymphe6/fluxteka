@@ -72,15 +72,17 @@ export async function DELETE(request: NextRequest) {
     const dbUser = await prisma.user.findFirst({ where: { email: user.email! } });
 
     if (dbUser) {
-      // Delete all user data in order (cascade handles some, but be explicit)
-      await prisma.savedWorkflow.deleteMany({ where: { user_id: dbUser.id } });
-      await prisma.review.deleteMany({ where: { user_id: dbUser.id } });
-      await prisma.report.deleteMany({ where: { user_id: dbUser.id } });
-      await prisma.affiliateClick.updateMany({
-        where: { user_id: dbUser.id },
-        data: { user_id: null },
-      });
-      await prisma.user.delete({ where: { id: dbUser.id } });
+      // Delete all user data in a transaction to prevent partial deletion corruption
+      await prisma.$transaction([
+        prisma.savedWorkflow.deleteMany({ where: { user_id: dbUser.id } }),
+        prisma.review.deleteMany({ where: { user_id: dbUser.id } }),
+        prisma.report.deleteMany({ where: { user_id: dbUser.id } }),
+        prisma.affiliateClick.updateMany({
+          where: { user_id: dbUser.id },
+          data: { user_id: null },
+        }),
+        prisma.user.delete({ where: { id: dbUser.id } })
+      ]);
     }
 
     // Delete user from Supabase Auth for complete RGPD compliance

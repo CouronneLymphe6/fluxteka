@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from '@/i18n/navigation';
-import { Search, Menu, X, Upload, User, LogOut } from 'lucide-react';
+import { Search, Menu, X, Upload, User, LogOut, Map, Bookmark, Shield, Home, Compass } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -14,7 +14,7 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const isHome = pathname === '/';
-  const isRecherche = pathname?.startsWith('/recherche');
+  const isRecherche = pathname?.startsWith('/recherche') || pathname?.startsWith('/search');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -131,12 +131,13 @@ export default function Header() {
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-2">
           <Link href="/carte"
-            className={`rounded-lg px-4 py-2 text-sm font-medium transition-all border ${
+            className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-all border ${
               pathname === '/carte' 
                 ? 'bg-primary-50 text-primary-700 border-primary-200 shadow-sm' 
                 : 'bg-white text-text-primary border-border hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 shadow-sm'
             }`} id="nav-carte">
-            🗺️ {t('carte')}
+            <Compass className="h-4 w-4" />
+            {t('carte')}
           </Link>
 
           <Link href="/soumettre"
@@ -175,10 +176,10 @@ export default function Header() {
                       <User className="h-3.5 w-3.5" /> {t('myProfile')}
                     </Link>
                     <Link href="/compte/sauvegardes" className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:bg-gray-50 hover:text-primary-600" id="dropdown-saves">
-                      📑 {t('mySaves')}
+                      <Bookmark className="h-3.5 w-3.5" /> {t('mySaves')}
                     </Link>
                     <Link href="/compte/donnees" className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:bg-gray-50 hover:text-primary-600" id="dropdown-data">
-                      🔒 {t('myAccount')}
+                      <Shield className="h-3.5 w-3.5" /> {t('myAccount')}
                     </Link>
                     <hr className="my-1 border-border" />
                     <button onClick={handleLogout}
@@ -239,41 +240,41 @@ export default function Header() {
             exit={{ height: 0, opacity: 0 }} className="md:hidden border-t border-border bg-white overflow-hidden">
             <div className="container-page flex flex-col gap-1 py-4">
               <Link href="/"
-                className={`rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
+                className={`flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
                 id="mobile-nav-home">
-                🏠 {t('home')}
+                <Home className="h-4 w-4" /> {t('home')}
               </Link>
               <Link href="/carte"
-                className={`rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/carte' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
+                className={`flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/carte' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
                 id="mobile-nav-carte">
-                🗺️ {t('carte')}
+                <Compass className="h-4 w-4" /> {t('carte')}
               </Link>
               <Link href="/recherche"
-                className={`rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/recherche' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
+                className={`flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/recherche' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
                 id="mobile-nav-search">
-                🔍 {t('search')}
+                <Search className="h-4 w-4" /> {t('search')}
               </Link>
               <hr className="my-2 border-border" />
               <Link href="/soumettre"
-                className="rounded-lg px-4 py-3 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-50"
+                className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-50"
                 id="mobile-nav-submit">
-                📤 {t('submit')}
+                <Upload className="h-4 w-4" /> {t('submit')}
               </Link>
 
               {user ? (
                 <>
                   <hr className="my-2 border-border" />
                   <Link href="/compte"
-                    className="rounded-lg px-4 py-3 text-sm font-medium text-text-secondary hover:bg-gray-50" id="mobile-nav-compte">
-                    👤 {t('myAccount')}
+                    className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-text-secondary hover:bg-gray-50" id="mobile-nav-compte">
+                    <User className="h-4 w-4" /> {t('myAccount')}
                   </Link>
                   <Link href="/compte/sauvegardes"
-                    className="rounded-lg px-4 py-3 text-sm font-medium text-text-secondary hover:bg-gray-50" id="mobile-nav-saves">
-                    📑 {t('mySaves')}
+                    className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-text-secondary hover:bg-gray-50" id="mobile-nav-saves">
+                    <Bookmark className="h-4 w-4" /> {t('mySaves')}
                   </Link>
                   <button onClick={handleLogout}
-                    className="rounded-lg px-4 py-3 text-left text-sm font-medium text-danger-600 hover:bg-danger-50" id="mobile-nav-logout">
-                    🚪 {t('logout')}
+                    className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-medium text-danger-600 hover:bg-danger-50" id="mobile-nav-logout">
+                    <LogOut className="h-4 w-4" /> {t('logout')}
                   </button>
                 </>
               ) : (
