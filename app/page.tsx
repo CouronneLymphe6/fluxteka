@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Zap, Globe, Gift, Sparkles, CheckCircle, ChevronRight } from 'lucide-react';
 import SearchBar from '@/components/search/SearchBar';
@@ -129,6 +130,7 @@ const profiles = [
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
+  const router = useRouter();
   const [trending, setTrending] = useState<WorkflowData[]>([]);
   const [loading, setLoading] = useState(true);
   const [workflowCount, setWorkflowCount] = useState<number | null>(null);
@@ -241,17 +243,17 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="mt-4 flex flex-wrap justify-center gap-2"
+            className="relative z-10 mt-4 flex flex-wrap justify-center gap-2"
           >
             {suggestions.map((s) => (
-              <Link
+              <button
                 key={s.query}
-                href={`/recherche?q=${encodeURIComponent(s.query)}`}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 text-sm text-text-secondary transition-all hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600"
+                onClick={() => router.push(`/recherche?q=${encodeURIComponent(s.query)}`)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 text-sm text-text-secondary transition-all hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 cursor-pointer"
               >
                 <span>{s.emoji}</span>
                 {s.label}
-              </Link>
+              </button>
             ))}
           </motion.div>
         </div>

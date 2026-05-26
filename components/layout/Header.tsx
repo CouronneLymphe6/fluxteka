@@ -11,6 +11,7 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const isHome = pathname === '/';
+  const isRecherche = pathname?.startsWith('/recherche');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -111,8 +112,8 @@ export default function Header() {
           </span>
         </Link>
 
-        {/* Search Bar — hidden on home page */}
-        {!isHome && (
+        {/* Search Bar — hidden on home and recherche page */}
+        {!isHome && !isRecherche && (
           <div className="hidden md:flex flex-1 max-w-md mx-8">
             <form onSubmit={handleSearchSubmit} className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-secondary" />
@@ -127,10 +128,12 @@ export default function Header() {
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-2">
           <Link href="/carte"
-            className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-primary-50 hover:text-primary-600 ${
-              pathname === '/carte' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary'
+            className={`rounded-lg px-4 py-2 text-sm font-medium transition-all border ${
+              pathname === '/carte' 
+                ? 'bg-primary-50 text-primary-700 border-primary-200 shadow-sm' 
+                : 'bg-white text-text-primary border-border hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 shadow-sm'
             }`} id="nav-carte">
-            🗺️ Carte
+            🗺️ Carte Pédagogique
           </Link>
 
           <Link href="/soumettre"
@@ -193,7 +196,7 @@ export default function Header() {
 
         {/* Mobile: Search + Hamburger */}
         <div className="flex md:hidden items-center gap-2">
-          {!isHome && (
+          {!isHome && !isRecherche && (
             <button onClick={() => setSearchOpen(!searchOpen)}
               className="rounded-lg p-2 text-text-secondary hover:bg-gray-100" aria-label="Rechercher" id="mobile-search-toggle">
               <Search className="h-5 w-5" />
@@ -208,7 +211,7 @@ export default function Header() {
 
       {/* Mobile Search Bar */}
       <AnimatePresence>
-        {searchOpen && !isHome && (
+        {searchOpen && !isHome && !isRecherche && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }} className="md:hidden border-t border-border overflow-hidden">
             <form onSubmit={handleSearchSubmit} className="container-page py-3">
@@ -238,7 +241,7 @@ export default function Header() {
               <Link href="/carte"
                 className={`rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/carte' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
                 id="mobile-nav-carte">
-                🗺️ Carte de l&apos;automatisation
+                🗺️ Carte Pédagogique
               </Link>
               <Link href="/recherche"
                 className={`rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/recherche' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}

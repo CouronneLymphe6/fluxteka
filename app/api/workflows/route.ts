@@ -64,6 +64,7 @@ export async function GET(request: NextRequest) {
       ...w,
       tags: safeParseJson(w.tags),
       tools_connected: safeParseJson(w.tools_connected),
+      has_tutorial: !!w.how_to_use,
     }));
 
     return NextResponse.json({

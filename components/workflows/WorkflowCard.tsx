@@ -58,6 +58,7 @@ export interface WorkflowData {
   difficulty?: string | null;
   setup_time_minutes?: number | null;
   verified_at?: string | null;
+  has_tutorial?: boolean;
   author: {
     id: string;
     name: string;
@@ -137,7 +138,7 @@ export default function WorkflowCard({
 
         {/* Badges — Trending / Nouveau */}
         {(showNew || showTrending) && (
-          <div className="absolute top-5 right-3 z-10">
+          <div className="absolute top-4 right-4 z-20 flex gap-1.5">
             {showNew && (
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
                 <Sparkles className="h-2.5 w-2.5" />
@@ -157,13 +158,20 @@ export default function WorkflowCard({
           {/* Header row */}
           <div className="flex items-start justify-between gap-3">
             {/* Platform badge */}
-            <span className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-semibold ${platform.bg} ${platform.text} ${platform.border}`}>
-              <span>{platform.emoji}</span>
-              {platform.label}
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-semibold ${platform.bg} ${platform.text} ${platform.border}`}>
+                <span>{platform.emoji}</span>
+                {platform.label}
+              </span>
+              {workflow.has_tutorial && (
+                <span className="inline-flex items-center gap-1 rounded-lg bg-blue-50 border border-blue-200 px-2 py-1 text-[10px] font-bold text-blue-700">
+                  📖 Tuto
+                </span>
+              )}
+            </div>
 
             {/* Views */}
-            <div className="flex items-center gap-1 text-xs text-text-secondary">
+            <div className="flex items-center gap-1 text-xs text-text-secondary mt-1">
               <Eye className="h-3.5 w-3.5" />
               <span>{(workflow.views ?? 0).toLocaleString('fr-FR')}</span>
             </div>
@@ -171,7 +179,7 @@ export default function WorkflowCard({
 
           {/* Title */}
           <h3
-            className="mt-3 text-base font-heading font-semibold text-text-primary transition-colors group-hover:text-primary-600 line-clamp-2 leading-snug"
+            className="mt-3 text-base font-heading font-semibold text-text-primary transition-colors group-hover:text-primary-600 line-clamp-2 leading-snug min-h-[2.75rem]"
           >
             {workflow.title}
           </h3>

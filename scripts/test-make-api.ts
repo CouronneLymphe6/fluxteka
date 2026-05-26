@@ -1,30 +1,40 @@
-import path from 'path';
-import dotenv from 'dotenv';
-dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
-
-const TOKEN = process.env.MAKE_API_TOKEN;
-const BASE = 'https://eu1.make.com';
-const TEAM_ID = 1797770;
-
-async function test(endpoint: string) {
+/**
+ * Test sitemaps Make & Zapier pour extraire les URLs de templates
+ */
+async function test(label: string, url: string) {
   try {
-    const res = await fetch(`${BASE}${endpoint}`, {
-      headers: { 'Authorization': `Token ${TOKEN}`, 'Accept': 'application/json' },
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; Fluxteka/1.0; +https://fluxteka.com/bot)' }
     });
     const body = await res.text();
-    const preview = body.substring(0, 300).replace(/\n/g, ' ');
-    console.log(`${res.ok ? '✅' : '❌'} ${res.status} ${endpoint}`);
-    console.log(`   → ${preview}\n`);
+    const preview = body.substring(0, 400).replace(/\n/g, ' ');
+    console.log(`${res.ok ? '✅' : '❌'} [${res.status}] ${label}`);
+    // Count template URLs if XML
+    const templateMatches = body.match(/templates\/[\w-]+/g) || [];
+    if (templateMatches.length > 0) {
+      console.log(`   📋 ${templateMatches.length} templates trouvés!`);
+      console.log(`   Exemple: ${templateMatches.slice(0, 3).join(', ')}`);
+    } else {
+      console.log(`   ${preview.substring(0, 150)}`);
+    }
+    console.log();
   } catch (e) {
-    console.log(`💥 ${endpoint} → ${e}\n`);
+    console.log(`💥 ${label} → ${e}\n`);
   }
 }
 
 async function main() {
-  console.log(`🔍 Make API — Team ID: ${TEAM_ID}\n`);
-  await test(`/api/v2/templates?teamId=${TEAM_ID}`);
-  await test(`/api/v2/teams/${TEAM_ID}/templates`);
-  await test(`/api/v2/templates?teamId=${TEAM_ID}&pg[limit]=5`);
-  await test(`/api/v2/scenarios?teamId=${TEAM_ID}&pg[limit]=3`);
+  console.log('🗺️  Test Sitemaps\n');
+  
+  console.log('── MAKE ─────────────────────');
+  await test('Make sitemap index', 'https://www.make.com/sitemap.xml');
+  await test('Make templates sitemap', 'https://www.make.com/sitemap-templates.xml');
+  await test('Make en sitemap', 'https://www.make.com/en/sitemap.xml');
+
+  console.log('── ZAPIER ───────────────────');
+  await test('Zapier sitemap index', 'https://zapier.com/sitemap.xml');
+  await test('Zapier templates sitemap', 'https://zapier.com/sitemap_templates.xml');
+  await test('Zapier apps sitemap', 'https://zapier.com/sitemap_apps.xml');
 }
+
 main();

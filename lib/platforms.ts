@@ -195,19 +195,10 @@ export const SOURCE_PLATFORMS: Record<string, SourcePlatformInfo> = {
   'youtube':                 { label: 'YouTube', emoji: '▶️', color: 'bg-red-50 text-red-700 border-red-200' },
 };
 
-// ── Filter bar tools list ───────────────────────────────────────────────
-
 export const FILTER_TOOLS = [
   { value: '', label: 'Tous', icon: '🔄' },
   { value: 'n8n', label: 'N8N', icon: '🔶' },
-  { value: 'make', label: 'Make', icon: '🟣' },
-  { value: 'zapier', label: 'Zapier', icon: '⚡' },
   { value: 'activepieces', label: 'Activepieces', icon: '🧩' },
   { value: 'pipedream', label: 'Pipedream', icon: '🌀' },
   { value: 'flowise', label: 'Flowise', icon: '🌊' },
-  { value: 'dify', label: 'Dify', icon: '💎' },
-  { value: 'langchain', label: 'LangChain', icon: '🦜' },
-  { value: 'crewai', label: 'CrewAI', icon: '🤖' },
-  { value: 'autogen', label: 'AutoGen', icon: '🔵' },
-  { value: 'other', label: 'Autres', icon: '⚙️' },
 ];
