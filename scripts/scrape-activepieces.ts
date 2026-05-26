@@ -18,16 +18,12 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
-import { PrismaClient } from '@prisma/client';
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 import { ActivepiecesCrawler } from '../lib/pipeline/sources/activepieces';
+import { createScriptPrisma } from './_prisma';
 import crypto from 'crypto';
 import slugifyLib from 'slugify';
 
-const adapter = new PrismaBetterSqlite3({
-  url: process.env.DATABASE_URL || 'file:./prisma/dev.db',
-});
-const prisma = new PrismaClient({ adapter });
+const { prisma, disconnect } = createScriptPrisma();
 
 function normalizeUrl(url: string): string {
   try {
@@ -137,7 +133,7 @@ async function main() {
   console.log(`  📦 Total en base: ${total} workflows`);
   console.log('═'.repeat(50));
 
-  await prisma.$disconnect();
+  await disconnect();
 }
 
-main().catch(async (e) => { console.error('❌', e); await prisma.$disconnect(); process.exit(1); });
+main().catch(async (e) => { console.error('❌', e); await disconnect(); process.exit(1); });
