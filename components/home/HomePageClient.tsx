@@ -1,7 +1,7 @@
 'use client';
 
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -87,47 +87,6 @@ const steps = [
   { emoji: '🚀', title: 'Applique ou télécharge', description: 'Utilise directement ou adapte à ton cas en quelques minutes.' },
 ];
 
-// ── Onboarding profiles ───────────────────────────────────────────────────────
-
-const profiles = [
-  {
-    id: 'beginner',
-    emoji: '🌱',
-    title: 'Débutant',
-    description: 'Je découvre l\'automatisation',
-    query: '/recherche?tool=zapier&tri=score',
-    tip: 'On te recommande de commencer avec Zapier — le plus simple à prendre en main.',
-    platform: 'zapier',
-  },
-  {
-    id: 'business',
-    emoji: '🏢',
-    title: 'PME / Agence',
-    description: 'J\'automatise mes process métier',
-    query: '/recherche?tool=make&tri=score',
-    tip: 'Make est parfait pour les PMEs et agences — puissant et flexible.',
-    platform: 'make',
-  },
-  {
-    id: 'developer',
-    emoji: '💻',
-    title: 'Développeur',
-    description: 'Je veux du contrôle et de la flexibilité',
-    query: '/recherche?tool=n8n&tri=score',
-    tip: 'n8n est fait pour toi — open-source, self-hostable, et ultra-puissant.',
-    platform: 'n8n',
-  },
-  {
-    id: 'ai',
-    emoji: '🤖',
-    title: 'Passionné IA',
-    description: 'Je construis des agents autonomes',
-    query: '/recherche?categorie=ai-agents&tri=score',
-    tip: 'LangChain et les agents IA n8n sont tes meilleurs alliés.',
-    platform: 'langchain',
-  },
-];
-
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function HomePageClient({ 
@@ -160,26 +119,7 @@ export default function HomePageClient({
     { value: '100%', label: tStats('free'), icon: Gift },
   ];
 
-  const activeProfile = profiles.find((p) => p.id === selectedProfile);
-
-  const handleNewsletter = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim()) return;
-    try {
-      const res = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim() }),
-      });
-      if (res.ok || res.status === 409) {
-        // 409 = already subscribed — still show success
-        setNewsletterSent(true);
-      }
-    } catch {
-      // Fallback: show success anyway (don't block UX on network error)
-      setNewsletterSent(true);
-    }
-  };
+  // Le OnboardingQuiz et le NewsletterForm gèrent maintenant leur propre état.
 
 
   return (

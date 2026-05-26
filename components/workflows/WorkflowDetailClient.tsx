@@ -7,7 +7,7 @@ import {
   ExternalLink, Bookmark, Flag, Star, Eye, Calendar,
   Tag, ArrowLeft, Share2, ChevronDown, ChevronUp,
   CheckCircle, Loader2, ThumbsUp, GitBranch, Globe,
-  ArrowRight, Zap, AlertCircle, Clock, Code2, Briefcase, Users, Link as LinkIcon, Target
+  ArrowRight, Zap, AlertCircle, Clock, Code2, Briefcase, Users, Link as LinkIcon, Target, Wrench
 } from 'lucide-react';
 import ScoreBadge from '@/components/workflows/ScoreBadge';
 import AffiliateButton from '@/components/workflows/AffiliateButton';

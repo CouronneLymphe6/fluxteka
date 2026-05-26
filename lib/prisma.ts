@@ -57,6 +57,7 @@ export const prisma = {
   get crawledUrl() { return getPrismaClient().crawledUrl; },
   get smokeTestLead() { return getPrismaClient().smokeTestLead; },
   get user() { return getPrismaClient().user; },
+  get rateLimit() { return getPrismaClient().rateLimit; },
   $disconnect() { return getPrismaClient().$disconnect(); },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   $transaction(...args: any[]) { return (getPrismaClient() as any).$transaction(...args); },
