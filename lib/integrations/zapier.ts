@@ -40,15 +40,26 @@ interface ZapierApiResponse {
   };
 }
 
-const BASE_URL = 'https://zapier.com/api/v3/zap-templates';
+// L'API Zapier embed nécessite un client_id de partenaire
+// Inscription gratuite : https://platform.zapier.com/partners/overview
+const PARTNER_API = 'https://api.zapier.com/v1/zap-templates';
 const PAGE_SIZE = 100;
-const DELAY_MS = 400; // Respecter le rate limit
+const DELAY_MS = 400;
 
 /**
- * Récupère une page de templates Zapier
+ * Récupère une page de templates Zapier (nécessite ZAPIER_CLIENT_ID)
  */
 async function fetchPage(offset: number): Promise<ZapierApiResponse> {
-  const url = `${BASE_URL}/?limit=${PAGE_SIZE}&offset=${offset}&status=active`;
+  const clientId = process.env.ZAPIER_CLIENT_ID;
+  if (!clientId) {
+    throw new Error(
+      'ZAPIER_CLIENT_ID manquant.\n' +
+      '→ Inscris-toi sur https://platform.zapier.com/partners/overview\n' +
+      '→ Une fois approuvé, ajoute ZAPIER_CLIENT_ID=xxx dans .env.local'
+    );
+  }
+
+  const url = `${PARTNER_API}?client_id=${clientId}&limit=${PAGE_SIZE}&offset=${offset}&status=published`;
   const res = await fetch(url, {
     headers: {
       'User-Agent': 'Fluxteka/1.0 (contact@fluxteka.com)',

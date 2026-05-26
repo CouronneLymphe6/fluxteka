@@ -11,7 +11,24 @@ import dotenv from 'dotenv';
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 import { syncMake } from '../lib/integrations/sync';
+
+function createPrisma(): PrismaClient {
+  const rawUrl = process.env.POSTGRES_PRISMA_URL ?? process.env.DATABASE_URL ?? '';
+  let cleanUrl = rawUrl;
+  try {
+    const u = new URL(rawUrl);
+    u.searchParams.delete('sslmode');
+    u.searchParams.delete('pgbouncer');
+    cleanUrl = u.toString();
+  } catch { /* use raw */ }
+
+  const pool = new Pool({ connectionString: cleanUrl, ssl: { rejectUnauthorized: false }, max: 1 });
+  const adapter = new PrismaPg(pool);
+  return new PrismaClient({ adapter });
+}
 
 async function main() {
   const maxResults = parseInt(process.argv[2] || '1500');
@@ -21,21 +38,22 @@ async function main() {
   console.log('═'.repeat(52));
   console.log(`Max templates : ${maxResults}`);
   console.log(`Région        : ${process.env.MAKE_API_REGION || 'EU (eu1.make.com)'}`);
-  console.log(`Token         : ${process.env.MAKE_API_TOKEN ? '✅ configuré' : '❌ MAKE_API_TOKEN manquant!'}`);
+  console.log(`Token         : ${process.env.MAKE_API_TOKEN ? '✅ configuré' : '❌ MAKE_API_TOKEN manquant'}`);
 
   if (!process.env.MAKE_API_TOKEN) {
     console.log('\n⚠️  Pour obtenir ton token Make :');
-    console.log('   1. Va sur make.com → Profil → API');
-    console.log('   2. Clique sur "Générer un token"');
-    console.log('   3. Ajoute MAKE_API_TOKEN=xxx dans .env.local');
-    console.log('   4. Relance ce script\n');
+    console.log('   1. Va sur make.com → ton avatar → Profil');
+    console.log('   2. Onglet "API" → "Ajouter un token"');
+    console.log('   3. Nomme-le "Fluxteka" → Ajouter');
+    console.log('   4. Copie le token');
+    console.log('   5. Ajoute MAKE_API_TOKEN=xxx dans .env.local\n');
     process.exit(1);
   }
 
-  const prisma = new PrismaClient();
+  const prisma = createPrisma();
 
   try {
-    const result = await syncMake(prisma, maxResults);
+    const result = await syncMake(prisma as any, maxResults);
 
     console.log('\n' + '─'.repeat(52));
     console.log(`  ✅ Récupérés  : ${result.fetched}`);
@@ -44,17 +62,14 @@ async function main() {
     console.log(`  ⏭️  Ignorés    : ${result.skipped}`);
     console.log(`  ❌ Erreurs    : ${result.errors}`);
 
-    const total = await prisma.workflow.count({ where: { status: 'active' } });
-    const makeTotal = await prisma.workflow.count({ where: { tool: 'make', status: 'active' } });
-    console.log(`\n  📦 Make en base   : ${makeTotal} workflows`);
-    console.log(`  📦 Total en base  : ${total} workflows`);
+    const total = await (prisma as any).workflow.count({ where: { status: 'active' } });
+    const makeTotal = await (prisma as any).workflow.count({ where: { tool: 'make', status: 'active' } });
+    console.log(`\n  📦 Make en base   : ${makeTotal}`);
+    console.log(`  📦 Total en base  : ${total}`);
     console.log('═'.repeat(52));
   } finally {
     await prisma.$disconnect();
   }
 }
 
-main().catch(async e => {
-  console.error('❌ Erreur fatale:', e);
-  process.exit(1);
-});
+main().catch(e => { console.error('❌', e); process.exit(1); });
