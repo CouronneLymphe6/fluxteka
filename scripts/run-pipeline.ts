@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Pipeline Runner — Standalone script to crawl real workflows into SQLite
  *
  * Usage: npx tsx scripts/run-pipeline.ts [source] [maxResults]
@@ -25,6 +25,9 @@ const prisma = new PrismaClient({ adapter });
 import { N8NCommunityWalker } from '../lib/pipeline/sources/n8n-community';
 import { MakeTemplatesCrawler } from '../lib/pipeline/sources/make-templates';
 import { ZapierTemplatesCrawler } from '../lib/pipeline/sources/zapier-templates';
+import { ActivepiecesCrawler } from '../lib/pipeline/sources/activepieces';
+import { PipedreamCrawler } from '../lib/pipeline/sources/pipedream';
+import { FlowiseCrawler } from '../lib/pipeline/sources/flowise';
 import type { CrawlerSource, RawWorkflow } from '../lib/pipeline/engine';
 
 // ── Utils ──
@@ -89,9 +92,12 @@ function guessCategory(raw: RawWorkflow): string {
 
 // ── Sources ──
 const SOURCES: Record<string, () => CrawlerSource> = {
-  n8n: () => new N8NCommunityWalker(),
-  make: () => new MakeTemplatesCrawler(),
-  zapier: () => new ZapierTemplatesCrawler(),
+  n8n:          () => new N8NCommunityWalker(),
+  make:         () => new MakeTemplatesCrawler(),
+  zapier:       () => new ZapierTemplatesCrawler(),
+  activepieces: () => new ActivepiecesCrawler(),
+  pipedream:    () => new PipedreamCrawler(),
+  flowise:      () => new FlowiseCrawler(),
 };
 
 async function processWorkflows(source: CrawlerSource, maxResults: number) {

@@ -13,7 +13,7 @@
   --color-bg: #F8FAFC;               /* Presque blanc — plus froid que F9FAFB */
   --color-surface: #FFFFFF;
   --color-text: #0F172A;             /* Quasi-noir slate */
-  --color-text-secondary: #64748B;   /* Slate 500 */
+  --color-text-secondary: #475569;   /* Slate 600 — WCAG AA on xs text */
   --color-border: #E2E8F0;           /* Slate 200 */
 
   /* Gradient signature Fluxteka */

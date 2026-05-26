@@ -4,10 +4,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { checkRateLimit } from '@/lib/rateLimit';
 import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
+    const rl = checkRateLimit(request, 'affiliate-click', 20, 60_000);
+    if (rl) return rl;
+
     const { tool, workflow_id } = await request.json();
 
     if (!tool) {

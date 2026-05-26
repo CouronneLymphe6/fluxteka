@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 const LeadSchema = z.object({
   type: z.enum(['agency_badge', 'premium_waitlist', 'subscriber_waitlist', 'custom_mission']),
@@ -15,6 +16,9 @@ const LeadSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    const rl = checkRateLimit(request, 'smoke-test', 3, 60_000);
+    if (rl) return rl;
+
     const body = await request.json();
     const data = LeadSchema.parse(body);
 

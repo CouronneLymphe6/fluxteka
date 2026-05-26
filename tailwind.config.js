@@ -82,7 +82,7 @@ module.exports = {
         },
         bg: '#F9FAFB',
         'text-primary': '#111827',
-        'text-secondary': '#6B7280',
+        'text-secondary': '#475569',
       },
       borderRadius: {
         lg: 'var(--radius)',

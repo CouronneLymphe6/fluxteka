@@ -1,7 +1,30 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import createIntlMiddleware from 'next-intl/middleware';
+import { routing } from './i18n/navigation';
+
+// Create the next-intl middleware handler
+const intlMiddleware = createIntlMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  // ── Step 1: i18n locale detection ──────────────────────────────────────────
+  // Run intl middleware first to set locale cookie and handle locale prefixes.
+  // Skip for API routes, Next.js internals, and static files.
+  const isApiRoute = pathname.startsWith('/api/');
+  const isNextInternal = pathname.startsWith('/_next/') || pathname === '/favicon.ico';
+  const isStaticFile = /\.(png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|css|js)$/.test(pathname);
+
+  if (!isApiRoute && !isNextInternal && !isStaticFile) {
+    const intlResponse = intlMiddleware(request);
+    // If next-intl wants to redirect (e.g. to add/remove locale prefix), let it
+    if (intlResponse.status !== 200 || intlResponse.headers.get('location')) {
+      return intlResponse;
+    }
+  }
+
+  // ── Step 2: Auth checks (Supabase) ─────────────────────────────────────────
   // Skip auth checks if Supabase isn't configured
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return NextResponse.next();
@@ -30,11 +53,14 @@ export async function middleware(request: NextRequest) {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
-  const pathname = request.nextUrl.pathname;
+
+  // Strip locale prefix for protected route matching
+  // e.g. /en/account → /account, /compte → /compte
+  const pathnameWithoutLocale = pathname.replace(/^\/(en|es|de)/, '') || '/';
 
   // Protected routes — redirect to /connexion if not authenticated
-  const protectedPaths = ['/compte', '/admin'];
-  const isProtected = protectedPaths.some(p => pathname.startsWith(p));
+  const protectedPaths = ['/compte', '/admin', '/account', '/konto', '/cuenta'];
+  const isProtected = protectedPaths.some(p => pathnameWithoutLocale.startsWith(p));
 
   if (isProtected && !user) {
     const redirectUrl = new URL('/connexion', request.url);
@@ -43,7 +69,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Admin routes — require admin role
-  if (pathname.startsWith('/admin') && user) {
+  if (pathnameWithoutLocale.startsWith('/admin') && user) {
     // Check role via app_metadata (server-side only, not editable by user)
     const role = user.app_metadata?.role || 'buyer';
     if (role !== 'admin') {
@@ -51,8 +77,9 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // If logged in and visiting /connexion, redirect to /compte
-  if (pathname === '/connexion' && user) {
+  // If logged in and visiting /connexion (any locale), redirect to /compte
+  const loginPaths = ['/connexion', '/login', '/iniciar-sesion', '/anmelden'];
+  if (loginPaths.some(p => pathnameWithoutLocale === p) && user) {
     return NextResponse.redirect(new URL('/compte', request.url));
   }
 
@@ -61,8 +88,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/compte/:path*',
-    '/admin/:path*',
-    '/connexion',
+    // Match all paths except Next.js internals, API routes, and static files
+    '/((?!_next/static|_next/image|favicon.ico|api/).*)',
   ],
 };

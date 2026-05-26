@@ -1,6 +1,7 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser } from '@/lib/auth';
+import { checkRateLimit } from '@/lib/rateLimit';
 import { z } from 'zod';
 
 const ReviewSchema = z.object({
@@ -12,6 +13,9 @@ const ReviewSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    const rl = checkRateLimit(request, 'reviews', 5, 60_000);
+    if (rl) return rl;
+
     const body = await request.json();
     const data = ReviewSchema.parse(body);
 

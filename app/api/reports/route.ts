@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { getAuthUser } from '@/lib/auth';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 const ReportSchema = z.object({
   workflow_id: z.string().uuid(),
@@ -15,6 +16,9 @@ const ReportSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    const rl = checkRateLimit(request, 'reports', 3, 60_000);
+    if (rl) return rl;
+
     const user = await getAuthUser(request);
     if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
 

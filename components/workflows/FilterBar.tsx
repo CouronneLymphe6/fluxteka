@@ -1,21 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { Star, Clock, Download, Filter } from 'lucide-react';
-
-const tools = [
-  { value: '', label: 'Tous', icon: '🔄' },
-  { value: 'n8n', label: 'N8N', icon: '🔶' },
-  { value: 'make', label: 'Make', icon: '🟣' },
-  { value: 'zapier', label: 'Zapier', icon: '🟠' },
-  { value: 'langchain', label: 'LangChain', icon: '🟢' },
-  { value: 'crewai', label: 'CrewAI', icon: '🤖' },
-  { value: 'autogen', label: 'AutoGen', icon: '🔵' },
-  { value: 'flowise', label: 'Flowise', icon: '🌊' },
-  { value: 'dify', label: 'Dify', icon: '💎' },
-  { value: 'activepieces', label: 'Activepieces', icon: '🧩' },
-  { value: 'other', label: 'Autres', icon: '⚙️' },
-];
+import { FILTER_TOOLS } from '@/lib/platforms';
 
 const sorts = [
   { value: 'score', label: 'Mieux notés', icon: '⭐' },
@@ -35,7 +21,7 @@ export default function FilterBar({ selectedTool, selectedSort, onToolChange, on
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       {/* Tool Filters */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
-        {tools.map((tool) => (
+        {FILTER_TOOLS.map((tool) => (
           <button
             key={tool.value}
             onClick={() => onToolChange(tool.value)}

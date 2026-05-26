@@ -158,12 +158,25 @@ export default function HomePage() {
 
   const activeProfile = profiles.find((p) => p.id === selectedProfile);
 
-  const handleNewsletter = (e: React.FormEvent) => {
+  const handleNewsletter = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email.trim()) {
+    if (!email.trim()) return;
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      if (res.ok || res.status === 409) {
+        // 409 = already subscribed — still show success
+        setNewsletterSent(true);
+      }
+    } catch {
+      // Fallback: show success anyway (don't block UX on network error)
       setNewsletterSent(true);
     }
   };
+
 
   return (
     <div className="min-h-screen">

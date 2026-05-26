@@ -5,3 +5,6 @@ export { N8NCommunityWalker } from './n8n-community';
 export { MakeTemplatesCrawler } from './make-templates';
 export { ZapierTemplatesCrawler } from './zapier-templates';
 export { AIAgentsCrawler } from './ai-agents';
+export { ActivepiecesCrawler } from './activepieces';
+export { PipedreamCrawler } from './pipedream';
+export { FlowiseCrawler } from './flowise';

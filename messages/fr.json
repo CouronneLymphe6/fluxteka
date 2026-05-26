@@ -1,8 +1,18 @@
-﻿{
+{
   "site": {
     "name": "Fluxteka",
     "tagline": "La bibliothèque européenne de l'automatisation et de l'IA",
     "description": "Trouve et applique des workflows N8N, Make, Zapier et LangChain. Des recettes gratuites en français."
+  },
+  "metadata": {
+    "title": "Fluxteka — Bibliothèque de workflows d'automatisation IA",
+    "titleTemplate": "%s — Fluxteka",
+    "description": "Découvrez, appliquez et partagez les meilleurs workflows IA. N8N, Make, Zapier, LangChain — 24 000+ automatisations prêtes à l'emploi.",
+    "ogDescription": "Découvrez, appliquez et partagez les meilleurs workflows IA. N8N, Make, Zapier, LangChain — 24 000+ automatisations.",
+    "searchTitle": "Rechercher des workflows — Fluxteka",
+    "searchDescription": "Explore et filtre 24 000+ workflows d'automatisation IA gratuits. N8N, Make, Zapier, LangChain — trouve la recette parfaite.",
+    "loginTitle": "Connexion — Fluxteka",
+    "loginDescription": "Connecte-toi à Fluxteka avec Google, GitHub ou un lien magique. Aucun mot de passe requis."
   },
   "nav": {
     "home": "Accueil",
@@ -14,28 +24,229 @@
     "admin": "Administration",
     "partners": "Partenaires",
     "premium": "Premium",
-    "mission": "Mission sur mesure"
+    "mission": "Mission sur mesure",
+    "searchPlaceholder": "Rechercher un workflow...",
+    "mapFull": "Carte de l'automatisation",
+    "submitWorkflow": "Soumettre un workflow",
+    "myAccount": "Mon compte",
+    "mySaves": "Mes sauvegardes",
+    "logout": "Se déconnecter",
+    "myProfile": "Mon profil"
   },
   "footer": {
-    "privacy": "Politique de confidentialité",
-    "legal": "Mentions légales",
+    "description": "La bibliothèque européenne de l'automatisation et de l'IA. Trouvez et appliquez des workflows N8N, Make, Zapier et LangChain.",
+    "navigation": "Navigation",
+    "explore": "Explorer",
+    "partners": "Partenaires",
+    "premium": "Premium",
+    "ourMission": "Notre mission",
     "submit": "Soumettre",
+    "legal": "Légal",
+    "privacy": "Politique de confidentialité",
+    "terms": "CGU",
+    "legalNotices": "Mentions légales",
     "contact": "Contact",
-    "languages_soon": "Bientôt disponible"
+    "copyright": "© {year} Fluxteka. Tous droits réservés.",
+    "madeWith": "Fait avec ❤️ en Europe",
+    "languagesSoon": "Bientôt disponible"
   },
   "cookies": {
-    "message": "Fluxteka utilise des cookies pour les publicités et l'analyse.",
+    "title": "Fluxteka utilise des cookies",
+    "message": "Nous utilisons des cookies pour les publicités et l'analyse du trafic. Vous pouvez accepter ou refuser à tout moment.",
     "accept": "Accepter",
-    "refuse": "Refuser"
+    "refuse": "Refuser",
+    "close": "Fermer"
+  },
+  "hero": {
+    "badge": "Bibliothèque européenne de l'automatisation et de l'IA",
+    "title1": "Trouve la recette d'automatisation",
+    "title2": "qu'il te faut",
+    "subtitleWithCount": "{count} workflows indexés. Trouvés en 2 minutes.",
+    "subtitleDefault": "Des workflows indexés chaque jour. Trouvés en 2 minutes."
+  },
+  "suggestions": {
+    "emailAuto": "Email auto",
+    "notifyStripe": "Notifier Stripe",
+    "publishLinkedin": "Publier LinkedIn",
+    "summarizePdf": "Résumer PDF",
+    "autoReport": "Rapport auto"
+  },
+  "stats": {
+    "workflowsIndexed": "Workflows indexés",
+    "platforms": "Plateformes",
+    "free": "Gratuit"
+  },
+  "onboarding": {
+    "title": "Je suis…",
+    "subtitle": "Sélectionne ton profil pour des recommandations personnalisées",
+    "viewWorkflows": "Voir les workflows",
+    "beginner": {
+      "title": "Débutant",
+      "description": "Je découvre l'automatisation",
+      "tip": "On te recommande de commencer avec Zapier — le plus simple à prendre en main."
+    },
+    "business": {
+      "title": "PME / Agence",
+      "description": "J'automatise mes process métier",
+      "tip": "Make est parfait pour les PMEs et agences — puissant et flexible."
+    },
+    "developer": {
+      "title": "Développeur",
+      "description": "Je veux du contrôle et de la flexibilité",
+      "tip": "n8n est fait pour toi — open-source, self-hostable, et ultra-puissant."
+    },
+    "ai": {
+      "title": "Passionné IA",
+      "description": "Je construis des agents autonomes",
+      "tip": "LangChain et les agents IA n8n sont tes meilleurs alliés."
+    }
+  },
+  "platforms": {
+    "title": "Toutes les plateformes, un seul endroit",
+    "subtitle": "Comparez n8n, Make, Zapier et LangChain pour chaque besoin métier",
+    "n8n": {
+      "tagline": "Open-source & self-hosted",
+      "commission": "30% affilié"
+    },
+    "make": {
+      "tagline": "Visuel & puissant",
+      "commission": "35% affilié"
+    },
+    "zapier": {
+      "tagline": "Le plus simple",
+      "commission": "8 000+ apps"
+    },
+    "langchain": {
+      "tagline": "Agents IA avancés",
+      "commission": "Open-source"
+    }
+  },
+  "trending": {
+    "title": "🔥 Tendances",
+    "subtitle": "Les workflows les plus populaires cette semaine",
+    "viewAll": "Voir tout",
+    "viewAllWorkflows": "Voir tous les workflows",
+    "emptyMessage": "Les workflows tendances apparaîtront ici une fois le pipeline activé."
   },
   "categories": {
-    "email": "Email & Communication",
-    "crm": "Ventes & CRM",
-    "content": "Contenu & SEO",
-    "data": "Data & Rapports",
-    "ai-agents": "Agents IA",
+    "title": "Explorer par catégorie",
+    "subtitle": "Trouve le workflow adapté à ton métier",
+    "salesProspection": "Ventes & Prospection",
+    "marketingContent": "Marketing & Contenu",
+    "aiAgents": "Agents IA",
+    "operations": "Opérations",
+    "customerSuccess": "Relation Client",
+    "dataAnalytics": "Data & Analytics",
     "ecommerce": "E-commerce",
-    "hr": "RH & Recrutement",
-    "finance": "Finance & Facturation"
+    "financeAdmin": "Finance & Admin",
+    "all": "Toutes",
+    "communication": "Communication",
+    "devTech": "Dev & Tech",
+    "hrRecruitment": "RH & Recrutement"
+  },
+  "howItWorks": {
+    "title": "Comment ça marche",
+    "subtitle": "En 3 étapes simples",
+    "step1Title": "Décris ton besoin",
+    "step1Description": "Recherche par mots-clés ou explore les catégories métier.",
+    "step2Title": "Fluxteka trouve la recette",
+    "step2Description": "Notre moteur indexe les meilleurs workflows du web.",
+    "step3Title": "Applique ou télécharge",
+    "step3Description": "Utilise directement ou adapte à ton cas en quelques minutes."
+  },
+  "newsletter": {
+    "badge": "📬 Newsletter gratuite",
+    "title": "Workflow de la semaine",
+    "subtitle": "Chaque semaine, reçois le meilleur workflow du moment — expliqué simplement, applicable immédiatement.",
+    "placeholder": "toi@example.com",
+    "subscribe": "Je m'inscris →",
+    "successTitle": "Tu es inscrit(e) ! 🎉",
+    "successMessage": "On t'envoie le prochain workflow dès qu'il est prêt.",
+    "disclaimer": "Gratuit · Pas de spam · Désinscription en 1 clic"
+  },
+  "cta": {
+    "title": "Prêt à automatiser ?",
+    "subtitle": "Rejoins des professionnels qui gagnent du temps chaque jour.",
+    "searchWorkflow": "🔍 Rechercher un workflow",
+    "submitMine": "📤 Soumettre le mien"
+  },
+  "search": {
+    "placeholder": "Email automatisation, Stripe, CRM...",
+    "submit": "Rechercher",
+    "resetFilters": "✕ Réinitialiser les filtres",
+    "resultCount": "{count} workflow",
+    "resultCountPlural": "{count} workflows",
+    "forQuery": "pour \"{query}\"",
+    "noResults": "Aucun résultat",
+    "noWorkflowFound": "Aucun workflow trouvé",
+    "tryOtherTerm": "Essaie un autre terme ou explore les catégories.",
+    "pipelineMessage": "Le pipeline d'indexation alimentera cette bibliothèque très bientôt.",
+    "viewAllWorkflows": "Voir tous les workflows",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "animatedPlaceholders": {
+      "1": "Que voulez-vous automatiser ?",
+      "2": "Envoyer un email automatiquement...",
+      "3": "Notifier Slack à chaque vente...",
+      "4": "Publier sur LinkedIn automatiquement...",
+      "5": "Résumer un PDF avec IA..."
+    }
+  },
+  "auth": {
+    "welcomeTitle": "Bienvenue sur Fluxteka",
+    "welcomeSubtitle": "Connecte-toi ou crée un compte en un clic.",
+    "continueGoogle": "Continuer avec Google",
+    "continueGithub": "Continuer avec GitHub",
+    "or": "ou",
+    "magicLinkButton": "Recevoir un lien magique",
+    "sendingLink": "Envoi du lien...",
+    "checkEmail": "Vérifie ta boîte mail",
+    "magicLinkSent": "Un lien magique a été envoyé à {email}.",
+    "clickToLogin": "Clique dessus pour te connecter.",
+    "checkSpam": "💡 Pense à vérifier tes spams si tu ne reçois rien dans les 2 minutes.",
+    "useOtherEmail": "Utiliser une autre adresse",
+    "termsIntro": "En continuant, tu acceptes nos",
+    "termsLink": "CGU",
+    "andOur": "et notre",
+    "privacyLink": "politique de confidentialité",
+    "securityNote": "🔒 Aucun mot de passe · Aucune carte bancaire · 100% gratuit",
+    "googleError": "Erreur de connexion avec Google. Réessaie.",
+    "githubError": "Erreur de connexion avec GitHub. Réessaie.",
+    "magicLinkError": "Impossible d'envoyer le lien. Vérifie ton email.",
+    "emailPlaceholder": "toi@example.com"
+  },
+  "account": {
+    "profileTitle": "Mon profil",
+    "profileSubtitle": "Gère tes informations personnelles.",
+    "namePseudo": "Nom / Pseudo",
+    "namePlaceholder": "Jean-Pierre",
+    "bio": "Bio",
+    "website": "Site web",
+    "websitePlaceholder": "https://monsite.fr",
+    "github": "GitHub",
+    "githubPlaceholder": "https://github.com/monpseudo",
+    "save": "Enregistrer",
+    "saved": "Sauvegardé",
+    "user": "Utilisateur",
+    "myProfile": "Mon profil",
+    "mySaves": "Mes sauvegardes",
+    "myData": "Mes données",
+    "logout": "Se déconnecter"
+  },
+  "workflowCard": {
+    "viewWorkflow": "Voir le workflow →",
+    "save": "Sauvegarder",
+    "report": "Signaler",
+    "verified": "Vérifié",
+    "beginner": "Débutant",
+    "intermediate": "Intermédiaire",
+    "advanced": "Avancé",
+    "other": "Autre"
+  },
+  "filterBar": {
+    "allTools": "Tous",
+    "sortScore": "Pertinence",
+    "sortRecent": "Récents",
+    "sortPopular": "Populaires"
   }
 }

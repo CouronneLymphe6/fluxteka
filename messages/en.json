@@ -1,0 +1,252 @@
+{
+  "site": {
+    "name": "Fluxteka",
+    "tagline": "The European library for automation and AI",
+    "description": "Find and apply N8N, Make, Zapier and LangChain workflows. Free recipes in your language."
+  },
+  "metadata": {
+    "title": "Fluxteka — AI Automation Workflow Library",
+    "titleTemplate": "%s — Fluxteka",
+    "description": "Discover, apply and share the best AI workflows. N8N, Make, Zapier, LangChain — 24,000+ ready-to-use automations.",
+    "ogDescription": "Discover, apply and share the best AI workflows. N8N, Make, Zapier, LangChain — 24,000+ automations.",
+    "searchTitle": "Search Workflows — Fluxteka",
+    "searchDescription": "Explore and filter 24,000+ free AI automation workflows. N8N, Make, Zapier, LangChain — find the perfect recipe.",
+    "loginTitle": "Login — Fluxteka",
+    "loginDescription": "Sign in to Fluxteka with Google, GitHub or a magic link. No password required."
+  },
+  "nav": {
+    "home": "Home",
+    "search": "Search",
+    "carte": "Map",
+    "submit": "Submit",
+    "login": "Login",
+    "signup": "Sign up",
+    "admin": "Administration",
+    "partners": "Partners",
+    "premium": "Premium",
+    "mission": "Custom Mission",
+    "searchPlaceholder": "Search a workflow...",
+    "mapFull": "Automation Map",
+    "submitWorkflow": "Submit a workflow",
+    "myAccount": "My account",
+    "mySaves": "My saves",
+    "logout": "Log out",
+    "myProfile": "My profile"
+  },
+  "footer": {
+    "description": "The European library for automation and AI. Find and apply N8N, Make, Zapier and LangChain workflows.",
+    "navigation": "Navigation",
+    "explore": "Explore",
+    "partners": "Partners",
+    "premium": "Premium",
+    "ourMission": "Our mission",
+    "submit": "Submit",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "legalNotices": "Legal notices",
+    "contact": "Contact",
+    "copyright": "© {year} Fluxteka. All rights reserved.",
+    "madeWith": "Made with ❤️ in Europe",
+    "languagesSoon": "Coming soon"
+  },
+  "cookies": {
+    "title": "Fluxteka uses cookies",
+    "message": "We use cookies for advertising and traffic analysis. You can accept or refuse at any time.",
+    "accept": "Accept",
+    "refuse": "Refuse",
+    "close": "Close"
+  },
+  "hero": {
+    "badge": "European library for automation and AI",
+    "title1": "Find the automation recipe",
+    "title2": "you need",
+    "subtitleWithCount": "{count} indexed workflows. Found in 2 minutes.",
+    "subtitleDefault": "Workflows indexed every day. Found in 2 minutes."
+  },
+  "suggestions": {
+    "emailAuto": "Email auto",
+    "notifyStripe": "Notify Stripe",
+    "publishLinkedin": "Publish LinkedIn",
+    "summarizePdf": "Summarize PDF",
+    "autoReport": "Auto report"
+  },
+  "stats": {
+    "workflowsIndexed": "Indexed Workflows",
+    "platforms": "Platforms",
+    "free": "Free"
+  },
+  "onboarding": {
+    "title": "I am…",
+    "subtitle": "Select your profile for personalized recommendations",
+    "viewWorkflows": "View workflows",
+    "beginner": {
+      "title": "Beginner",
+      "description": "I'm discovering automation",
+      "tip": "We recommend starting with Zapier — the easiest to get started with."
+    },
+    "business": {
+      "title": "SMB / Agency",
+      "description": "I automate my business processes",
+      "tip": "Make is perfect for SMBs and agencies — powerful and flexible."
+    },
+    "developer": {
+      "title": "Developer",
+      "description": "I want control and flexibility",
+      "tip": "n8n is made for you — open-source, self-hostable, and ultra-powerful."
+    },
+    "ai": {
+      "title": "AI Enthusiast",
+      "description": "I build autonomous agents",
+      "tip": "LangChain and n8n AI agents are your best allies."
+    }
+  },
+  "platforms": {
+    "title": "All platforms, one place",
+    "subtitle": "Compare n8n, Make, Zapier and LangChain for every business need",
+    "n8n": {
+      "tagline": "Open-source & self-hosted",
+      "commission": "30% affiliate"
+    },
+    "make": {
+      "tagline": "Visual & powerful",
+      "commission": "35% affiliate"
+    },
+    "zapier": {
+      "tagline": "The simplest",
+      "commission": "8,000+ apps"
+    },
+    "langchain": {
+      "tagline": "Advanced AI agents",
+      "commission": "Open-source"
+    }
+  },
+  "trending": {
+    "title": "🔥 Trending",
+    "subtitle": "The most popular workflows this week",
+    "viewAll": "View all",
+    "viewAllWorkflows": "View all workflows",
+    "emptyMessage": "Trending workflows will appear here once the pipeline is activated."
+  },
+  "categories": {
+    "title": "Browse by category",
+    "subtitle": "Find the workflow that fits your business",
+    "salesProspection": "Sales & Prospecting",
+    "marketingContent": "Marketing & Content",
+    "aiAgents": "AI Agents",
+    "operations": "Operations",
+    "customerSuccess": "Customer Success",
+    "dataAnalytics": "Data & Analytics",
+    "ecommerce": "E-commerce",
+    "financeAdmin": "Finance & Admin",
+    "all": "All",
+    "communication": "Communication",
+    "devTech": "Dev & Tech",
+    "hrRecruitment": "HR & Recruitment"
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "subtitle": "In 3 simple steps",
+    "step1Title": "Describe your need",
+    "step1Description": "Search by keywords or explore business categories.",
+    "step2Title": "Fluxteka finds the recipe",
+    "step2Description": "Our engine indexes the best workflows on the web.",
+    "step3Title": "Apply or download",
+    "step3Description": "Use directly or adapt to your case in a few minutes."
+  },
+  "newsletter": {
+    "badge": "📬 Free newsletter",
+    "title": "Workflow of the week",
+    "subtitle": "Every week, receive the best workflow of the moment — simply explained, immediately applicable.",
+    "placeholder": "you@example.com",
+    "subscribe": "Subscribe →",
+    "successTitle": "You're subscribed! 🎉",
+    "successMessage": "We'll send you the next workflow as soon as it's ready.",
+    "disclaimer": "Free · No spam · Unsubscribe in 1 click"
+  },
+  "cta": {
+    "title": "Ready to automate?",
+    "subtitle": "Join professionals who save time every day.",
+    "searchWorkflow": "🔍 Search a workflow",
+    "submitMine": "📤 Submit mine"
+  },
+  "search": {
+    "placeholder": "Email automation, Stripe, CRM...",
+    "submit": "Search",
+    "resetFilters": "✕ Reset filters",
+    "resultCount": "{count} workflow",
+    "resultCountPlural": "{count} workflows",
+    "forQuery": "for \"{query}\"",
+    "noResults": "No results",
+    "noWorkflowFound": "No workflow found",
+    "tryOtherTerm": "Try another term or explore categories.",
+    "pipelineMessage": "The indexing pipeline will feed this library very soon.",
+    "viewAllWorkflows": "View all workflows",
+    "previous": "Previous",
+    "next": "Next",
+    "animatedPlaceholders": {
+      "1": "What do you want to automate?",
+      "2": "Send an email automatically...",
+      "3": "Notify Slack on every sale...",
+      "4": "Publish on LinkedIn automatically...",
+      "5": "Summarize a PDF with AI..."
+    }
+  },
+  "auth": {
+    "welcomeTitle": "Welcome to Fluxteka",
+    "welcomeSubtitle": "Sign in or create an account in one click.",
+    "continueGoogle": "Continue with Google",
+    "continueGithub": "Continue with GitHub",
+    "or": "or",
+    "magicLinkButton": "Receive a magic link",
+    "sendingLink": "Sending link...",
+    "checkEmail": "Check your inbox",
+    "magicLinkSent": "A magic link was sent to {email}.",
+    "clickToLogin": "Click it to sign in.",
+    "checkSpam": "💡 Don't forget to check your spam if you don't receive anything within 2 minutes.",
+    "useOtherEmail": "Use another address",
+    "termsIntro": "By continuing, you agree to our",
+    "termsLink": "Terms of Service",
+    "andOur": "and our",
+    "privacyLink": "privacy policy",
+    "securityNote": "🔒 No password · No credit card · 100% free",
+    "googleError": "Error signing in with Google. Please try again.",
+    "githubError": "Error signing in with GitHub. Please try again.",
+    "magicLinkError": "Unable to send the link. Check your email.",
+    "emailPlaceholder": "you@example.com"
+  },
+  "account": {
+    "profileTitle": "My profile",
+    "profileSubtitle": "Manage your personal information.",
+    "namePseudo": "Name / Nickname",
+    "namePlaceholder": "John Doe",
+    "bio": "Bio",
+    "website": "Website",
+    "websitePlaceholder": "https://mysite.com",
+    "github": "GitHub",
+    "githubPlaceholder": "https://github.com/mynickname",
+    "save": "Save",
+    "saved": "Saved",
+    "user": "User",
+    "myProfile": "My profile",
+    "mySaves": "My saves",
+    "myData": "My data",
+    "logout": "Log out"
+  },
+  "workflowCard": {
+    "viewWorkflow": "View workflow →",
+    "save": "Save",
+    "report": "Report",
+    "verified": "Verified",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "other": "Other"
+  },
+  "filterBar": {
+    "allTools": "All",
+    "sortScore": "Relevance",
+    "sortRecent": "Recent",
+    "sortPopular": "Popular"
+  }
+}
