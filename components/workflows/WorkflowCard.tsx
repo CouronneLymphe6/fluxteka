@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { Eye, Bookmark, Flag, Clock, Zap, CheckCircle, TrendingUp, Sparkles, ExternalLink } from 'lucide-react';
 import ScoreBadge from './ScoreBadge';
 import { getPlatform } from '@/lib/platforms';
+import { useTranslations } from 'next-intl';
 
 // Plateformes avec affiliation — suggérées sur les cartes des autres
 const AFFILIATE_SUGGESTIONS = [
@@ -40,6 +41,7 @@ export interface WorkflowData {
   slug: string;
   title: string;
   description_fr: string;
+  description?: string;
   tool: string;
   tools_connected?: string[];
   category: string;
@@ -69,17 +71,17 @@ export interface WorkflowData {
 
 // ── Difficulty ────────────────────────────────────────────────────────────────
 
-function getDifficulty(workflow: WorkflowData): { label: string; color: string; icon: string } {
+function getDifficulty(workflow: WorkflowData, t: any): { label: string; color: string; icon: string } {
   // Use explicit difficulty field if set
   const d = workflow.difficulty?.toLowerCase();
-  if (d === 'beginner' || d === 'débutant') return { label: 'Débutant', color: 'text-emerald-600', icon: '🟢' };
-  if (d === 'intermediate' || d === 'intermédiaire') return { label: 'Intermédiaire', color: 'text-amber-600', icon: '🟡' };
-  if (d === 'advanced' || d === 'avancé') return { label: 'Avancé', color: 'text-rose-600', icon: '🔴' };
+  if (d === 'beginner' || d === 'débutant') return { label: t('beginner'), color: 'text-emerald-600', icon: '🟢' };
+  if (d === 'intermediate' || d === 'intermédiaire') return { label: t('intermediate'), color: 'text-amber-600', icon: '🟡' };
+  if (d === 'advanced' || d === 'avancé') return { label: t('advanced'), color: 'text-rose-600', icon: '🔴' };
   // Derive from tools_connected count
   const toolCount = (workflow.tools_connected ?? []).length;
-  if (toolCount >= 4) return { label: 'Avancé', color: 'text-rose-600', icon: '🔴' };
-  if (toolCount >= 2) return { label: 'Intermédiaire', color: 'text-amber-600', icon: '🟡' };
-  return { label: 'Débutant', color: 'text-emerald-600', icon: '🟢' };
+  if (toolCount >= 4) return { label: t('advanced'), color: 'text-rose-600', icon: '🔴' };
+  if (toolCount >= 2) return { label: t('intermediate'), color: 'text-amber-600', icon: '🟡' };
+  return { label: t('beginner'), color: 'text-emerald-600', icon: '🟢' };
 }
 
 // ── Badge helpers ─────────────────────────────────────────────────────────────
@@ -102,10 +104,11 @@ export default function WorkflowCard({
   workflow: WorkflowData;
   compact?: boolean;
 }) {
+  const t = useTranslations('workflowCard');
   const [saved, setSaved] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const platform = getPlatform(workflow.tool);
-  const difficulty = getDifficulty(workflow);
+  const difficulty = getDifficulty(workflow, t);
   const isVerified = !!workflow.verified_at;
   const setupTime = workflow.setup_time_minutes;
   const showNew = isNew(workflow.created_at);
@@ -187,7 +190,7 @@ export default function WorkflowCard({
           {/* Description */}
           {!compact && (
             <p className="mt-2 text-sm text-text-secondary leading-relaxed line-clamp-2">
-              {workflow.description_fr}
+              {workflow.description || workflow.description_fr}
             </p>
           )}
 
@@ -211,7 +214,7 @@ export default function WorkflowCard({
                 <span className="text-border">·</span>
                 <span className="flex items-center gap-1 text-xs text-emerald-600 font-medium">
                   <CheckCircle className="h-3 w-3" />
-                  Vérifié
+                  {t('verified')}
                 </span>
               </>
             )}
@@ -260,7 +263,7 @@ export default function WorkflowCard({
             <span
               className="text-sm font-medium text-primary-600 transition-colors group-hover:text-primary-700"
             >
-              Voir le workflow →
+              {t('viewWorkflow')}
             </span>
             <div className="flex items-center gap-1">
               <button
@@ -270,8 +273,8 @@ export default function WorkflowCard({
                   setSaved(!saved);
                 }}
                 className={`rounded-lg p-1.5 transition-colors ${saved ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-primary-50 hover:text-primary-600'}`}
-                title="Sauvegarder"
-                aria-label="Sauvegarder"
+                title={t('save')}
+                aria-label={t('save')}
               >
                 <Bookmark className={`h-4 w-4 ${saved ? 'fill-current' : ''}`} />
               </button>
@@ -281,8 +284,8 @@ export default function WorkflowCard({
                   e.preventDefault();
                 }}
                 className="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-danger-50 hover:text-danger-600"
-                title="Signaler"
-                aria-label="Signaler"
+                title={t('report')}
+                aria-label={t('report')}
               >
                 <Flag className="h-3.5 w-3.5" />
               </button>

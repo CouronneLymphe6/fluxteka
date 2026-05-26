@@ -8,25 +8,28 @@ import WorkflowCard, { type WorkflowData } from '@/components/workflows/Workflow
 import FilterBar from '@/components/workflows/FilterBar';
 import { SkeletonGrid } from '@/components/shared/SkeletonCard';
 import EmptyState from '@/components/shared/EmptyState';
-
-const CATEGORIES = [
-  { value: '', label: 'Toutes' },
-  { value: 'sales-prospection', label: '🎯 Ventes & Prospection' },
-  { value: 'marketing-content', label: '📣 Marketing & Contenu' },
-  { value: 'ai-agents', label: '🤖 Agents IA' },
-  { value: 'operations', label: '⚙️ Opérations' },
-  { value: 'customer-success', label: '🤝 Relation Client' },
-  { value: 'data-analytics', label: '📊 Data & Analytics' },
-  { value: 'communication', label: '💬 Communication' },
-  { value: 'dev-tech', label: '🛠️ Dev & Tech' },
-  { value: 'finance-admin', label: '💰 Finance & Admin' },
-  { value: 'ecommerce', label: '🛒 E-commerce' },
-  { value: 'hr-recrutement', label: '👥 RH & Recrutement' },
-];
+import { useTranslations } from 'next-intl';
 
 function RechercheContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const tCat = useTranslations('categories');
+  const t = useTranslations('search');
+
+  const CATEGORIES = [
+    { value: '', label: tCat('all') },
+    { value: 'sales-prospection', label: `🎯 ${tCat('salesProspection')}` },
+    { value: 'marketing-content', label: `📣 ${tCat('marketingContent')}` },
+    { value: 'ai-agents', label: `🤖 ${tCat('aiAgents')}` },
+    { value: 'operations', label: `⚙️ ${tCat('operations')}` },
+    { value: 'customer-success', label: `🤝 ${tCat('customerSuccess')}` },
+    { value: 'data-analytics', label: `📊 ${tCat('dataAnalytics')}` },
+    { value: 'communication', label: `💬 ${tCat('communication')}` },
+    { value: 'dev-tech', label: `🛠️ ${tCat('devTech')}` },
+    { value: 'finance-admin', label: `💰 ${tCat('financeAdmin')}` },
+    { value: 'ecommerce', label: `🛒 ${tCat('ecommerce')}` },
+    { value: 'hr-recrutement', label: `👥 ${tCat('hrRecruitment')}` },
+  ];
 
   const [inputValue, setInputValue] = useState(searchParams.get('q') || '');
   const [query, setQuery] = useState(searchParams.get('q') || '');
@@ -104,7 +107,7 @@ function RechercheContent() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-secondary" />
               <input
                 type="text"
-                placeholder="Email automatisation, Stripe, CRM..."
+                placeholder={t('placeholder')}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 className="w-full rounded-xl border border-border bg-white py-2.5 pl-10 pr-4 text-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:outline-none"
@@ -119,7 +122,7 @@ function RechercheContent() {
             </div>
             <button type="submit" id="recherche-submit"
               className="rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-700 active:scale-[0.98]">
-              Rechercher
+              {t('submit')}
             </button>
             <button type="button" onClick={() => setShowFilters(!showFilters)} id="filter-toggle"
               className={`relative rounded-xl border px-3 py-2.5 text-sm transition-all ${
@@ -152,7 +155,7 @@ function RechercheContent() {
                   {hasFilters && (
                     <button onClick={() => pushParams({ tool: '', categorie: '', tri: 'score' })}
                       className="mt-2 text-xs text-danger-600 hover:underline">
-                      ✕ Réinitialiser les filtres
+                      {t('resetFilters')}
                     </button>
                   )}
                 </div>
@@ -176,10 +179,10 @@ function RechercheContent() {
           {!loading && !error && (
             <p className="text-sm text-text-secondary">
               {total > 0 ? (
-                <><span className="font-semibold text-text-primary">{total.toLocaleString('fr-FR')}</span> workflow{total > 1 ? 's' : ''}
-                  {query && <> pour &quot;<span className="text-primary-600 font-medium">{query}</span>&quot;</>}
+                <><span className="font-semibold text-text-primary">{total.toLocaleString('fr-FR')}</span> {total > 1 ? t('resultCountPlural', { count: '' }) : t('resultCount', { count: '' })}
+                  {query && <> {t('forQuery', { query })}</>}
                 </>
-              ) : 'Aucun résultat'}
+              ) : t('noResults')}
             </p>
           )}
           <div className="flex flex-wrap gap-1.5">
@@ -210,14 +213,14 @@ function RechercheContent() {
         ) : workflows.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <Sparkles className="h-12 w-12 text-primary-300 mb-3" />
-            <h2 className="font-heading text-lg font-semibold text-text-primary">Aucun workflow trouvé</h2>
+            <h2 className="font-heading text-lg font-semibold text-text-primary">{t('noWorkflowFound')}</h2>
             <p className="mt-1 text-sm text-text-secondary max-w-sm">
-              {query ? `Essaie un autre terme ou explore les catégories.` : 'Le pipeline d\'indexation alimentera cette bibliothèque très bientôt.'}
+              {query ? t('tryOtherTerm') : t('pipelineMessage')}
             </p>
             {hasFilters && (
               <button onClick={() => pushParams({ tool: '', categorie: '', tri: 'score', q: '' })}
                 className="mt-4 text-sm font-medium text-primary-600 hover:underline">
-                Voir tous les workflows
+                {t('viewAllWorkflows')}
               </button>
             )}
           </div>
@@ -238,7 +241,7 @@ function RechercheContent() {
           <div className="mt-10 flex items-center justify-center gap-1">
             <button onClick={() => handlePageChange(page - 1)} disabled={page <= 1} id="pagination-prev"
               className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm text-text-secondary hover:border-primary-300 hover:text-primary-600 disabled:opacity-40 disabled:cursor-not-allowed">
-              <ChevronLeft className="h-4 w-4" /> Précédent
+              <ChevronLeft className="h-4 w-4" /> {t('previous')}
             </button>
             {Array.from({ length: Math.min(7, pages) }, (_, i) => {
               const p = pages <= 7 ? i + 1 : page <= 4 ? i + 1 : page >= pages - 3 ? pages - 6 + i : page - 3 + i;
@@ -251,7 +254,7 @@ function RechercheContent() {
             })}
             <button onClick={() => handlePageChange(page + 1)} disabled={page >= pages} id="pagination-next"
               className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm text-text-secondary hover:border-primary-300 hover:text-primary-600 disabled:opacity-40 disabled:cursor-not-allowed">
-              Suivant <ChevronRight className="h-4 w-4" />
+              {t('next')} <ChevronRight className="h-4 w-4" />
             </button>
           </div>
         )}

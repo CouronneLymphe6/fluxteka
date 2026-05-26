@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
@@ -59,12 +60,17 @@ export async function GET(request: NextRequest) {
       }),
     ]);
 
+    // Get locale
+    const cookieStore = await cookies();
+    const locale = cookieStore.get('NEXT_LOCALE')?.value || 'fr';
+
     // Parse JSON string fields back to arrays for frontend
-    const parsed = workflows.map((w) => ({
+    const parsed = workflows.map((w: any) => ({
       ...w,
       tags: safeParseJson(w.tags),
       tools_connected: safeParseJson(w.tools_connected),
       has_tutorial: !!w.how_to_use,
+      description: w[`description_${locale}`] || w.description_fr,
     }));
 
     return NextResponse.json({

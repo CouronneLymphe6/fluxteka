@@ -11,6 +11,7 @@ import { ArrowRight, Zap, Globe, Gift, Sparkles, CheckCircle, ChevronRight } fro
 import SearchBar from '@/components/search/SearchBar';
 import WorkflowCard, { type WorkflowData } from '@/components/workflows/WorkflowCard';
 import { SkeletonGrid } from '@/components/shared/SkeletonCard';
+import { useTranslations } from 'next-intl';
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -130,6 +131,17 @@ const profiles = [
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
+  const tHero = useTranslations('hero');
+  const tSug = useTranslations('suggestions');
+  const tStats = useTranslations('stats');
+  const tOnb = useTranslations('onboarding');
+  const tPlat = useTranslations('platforms');
+  const tTrend = useTranslations('trending');
+  const tCat = useTranslations('categories');
+  const tHow = useTranslations('howItWorks');
+  const tNews = useTranslations('newsletter');
+  const tCta = useTranslations('cta');
+
   const router = useRouter();
   const [trending, setTrending] = useState<WorkflowData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -153,9 +165,9 @@ export default function HomePage() {
 
   const formattedCount = workflowCount ? workflowCount.toLocaleString('fr-FR') : '—';
   const stats = [
-    { value: formattedCount, label: 'Workflows indexés', icon: Zap },
-    { value: '6', label: 'Plateformes', icon: Globe },
-    { value: '100%', label: 'Gratuit', icon: Gift },
+    { value: formattedCount, label: tStats('workflowsIndexed'), icon: Zap },
+    { value: '6', label: tStats('platforms'), icon: Globe },
+    { value: '100%', label: tStats('free'), icon: Gift },
   ];
 
   const activeProfile = profiles.find((p) => p.id === selectedProfile);
@@ -199,7 +211,7 @@ export default function HomePage() {
           >
             <span className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-4 py-1.5 text-sm font-medium text-primary-700 shadow-sm">
               <span>🇪🇺</span>
-              Bibliothèque européenne de l&apos;automatisation et de l&apos;IA
+              {tHero('badge')}
             </span>
           </motion.div>
 
@@ -210,10 +222,10 @@ export default function HomePage() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mt-6 text-center font-heading text-3xl font-bold tracking-tight text-text-primary sm:text-4xl md:text-5xl lg:text-6xl"
           >
-            Trouve la recette d&apos;automatisation
+            {tHero('title1')}
             <br className="hidden sm:block" />
             <span className="bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
-              {' '}qu&apos;il te faut
+              {' '}{tHero('title2')}
             </span>
           </motion.h1>
 
@@ -224,8 +236,8 @@ export default function HomePage() {
             className="mt-4 text-center text-lg text-text-secondary md:text-xl"
           >
             {workflowCount
-              ? `${formattedCount} workflows indexés. Trouvés en 2 minutes.`
-              : 'Des workflows indexés chaque jour. Trouvés en 2 minutes.'}
+              ? tHero('subtitleWithCount', { count: formattedCount })
+              : tHero('subtitleDefault')}
           </motion.p>
 
           {/* Search */}
@@ -394,14 +406,14 @@ export default function HomePage() {
         <div className="container-page">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-2xl font-heading font-bold text-text-primary">🔥 Tendances</h2>
-              <p className="mt-1 text-sm text-text-secondary">Les workflows les plus populaires cette semaine</p>
+              <h2 className="text-2xl font-heading font-bold text-text-primary">{tTrend('title')}</h2>
+              <p className="mt-1 text-sm text-text-secondary">{tTrend('subtitle')}</p>
             </div>
             <Link
               href="/recherche?tri=score"
               className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors"
             >
-              Voir tout <ArrowRight className="h-4 w-4" />
+              {tTrend('viewAll')} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
@@ -425,7 +437,7 @@ export default function HomePage() {
             <div className="rounded-xl border border-dashed border-border bg-gray-50 p-12 text-center">
               <Sparkles className="mx-auto h-10 w-10 text-primary-300" />
               <p className="mt-3 text-sm text-text-secondary">
-                Les workflows tendances apparaîtront ici une fois le pipeline activé.
+                {tTrend('emptyMessage')}
               </p>
             </div>
           )}
@@ -597,13 +609,13 @@ export default function HomePage() {
                 href="/recherche"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-lg transition-all hover:bg-primary-50 active:scale-[0.98]"
               >
-                🔍 Rechercher un workflow
+                🔍 {tCta('searchWorkflow')}
               </Link>
               <Link
                 href="/soumettre"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/30 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10"
               >
-                📤 Soumettre le mien
+                📤 {tCta('submitMine')}
               </Link>
             </div>
           </div>

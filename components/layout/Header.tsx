@@ -2,12 +2,15 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { Search, Menu, X, Upload, User, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useTranslations } from 'next-intl';
 
 export default function Header() {
+  const t = useTranslations('nav');
   const pathname = usePathname();
   const router = useRouter();
   const isHome = pathname === '/';
@@ -117,7 +120,7 @@ export default function Header() {
           <div className="hidden md:flex flex-1 max-w-md mx-8">
             <form onSubmit={handleSearchSubmit} className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-secondary" />
-              <input ref={searchRef} type="text" placeholder="Rechercher un workflow..."
+              <input ref={searchRef} type="text" placeholder={t('searchPlaceholder')}
                 value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full rounded-lg border border-border bg-white py-2 pl-10 pr-4 text-sm transition-all focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:outline-none"
                 id="header-search-input" />
@@ -133,15 +136,17 @@ export default function Header() {
                 ? 'bg-primary-50 text-primary-700 border-primary-200 shadow-sm' 
                 : 'bg-white text-text-primary border-border hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 shadow-sm'
             }`} id="nav-carte">
-            🗺️ Carte Pédagogique
+            🗺️ {t('carte')}
           </Link>
 
           <Link href="/soumettre"
             className="rounded-lg border border-primary-200 px-4 py-2 text-sm font-medium text-primary-600 transition-all hover:bg-primary-50 hover:border-primary-400"
             id="nav-submit">
             <Upload className="inline-block mr-1.5 h-4 w-4" />
-            Soumettre
+            {t('submit')}
           </Link>
+
+          <LanguageSwitcher />
 
           {user ? (
             /* ── Logged in: user dropdown ── */
@@ -167,18 +172,18 @@ export default function Header() {
                       <p className="text-[10px] text-text-secondary truncate">{user.email}</p>
                     </div>
                     <Link href="/compte" className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:bg-gray-50 hover:text-primary-600" id="dropdown-profile">
-                      <User className="h-3.5 w-3.5" /> Mon profil
+                      <User className="h-3.5 w-3.5" /> {t('myProfile')}
                     </Link>
                     <Link href="/compte/sauvegardes" className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:bg-gray-50 hover:text-primary-600" id="dropdown-saves">
-                      📑 Mes sauvegardes
+                      📑 {t('mySaves')}
                     </Link>
                     <Link href="/compte/donnees" className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:bg-gray-50 hover:text-primary-600" id="dropdown-data">
-                      🔒 Mes données
+                      🔒 {t('myAccount')}
                     </Link>
                     <hr className="my-1 border-border" />
                     <button onClick={handleLogout}
                       className="flex w-full items-center gap-2 px-3 py-2 text-sm text-danger-600 hover:bg-danger-50" id="dropdown-logout">
-                      <LogOut className="h-3.5 w-3.5" /> Se déconnecter
+                      <LogOut className="h-3.5 w-3.5" /> {t('logout')}
                     </button>
                   </motion.div>
                 )}
@@ -189,7 +194,7 @@ export default function Header() {
             <Link href="/connexion"
               className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-primary-700 active:scale-[0.98]"
               id="nav-login">
-              Connexion
+              {t('login')}
             </Link>
           )}
         </nav>
@@ -217,7 +222,7 @@ export default function Header() {
             <form onSubmit={handleSearchSubmit} className="container-page py-3">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-secondary" />
-                <input type="text" placeholder="Rechercher un workflow..."
+                <input type="text" placeholder={t('searchPlaceholder')}
                   value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full rounded-lg border border-border bg-white py-2.5 pl-10 pr-4 text-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:outline-none"
                   autoFocus id="mobile-search-input" />
@@ -236,23 +241,23 @@ export default function Header() {
               <Link href="/"
                 className={`rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
                 id="mobile-nav-home">
-                🏠 Accueil
+                🏠 {t('home')}
               </Link>
               <Link href="/carte"
                 className={`rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/carte' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
                 id="mobile-nav-carte">
-                🗺️ Carte Pédagogique
+                🗺️ {t('carte')}
               </Link>
               <Link href="/recherche"
                 className={`rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/recherche' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
                 id="mobile-nav-search">
-                🔍 Recherche
+                🔍 {t('search')}
               </Link>
               <hr className="my-2 border-border" />
               <Link href="/soumettre"
                 className="rounded-lg px-4 py-3 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-50"
                 id="mobile-nav-submit">
-                📤 Soumettre un workflow
+                📤 {t('submit')}
               </Link>
 
               {user ? (
@@ -260,22 +265,22 @@ export default function Header() {
                   <hr className="my-2 border-border" />
                   <Link href="/compte"
                     className="rounded-lg px-4 py-3 text-sm font-medium text-text-secondary hover:bg-gray-50" id="mobile-nav-compte">
-                    👤 Mon compte
+                    👤 {t('myAccount')}
                   </Link>
                   <Link href="/compte/sauvegardes"
                     className="rounded-lg px-4 py-3 text-sm font-medium text-text-secondary hover:bg-gray-50" id="mobile-nav-saves">
-                    📑 Mes sauvegardes
+                    📑 {t('mySaves')}
                   </Link>
                   <button onClick={handleLogout}
                     className="rounded-lg px-4 py-3 text-left text-sm font-medium text-danger-600 hover:bg-danger-50" id="mobile-nav-logout">
-                    🚪 Se déconnecter
+                    🚪 {t('logout')}
                   </button>
                 </>
               ) : (
                 <Link href="/connexion"
                   className="rounded-lg bg-primary-600 mx-4 mt-2 px-4 py-3 text-center text-sm font-medium text-white transition-all hover:bg-primary-700"
                   id="mobile-nav-login">
-                  Connexion
+                  {t('login')}
                 </Link>
               )}
             </div>

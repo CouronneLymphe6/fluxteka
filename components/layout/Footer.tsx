@@ -3,21 +3,9 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { locales, localeNames, localeFlags, defaultLocale, type Locale } from '@/i18n/config';
+import { useTranslations } from 'next-intl';
 
-const footerLinks = [
-  { href: '/recherche', label: 'Explorer' },
-  { href: '/partenaires', label: 'Partenaires' },
-  { href: '/premium', label: 'Premium' },
-  { href: '/mission', label: 'Notre mission' },
-  { href: '/soumettre', label: 'Soumettre' },
-];
-
-const legalLinks = [
-  { href: '/legal/confidentialite', label: 'Politique de confidentialité' },
-  { href: '/legal/cgu', label: 'CGU' },
-  { href: '/legal/mentions-legales', label: 'Mentions légales' },
-  { href: 'mailto:contact@fluxteka.com', label: 'Contact' },
-];
+// Removed static footerLinks and legalLinks to move them inside the component
 
 function LanguageSwitcher() {
   const pathname = usePathname();
@@ -68,6 +56,24 @@ function LanguageSwitcher() {
 }
 
 export default function Footer() {
+  const t = useTranslations('footer');
+  const tNav = useTranslations('nav');
+  
+  const footerLinks = [
+    { href: '/recherche', label: tNav('search') },
+    { href: '/partenaires', label: tNav('partners') },
+    { href: '/premium', label: tNav('premium') },
+    { href: '/mission', label: tNav('mission') },
+    { href: '/soumettre', label: tNav('submit') },
+  ];
+
+  const legalLinks = [
+    { href: '/legal/confidentialite', label: t('privacy') },
+    { href: '/legal/cgu', label: t('terms') },
+    { href: '/legal/mentions-legales', label: t('legalNotices') },
+    { href: 'mailto:contact@fluxteka.com', label: t('contact') },
+  ];
+
   return (
     <>
       {/* ── Separator wave between content and footer ── */}
@@ -90,7 +96,7 @@ export default function Footer() {
                 <span><span className="text-[#4338CA]">Flux</span><span className="text-[#374151] font-normal">teka</span></span>
               </Link>
               <p className="mt-3 max-w-sm text-sm text-text-secondary leading-relaxed">
-                La bibliothèque européenne de l&apos;automatisation et de l&apos;IA. Trouvez et appliquez des workflows N8N, Make, Zapier et LangChain.
+                {t('description')}
               </p>
 
               {/* Language switcher — now functional */}
@@ -100,7 +106,7 @@ export default function Footer() {
             {/* Navigation */}
             <div>
               <h3 className="text-sm font-heading font-semibold text-text-primary mb-4">
-                Navigation
+                {t('navigation')}
               </h3>
               <ul className="space-y-2.5">
                 {footerLinks.map((link) => (
@@ -119,7 +125,7 @@ export default function Footer() {
             {/* Legal */}
             <div>
               <h3 className="text-sm font-heading font-semibold text-text-primary mb-4">
-                Légal
+                {t('legal')}
               </h3>
               <ul className="space-y-2.5">
                 {legalLinks.map((link) => (
@@ -139,10 +145,10 @@ export default function Footer() {
           {/* Bottom bar */}
           <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 md:flex-row">
             <p className="text-xs text-text-secondary">
-              © {new Date().getFullYear()} Fluxteka. Tous droits réservés.
+              {t('copyright', { year: new Date().getFullYear() })}
             </p>
             <p className="text-xs text-text-secondary">
-              Fait avec ❤️ en Europe
+              {t('madeWith')}
             </p>
           </div>
         </div>

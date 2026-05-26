@@ -2,12 +2,7 @@
 
 import { Star, Clock, Download, Filter } from 'lucide-react';
 import { FILTER_TOOLS } from '@/lib/platforms';
-
-const sorts = [
-  { value: 'score', label: 'Mieux notés', icon: '⭐' },
-  { value: 'recent', label: 'Récents', icon: '🕐' },
-  { value: 'downloads', label: 'Plus téléchargés', icon: '📥' },
-];
+import { useTranslations } from 'next-intl';
 
 interface FilterBarProps {
   selectedTool: string;
@@ -17,6 +12,14 @@ interface FilterBarProps {
 }
 
 export default function FilterBar({ selectedTool, selectedSort, onToolChange, onSortChange }: FilterBarProps) {
+  const t = useTranslations('filterBar');
+
+  const sorts = [
+    { value: 'score', label: t('sortScore'), icon: '⭐' },
+    { value: 'recent', label: t('sortRecent'), icon: '🕐' },
+    { value: 'downloads', label: t('sortPopular'), icon: '📥' },
+  ];
+
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       {/* Tool Filters */}
@@ -33,7 +36,7 @@ export default function FilterBar({ selectedTool, selectedSort, onToolChange, on
             id={`filter-tool-${tool.value || 'all'}`}
           >
             <span className="text-xs">{tool.icon}</span>
-            {tool.label}
+            {tool.value === '' ? t('allTools') : tool.label}
           </button>
         ))}
       </div>
