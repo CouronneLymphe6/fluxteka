@@ -2,17 +2,17 @@
   "site": {
     "name": "Fluxteka",
     "tagline": "La biblioteca europea de automatización e IA",
-    "description": "Encuentra y aplica flujos de trabajo de N8N, Make, Zapier y LangChain. Recetas gratuitas en tu idioma."
+    "description": "Encuentra y aplica flujos de trabajo de N8N, Make, Zapier y LangChain. Recetas gratuitas en español."
   },
   "metadata": {
     "title": "Fluxteka — Biblioteca de flujos de trabajo de automatización IA",
     "titleTemplate": "%s — Fluxteka",
-    "description": "Descubre, aplica y comparte los mejores flujos de trabajo de IA. N8N, Make, Zapier, LangChain — más de 24.000 automatizaciones listas para usar.",
-    "ogDescription": "Descubre, aplica y comparte los mejores flujos de trabajo de IA. N8N, Make, Zapier, LangChain — más de 24.000 automatizaciones.",
+    "description": "Descubre, aplica y comparte los mejores flujos de trabajo IA. N8N, Make, Zapier, LangChain — 24,000+ automatizaciones listas para usar.",
+    "ogDescription": "Descubre, aplica y comparte los mejores flujos de trabajo IA. N8N, Make, Zapier, LangChain — 24,000+ automatizaciones.",
     "searchTitle": "Buscar flujos de trabajo — Fluxteka",
-    "searchDescription": "Explora y filtra más de 24.000 flujos de trabajo de automatización IA gratuitos. N8N, Make, Zapier, LangChain — encuentra la receta perfecta.",
+    "searchDescription": "Explora y filtra 24,000+ flujos de trabajo de automatización IA gratuitos. N8N, Make, Zapier, LangChain — encuentra la receta perfecta.",
     "loginTitle": "Iniciar sesión — Fluxteka",
-    "loginDescription": "Inicia sesión en Fluxteka con Google, GitHub o un enlace mágico. Sin contraseña."
+    "loginDescription": "Inicia sesión en Fluxteka con Google, GitHub o un enlace mágico. No se requiere contraseña."
   },
   "nav": {
     "home": "Inicio",
@@ -43,8 +43,8 @@
     "submit": "Enviar",
     "legal": "Legal",
     "privacy": "Política de privacidad",
-    "terms": "Términos de servicio",
-    "legalNotices": "Avisos legales",
+    "terms": "Condiciones de uso",
+    "legalNotices": "Aviso legal",
     "contact": "Contacto",
     "copyright": "© {year} Fluxteka. Todos los derechos reservados.",
     "madeWith": "Hecho con ❤️ en Europa",
@@ -52,7 +52,7 @@
   },
   "cookies": {
     "title": "Fluxteka utiliza cookies",
-    "message": "Usamos cookies para publicidad y análisis de tráfico. Puedes aceptar o rechazar en cualquier momento.",
+    "message": "Utilizamos cookies para análisis y publicidad. Puedes aceptar o rechazar en cualquier momento.",
     "accept": "Aceptar",
     "refuse": "Rechazar",
     "close": "Cerrar"
@@ -62,7 +62,7 @@
     "title1": "Encuentra la receta de automatización",
     "title2": "que necesitas",
     "subtitleWithCount": "{count} flujos de trabajo indexados. Encontrados en 2 minutos.",
-    "subtitleDefault": "Flujos de trabajo indexados cada día. Encontrados en 2 minutos."
+    "subtitleDefault": "Flujos de trabajo indexados todos los días. Encontrados en 2 minutos."
   },
   "suggestions": {
     "emailAuto": "Email automático",
@@ -72,61 +72,61 @@
     "autoReport": "Informe automático"
   },
   "stats": {
-    "workflowsIndexed": "Flujos indexados",
+    "workflowsIndexed": "Flujos de trabajo indexados",
     "platforms": "Plataformas",
-    "free": "Gratuito"
+    "free": "Gratis"
   },
   "onboarding": {
-    "title": "Soy…",
+    "title": "Soy...",
     "subtitle": "Selecciona tu perfil para recomendaciones personalizadas",
     "viewWorkflows": "Ver flujos de trabajo",
     "beginner": {
       "title": "Principiante",
-      "description": "Estoy descubriendo la automatización",
-      "tip": "Recomendamos empezar con Zapier — el más fácil de usar."
+      "description": "Descubriendo la automatización",
+      "tip": "Te recomendamos empezar con Zapier — el más fácil de aprender."
     },
     "business": {
       "title": "PYME / Agencia",
-      "description": "Automatizo mis procesos empresariales",
+      "description": "Automatizando procesos de negocio",
       "tip": "Make es perfecto para PYMEs y agencias — potente y flexible."
     },
     "developer": {
       "title": "Desarrollador",
-      "description": "Quiero control y flexibilidad",
-      "tip": "n8n está hecho para ti — open-source, auto-hospedable y ultra-potente."
+      "description": "Buscando control y flexibilidad",
+      "tip": "n8n está hecho para ti — código abierto, autoalojable y ultrapotente."
     },
     "ai": {
-      "title": "Entusiasta de la IA",
-      "description": "Construyo agentes autónomos",
+      "title": "Entusiasta de IA",
+      "description": "Construyendo agentes autónomos",
       "tip": "LangChain y los agentes IA de n8n son tus mejores aliados."
     }
   },
   "platforms": {
-    "title": "Todas las plataformas, un solo lugar",
-    "subtitle": "Compara n8n, Make, Zapier y LangChain para cada necesidad empresarial",
+    "title": "Todas las plataformas en un solo lugar",
+    "subtitle": "Compara n8n, Make, Zapier y LangChain para cada necesidad",
     "n8n": {
-      "tagline": "Open-source y auto-hospedado",
+      "tagline": "Código abierto & autoalojado",
       "commission": "30% afiliado"
     },
     "make": {
-      "tagline": "Visual y potente",
+      "tagline": "Visual & potente",
       "commission": "35% afiliado"
     },
     "zapier": {
-      "tagline": "El más simple",
-      "commission": "8.000+ apps"
+      "tagline": "El más sencillo",
+      "commission": "8,000+ apps"
     },
     "langchain": {
       "tagline": "Agentes IA avanzados",
-      "commission": "Open-source"
+      "commission": "Código abierto"
     }
   },
   "trending": {
     "title": "🔥 Tendencias",
-    "subtitle": "Los flujos de trabajo más populares esta semana",
+    "subtitle": "Los flujos de trabajo más populares de esta semana",
     "viewAll": "Ver todo",
     "viewAllWorkflows": "Ver todos los flujos de trabajo",
-    "emptyMessage": "Los flujos de trabajo de tendencia aparecerán aquí una vez activado el pipeline."
+    "emptyMessage": "Los flujos de trabajo en tendencia aparecerán aquí una vez que el pipeline esté activo."
   },
   "categories": {
     "title": "Explorar por categoría",
@@ -135,96 +135,96 @@
     "marketingContent": "Marketing y Contenido",
     "aiAgents": "Agentes IA",
     "operations": "Operaciones",
-    "customerSuccess": "Atención al Cliente",
+    "customerSuccess": "Éxito del Cliente",
     "dataAnalytics": "Datos y Análisis",
-    "ecommerce": "Comercio electrónico",
-    "financeAdmin": "Finanzas y Administración",
+    "ecommerce": "E-commerce",
+    "financeAdmin": "Finanzas y Admin",
     "all": "Todas",
     "communication": "Comunicación",
-    "devTech": "Dev y Tecnología",
-    "hrRecruitment": "RRHH y Reclutamiento"
+    "devTech": "Desarrollo y Tecnología",
+    "hrRecruitment": "RRHH y Selección"
   },
   "howItWorks": {
     "title": "Cómo funciona",
-    "subtitle": "En 3 simples pasos",
+    "subtitle": "En 3 sencillos pasos",
     "step1Title": "Describe tu necesidad",
-    "step1Description": "Busca por palabras clave o explora las categorías empresariales.",
+    "step1Description": "Busca por palabras clave o explora categorías.",
     "step2Title": "Fluxteka encuentra la receta",
     "step2Description": "Nuestro motor indexa los mejores flujos de trabajo de la web.",
     "step3Title": "Aplica o descarga",
-    "step3Description": "Úsalo directamente o adáptalo a tu caso en pocos minutos."
+    "step3Description": "Usa directamente o adapta a tu caso en minutos."
   },
   "newsletter": {
-    "badge": "📬 Newsletter gratuita",
+    "badge": "📬 Boletín gratuito",
     "title": "Flujo de trabajo de la semana",
-    "subtitle": "Cada semana, recibe el mejor flujo de trabajo del momento — explicado de forma sencilla, aplicable de inmediato.",
-    "placeholder": "tú@ejemplo.com",
-    "subscribe": "Suscribirme →",
-    "successTitle": "¡Estás suscrito(a)! 🎉",
-    "successMessage": "Te enviaremos el próximo flujo de trabajo en cuanto esté listo.",
-    "disclaimer": "Gratis · Sin spam · Darse de baja en 1 clic"
+    "subtitle": "Cada semana, recibe el mejor flujo de trabajo del momento — explicado de forma sencilla y listo para usar.",
+    "placeholder": "tu@ejemplo.com",
+    "subscribe": "Me suscribo →",
+    "successTitle": "¡Te has suscrito! 🎉",
+    "successMessage": "Te enviaremos el próximo flujo de trabajo tan pronto como esté listo.",
+    "disclaimer": "Gratis · Sin spam · Date de baja con 1 clic"
   },
   "cta": {
     "title": "¿Listo para automatizar?",
-    "subtitle": "Únete a profesionales que ahorran tiempo cada día.",
+    "subtitle": "Únete a los profesionales que ahorran tiempo todos los días.",
     "searchWorkflow": "🔍 Buscar un flujo de trabajo",
     "submitMine": "📤 Enviar el mío"
   },
   "search": {
-    "placeholder": "Automatización de email, Stripe, CRM...",
+    "placeholder": "Automatización de emails, Stripe, CRM...",
     "submit": "Buscar",
     "resetFilters": "✕ Restablecer filtros",
     "resultCount": "{count} flujo de trabajo",
     "resultCountPlural": "{count} flujos de trabajo",
     "forQuery": "para \"{query}\"",
     "noResults": "Sin resultados",
-    "noWorkflowFound": "No se encontraron flujos de trabajo",
-    "tryOtherTerm": "Prueba otro término o explora las categorías.",
-    "pipelineMessage": "El pipeline de indexación alimentará esta biblioteca muy pronto.",
+    "noWorkflowFound": "No se encontró ningún flujo de trabajo",
+    "tryOtherTerm": "Prueba con otro término o explora las categorías.",
+    "pipelineMessage": "El pipeline de indexación poblará esta biblioteca muy pronto.",
     "viewAllWorkflows": "Ver todos los flujos de trabajo",
     "previous": "Anterior",
     "next": "Siguiente",
     "animatedPlaceholders": {
       "1": "¿Qué quieres automatizar?",
       "2": "Enviar un email automáticamente...",
-      "3": "Notificar Slack en cada venta...",
+      "3": "Notificar en Slack cada venta...",
       "4": "Publicar en LinkedIn automáticamente...",
       "5": "Resumir un PDF con IA..."
     }
   },
   "auth": {
     "welcomeTitle": "Bienvenido a Fluxteka",
-    "welcomeSubtitle": "Inicia sesión o crea una cuenta en un clic.",
+    "welcomeSubtitle": "Inicia sesión o crea una cuenta con un clic.",
     "continueGoogle": "Continuar con Google",
     "continueGithub": "Continuar con GitHub",
     "or": "o",
     "magicLinkButton": "Recibir un enlace mágico",
     "sendingLink": "Enviando enlace...",
-    "checkEmail": "Revisa tu bandeja de entrada",
-    "magicLinkSent": "Se envió un enlace mágico a {email}.",
-    "clickToLogin": "Haz clic en él para iniciar sesión.",
-    "checkSpam": "💡 No olvides revisar tu correo no deseado si no recibes nada en 2 minutos.",
-    "useOtherEmail": "Usar otra dirección",
-    "termsIntro": "Al continuar, aceptas nuestros",
-    "termsLink": "Términos de servicio",
+    "checkEmail": "Revisa tu correo",
+    "magicLinkSent": "Se ha enviado un enlace mágico a {email}.",
+    "clickToLogin": "Haz clic para iniciar sesión.",
+    "checkSpam": "💡 Revisa tu carpeta de spam si no recibes nada en 2 minutos.",
+    "useOtherEmail": "Usar otro correo electrónico",
+    "termsIntro": "Al continuar, aceptas nuestras",
+    "termsLink": "Condiciones de uso",
     "andOur": "y nuestra",
-    "privacyLink": "política de privacidad",
-    "securityNote": "🔒 Sin contraseña · Sin tarjeta bancaria · 100% gratuito",
+    "privacyLink": "Política de privacidad",
+    "securityNote": "🔒 Sin contraseña · Sin tarjeta de crédito · 100% gratis",
     "googleError": "Error al iniciar sesión con Google. Inténtalo de nuevo.",
     "githubError": "Error al iniciar sesión con GitHub. Inténtalo de nuevo.",
-    "magicLinkError": "No se puede enviar el enlace. Verifica tu email.",
-    "emailPlaceholder": "tú@ejemplo.com"
+    "magicLinkError": "No se pudo enviar el enlace. Revisa tu correo electrónico.",
+    "emailPlaceholder": "tu@ejemplo.com"
   },
   "account": {
     "profileTitle": "Mi perfil",
     "profileSubtitle": "Gestiona tu información personal.",
-    "namePseudo": "Nombre / Apodo",
-    "namePlaceholder": "Juan García",
-    "bio": "Biografía",
+    "namePseudo": "Nombre / Usuario",
+    "namePlaceholder": "Juan Pérez",
+    "bio": "Bio",
     "website": "Sitio web",
     "websitePlaceholder": "https://misitioweb.com",
     "github": "GitHub",
-    "githubPlaceholder": "https://github.com/miapodo",
+    "githubPlaceholder": "https://github.com/miusuario",
     "save": "Guardar",
     "saved": "Guardado",
     "user": "Usuario",
@@ -236,7 +236,7 @@
   "workflowCard": {
     "viewWorkflow": "Ver flujo de trabajo →",
     "save": "Guardar",
-    "report": "Reportar",
+    "report": "Denunciar",
     "verified": "Verificado",
     "beginner": "Principiante",
     "intermediate": "Intermedio",

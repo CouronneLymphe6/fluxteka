@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Eye, Bookmark, Flag, Clock, Zap, CheckCircle, TrendingUp, Sparkles, ExternalLink, Globe } from 'lucide-react';
 import ScoreBadge from './ScoreBadge';
+import AffiliateButton from './AffiliateButton';
 import { getPlatform } from '@/lib/platforms';
 import { useTranslations } from 'next-intl';
 
@@ -233,16 +234,18 @@ export default function WorkflowCard({
           </div>
 
           {/* Score */}
-          <div className="mt-3">
-            <ScoreBadge
-              total={workflow.score_total}
-              users={workflow.score_users ?? 0}
-              popularity={workflow.score_popularity ?? 0}
-              freshness={workflow.score_freshness ?? 0}
-              reports={workflow.score_reports ?? 0}
-              compact
-            />
-          </div>
+          {((workflow.views ?? 0) >= 10 || (workflow.score_users ?? 0) > 0) && (
+            <div className="mt-3">
+              <ScoreBadge
+                total={workflow.score_total}
+                users={workflow.score_users ?? 0}
+                popularity={workflow.score_popularity ?? 0}
+                freshness={workflow.score_freshness ?? 0}
+                reports={workflow.score_reports ?? 0}
+                compact
+              />
+            </div>
+          )}
 
           {/* Tools connected */}
           {(workflow.tools_connected ?? []).length > 0 && (
@@ -272,11 +275,16 @@ export default function WorkflowCard({
 
           {/* Actions */}
           <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
-            <span
-              className="text-sm font-medium text-primary-600 transition-colors group-hover:text-primary-700"
-            >
-              {t('viewWorkflow')}
-            </span>
+            <div className="flex items-center gap-2 relative z-20">
+              <span className="text-sm font-medium text-primary-600 transition-colors group-hover:text-primary-700 mr-2">
+                {t('viewWorkflow')}
+              </span>
+              <AffiliateButton 
+                tool={workflow.tool} 
+                workflowId={workflow.id} 
+                label={platform.label}
+              />
+            </div>
             <div className="flex items-center gap-1 relative z-20">
               <button
                 onClick={() => setSaved(!saved)}

@@ -483,7 +483,7 @@ export default function WorkflowDetailClient({ initialWorkflow }: { initialWorkf
 
               {/* Title */}
               <h1 className="mt-4 font-heading text-2xl font-bold text-text-primary leading-snug md:text-3xl">
-                {workflow.title}
+                {workflow.title} {workflow.title.toLowerCase().includes(workflow.tool.toLowerCase()) ? '' : `sur ${workflow.tool}`}
               </h1>
 
               {/* Author + date + source */}

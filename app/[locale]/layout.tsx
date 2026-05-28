@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import CookieBanner from '@/components/layout/CookieBanner';
-import './globals.css';
+import '../globals.css';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -28,7 +28,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://fluxteka.vercel.app'),
   title: {
     default: 'Fluxteka — Bibliothèque de workflows d\'automatisation IA',
     template: '%s — Fluxteka',

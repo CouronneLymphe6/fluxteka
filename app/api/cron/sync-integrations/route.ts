@@ -8,7 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { syncZapier, syncMake } from '@/lib/integrations/sync';
+import { syncZapier, syncMake, syncN8n } from '@/lib/integrations/sync';
 
 export const runtime = 'nodejs';
 export const maxDuration = 300; // 5 min max (Vercel Pro)
@@ -58,6 +58,18 @@ export async function GET(request: NextRequest) {
       }
     } else {
       errors.make = 'MAKE_API_TOKEN non configuré';
+    }
+  }
+
+  // ─── N8n ──────────────────────────────────────────────────
+  if (source === 'all' || source === 'n8n') {
+    try {
+      const result = await syncN8n(prisma as any, 1000);
+      results.n8n = result;
+      console.log(`[Cron] n8n: ${result.inserted} nouveaux, ${result.updated} mis à jour`);
+    } catch (err) {
+      errors.n8n = String(err);
+      console.error('[Cron] n8n erreur:', err);
     }
   }
 

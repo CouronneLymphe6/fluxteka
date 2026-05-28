@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, ChevronRight } from 'lucide-react';
+import { CheckCircle, ChevronRight, ArrowRight } from 'lucide-react';
 
 const profiles = [
   {
@@ -45,6 +45,7 @@ const profiles = [
 ];
 
 export default function OnboardingQuiz() {
+  const router = useRouter();
   const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
   const activeProfile = profiles.find((p) => p.id === selectedProfile);
 
@@ -58,8 +59,12 @@ export default function OnboardingQuiz() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.08 }}
-            onClick={() => setSelectedProfile(selectedProfile === profile.id ? null : profile.id)}
-            className={`flex flex-col items-center gap-2 rounded-2xl border-2 p-5 text-center transition-all duration-200 hover:shadow-md ${
+            onClick={() => {
+              setSelectedProfile(profile.id);
+              // Optionnel: router.push(profile.query) pour redirection immédiate
+              // Mais afficher l'astuce et le bouton est plus clair.
+            }}
+            className={`group flex flex-col items-center gap-2 rounded-2xl border-2 p-5 text-center transition-all duration-200 hover:shadow-md ${
               selectedProfile === profile.id
                 ? 'border-primary-500 bg-primary-50 shadow-md'
                 : 'border-border bg-white hover:border-primary-300'
@@ -87,13 +92,13 @@ export default function OnboardingQuiz() {
                 <p className="font-medium text-primary-900 text-sm">{activeProfile.tip}</p>
               </div>
             </div>
-            <Link
-              href={activeProfile.query}
+            <button
+              onClick={() => router.push(activeProfile.query)}
               className="flex-shrink-0 inline-flex items-center gap-1.5 rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-primary-700 active:scale-[0.98]"
             >
               Voir les workflows
-              <ChevronRight className="h-4 w-4" />
-            </Link>
+              <ArrowRight className="h-4 w-4" />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

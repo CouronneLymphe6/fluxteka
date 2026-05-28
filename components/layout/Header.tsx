@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from '@/i18n/navigation';
-import { Search, Menu, X, Upload, User, LogOut, Map, Bookmark, Shield, Home, Compass } from 'lucide-react';
+import { Search, Menu, X, Upload, User, LogOut, Map, Bookmark, Shield, Home, Compass, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -140,6 +140,16 @@ export default function Header() {
             {t('carte')}
           </Link>
 
+          <Link href="/agences"
+            className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+              pathname === '/agences' 
+                ? 'bg-primary-50 text-primary-700' 
+                : 'text-text-secondary hover:bg-gray-50'
+            }`} id="nav-agences">
+            <Users className="h-4 w-4" />
+            Agences
+          </Link>
+
           <Link href="/soumettre"
             className="rounded-lg border border-primary-200 px-4 py-2 text-sm font-medium text-primary-600 transition-all hover:bg-primary-50 hover:border-primary-400"
             id="nav-submit">
@@ -253,6 +263,11 @@ export default function Header() {
                 className={`flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/recherche' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
                 id="mobile-nav-search">
                 <Search className="h-4 w-4" /> {t('search')}
+              </Link>
+              <Link href="/agences"
+                className={`flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/agences' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
+                id="mobile-nav-agences">
+                <Users className="h-4 w-4" /> Agences
               </Link>
               <hr className="my-2 border-border" />
               <Link href="/soumettre"

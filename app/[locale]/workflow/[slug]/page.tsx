@@ -92,5 +92,32 @@ export default async function WorkflowPage({ params }: { params: Promise<{ slug:
     similar,
   };
 
-  return <WorkflowDetailClient initialWorkflow={parsedWorkflow} />;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: `${workflow.title} ${workflow.title.toLowerCase().includes(workflow.tool.toLowerCase()) ? '' : `sur ${workflow.tool}`}`,
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Any',
+    description: workflow.description_fr,
+    offers: {
+      '@type': 'Offer',
+      price: workflow.price,
+      priceCurrency: 'EUR',
+    },
+    aggregateRating: workflow._count.reviews > 0 ? {
+      '@type': 'AggregateRating',
+      ratingValue: (workflow.reviews.reduce((s, r) => s + r.rating, 0) / workflow.reviews.length).toFixed(1),
+      ratingCount: workflow._count.reviews,
+    } : undefined,
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <WorkflowDetailClient initialWorkflow={parsedWorkflow} />
+    </>
+  );
 }

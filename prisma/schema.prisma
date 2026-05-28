@@ -20,6 +20,15 @@ model User {
   role              String    @default("buyer")
   stripe_account_id String?
   email_verified    Boolean   @default(false)
+
+  // B2B Agency / Freelance Profile
+  profile_type      String    @default("user") // user | freelance | agency
+  company_name      String?
+  company_size      String?
+  services_offered  Json?     // e.g. ["Make", "n8n", "Zapier"]
+  hourly_rate       Int?
+  is_public_agency  Boolean   @default(false)
+
   created_at        DateTime  @default(now())
   updated_at        DateTime  @updatedAt
   workflows         Workflow[]

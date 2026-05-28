@@ -27,6 +27,13 @@ import {
   type MakeTemplate,
 } from './make';
 
+import {
+  fetchN8nTemplates,
+  getN8nConnectedApps,
+  mapN8nCategory,
+  type N8nTemplate,
+} from './n8n';
+
 export interface SyncResult {
   source: string;
   fetched: number;
@@ -277,6 +284,107 @@ export async function syncMake(prisma: PrismaClient, maxResults = 1500): Promise
           url_normalized: normUrl,
           content_fingerprint: fingerprint,
           source: 'make-templates',
+          workflow_id: workflow.id,
+          status: 'indexed',
+        },
+      });
+
+      result.inserted++;
+      if ((result.inserted + result.updated) % 50 === 0) {
+        console.log(`  → ${result.inserted} nouveaux, ${result.updated} mis à jour`);
+      }
+    } catch (err) {
+      result.errors++;
+      if (result.errors <= 3) console.error(`  ❌ ${tpl.name?.substring(0, 40)}: ${String(err).substring(0, 100)}`);
+    }
+  }
+
+  return result;
+}
+
+// ─── N8n Sync ────────────────────────────────────────────────────────────────
+
+export async function syncN8n(prisma: PrismaClient, maxResults = 1500): Promise<SyncResult> {
+  const result: SyncResult = { source: 'n8n', fetched: 0, inserted: 0, updated: 0, skipped: 0, errors: 0 };
+  const pipelineUser = await getPipelineUser(prisma);
+
+  console.log('\n[Sync n8n] Récupération des templates...');
+  const templates = await fetchN8nTemplates(maxResults, (fetched) => {
+    process.stdout.write(`\r[Sync n8n] ${fetched} récupérés...`);
+  });
+  console.log();
+
+  if (templates.length === 0) {
+    console.log('[Sync n8n] Aucun template récupéré');
+    return result;
+  }
+
+  result.fetched = templates.length;
+  console.log(`[Sync n8n] ${templates.length} templates à indexer`);
+
+  for (const tpl of templates) {
+    try {
+      const url = `https://n8n.io/workflows/${tpl.id}`;
+      const normUrl = normalizeUrl(url);
+      const apps = getN8nConnectedApps(tpl);
+      const category = mapN8nCategory(tpl);
+
+      const description = [
+        tpl.description || '',
+        `Apps connectées : ${apps.join(', ')}`,
+        `Ce workflow n8n connecte ${apps.join(' → ')} pour automatiser tes processus de manière flexible et open-source.`,
+      ].filter(Boolean).join('\n');
+
+      const tags = [
+        'n8n', 'automation', 'workflow', 'open-source', 'self-hosted',
+        ...apps.map(a => a.toLowerCase().replace(/\s+/g, '-')).slice(0, 5),
+      ].slice(0, 10);
+
+      const fingerprint = contentFingerprint(description);
+
+      const existing = await (prisma as any).crawledUrl.findFirst({
+        where: { OR: [{ url_normalized: normUrl }, { content_fingerprint: fingerprint }] },
+        include: { workflow: true },
+      });
+
+      if (existing?.workflow) {
+        // Just skip if it exists and we don't have usage metrics to update
+        result.updated++;
+        continue;
+      }
+
+      if (existing) { result.skipped++; continue; }
+
+      const slug = await generateUniqueSlug(prisma, tpl.name);
+
+      const workflow = await (prisma as any).workflow.create({
+        data: {
+          slug,
+          title: tpl.name.substring(0, 200),
+          description_fr: description.substring(0, 2000),
+          tool: 'n8n',
+          tools_connected: JSON.stringify(apps.slice(0, 8)),
+          category,
+          tags: JSON.stringify(tags),
+          source_url: url,
+          source_type: 'n8n-community',
+          source_stars: 0,
+          source_views: 0,
+          author_id: pipelineUser.id,
+          score_total: 8,
+          score_popularity: 5,
+          raw_content: description.substring(0, 10000),
+          indexing_source: 'n8n-api',
+          status: 'active',
+        },
+      });
+
+      await (prisma as any).crawledUrl.create({
+        data: {
+          url: url,
+          url_normalized: normUrl,
+          content_fingerprint: fingerprint,
+          source: 'n8n-community',
           workflow_id: workflow.id,
           status: 'indexed',
         },
