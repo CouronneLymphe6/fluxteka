@@ -31,7 +31,8 @@
     "myAccount": "Mon compte",
     "mySaves": "Mes sauvegardes",
     "logout": "Se déconnecter",
-    "myProfile": "Mon profil"
+    "myProfile": "Mon profil",
+    "agencies": "Agences"
   },
   "footer": {
     "description": "La bibliothèque européenne de l'automatisation et de l'IA. Trouvez et appliquez des workflows N8N, Make, Zapier et LangChain.",

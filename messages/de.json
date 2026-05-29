@@ -31,7 +31,8 @@
     "myAccount": "Mein Konto",
     "mySaves": "Meine gespeicherten",
     "logout": "Abmelden",
-    "myProfile": "Mein Profil"
+    "myProfile": "Mein Profil",
+    "agencies": "Agenturen"
   },
   "footer": {
     "description": "Die europäische Automatisierungs- und KI-Bibliothek. Finde und nutze Workflows für N8N, Make, Zapier und LangChain.",

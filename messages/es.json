@@ -31,7 +31,8 @@
     "myAccount": "Mi cuenta",
     "mySaves": "Mis guardados",
     "logout": "Cerrar sesión",
-    "myProfile": "Mi perfil"
+    "myProfile": "Mi perfil",
+    "agencies": "Agencias"
   },
   "footer": {
     "description": "La biblioteca europea de automatización e IA. Encuentra y aplica flujos de trabajo de N8N, Make, Zapier y LangChain.",

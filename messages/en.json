@@ -31,7 +31,8 @@
     "myAccount": "My Account",
     "mySaves": "My Saves",
     "logout": "Log out",
-    "myProfile": "My Profile"
+    "myProfile": "My Profile",
+    "agencies": "Agencies"
   },
   "footer": {
     "description": "The European automation and AI library. Find and apply N8N, Make, Zapier, and LangChain workflows.",

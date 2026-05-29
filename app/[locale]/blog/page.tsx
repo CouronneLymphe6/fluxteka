@@ -1,6 +1,7 @@
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
+import { useLocale } from 'next-intl';
 import { getAllPosts } from '@/lib/blog';
-import { Calendar, User, ArrowRight, Tag } from 'lucide-react';
+import { Calendar, ArrowRight, Tag } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 
 export default function BlogIndex() {
   const posts = getAllPosts();
+  const locale = useLocale();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -53,7 +55,7 @@ export default function BlogIndex() {
                 </div>
                 <div className="border-t border-border bg-gray-50 p-6 pt-4 flex items-center justify-between text-xs text-text-secondary">
                   <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" /> {new Date(post.date).toLocaleDateString('fr-FR', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" /> {new Date(post.date).toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                   </div>
                   <span className="flex items-center gap-1 font-semibold text-primary-600 group-hover:text-primary-700">Lire <ArrowRight className="h-3.5 w-3.5" /></span>
                 </div>

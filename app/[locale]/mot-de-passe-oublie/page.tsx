@@ -1,7 +1,7 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
 import { Mail, Loader2, CheckCircle, Sparkles } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';

@@ -78,7 +78,7 @@ export default function Header() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = `/recherche?q=${encodeURIComponent(searchQuery.trim())}`;
+      router.push(`/recherche?q=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
@@ -146,7 +146,7 @@ export default function Header() {
                 : 'text-text-secondary hover:bg-gray-50'
             }`} id="nav-agences">
             <Users className="h-4 w-4" />
-            Agences
+            {t('agencies')}
           </Link>
 
           <Link href="/soumettre"
@@ -266,7 +266,7 @@ export default function Header() {
               <Link href="/agences"
                 className={`flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/agences' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
                 id="mobile-nav-agences">
-                <Users className="h-4 w-4" /> Agences
+                <Users className="h-4 w-4" /> {t('agencies')}
               </Link>
               <hr className="my-2 border-border" />
               <Link href="/soumettre"
@@ -274,6 +274,11 @@ export default function Header() {
                 id="mobile-nav-submit">
                 <Upload className="h-4 w-4" /> {t('submit')}
               </Link>
+
+              {/* Language switcher in mobile menu */}
+              <div className="px-4 py-2">
+                <LanguageSwitcher />
+              </div>
 
               {user ? (
                 <>
