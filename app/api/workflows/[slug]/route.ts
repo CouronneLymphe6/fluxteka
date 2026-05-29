@@ -12,11 +12,22 @@ function safeParseJson(val: unknown): string[] {
   return [];
 }
 
+// Resolve the best available description for a given locale
+function resolveDescription(workflow: Record<string, unknown>, locale: string): string {
+  const fr = workflow.description_fr as string || '';
+  if (locale === 'en') return (workflow.description_en as string) || fr;
+  if (locale === 'es') return (workflow.description_es as string) || fr;
+  if (locale === 'de') return (workflow.description_de as string) || fr;
+  if (locale === 'it') return (workflow.description_it as string) || fr;
+  return fr;
+}
+
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
+  const locale = request.nextUrl.searchParams.get('locale') || 'fr';
 
   try {
     const workflow = await prisma.workflow.findUnique({
@@ -42,7 +53,6 @@ export async function GET(
       return NextResponse.json({ error: 'Workflow introuvable' }, { status: 404 });
     }
 
-
     // Parse JSON string fields → arrays before sending to frontend
     const toolsConnected = safeParseJson(workflow.tools_connected);
 
@@ -66,15 +76,30 @@ export async function GET(
         id: true, slug: true, title: true, tool: true,
         category: true, score_total: true, views: true,
         description_fr: true,
+        description_en: true,
         _count: { select: { saved_by: true } },
       },
     });
 
+    const wfAsRecord = workflow as unknown as Record<string, unknown>;
+    const resolvedDescription = resolveDescription(wfAsRecord, locale);
+
     const response = {
       ...workflow,
+      // Override description with locale-resolved version
+      description_fr: resolvedDescription,
       tags: safeParseJson(workflow.tags),
       tools_connected: toolsConnected,
-      similar,
+      // Translation availability for the UI
+      has_translation: {
+        en: !!workflow.description_en,
+        es: !!workflow.description_es,
+        de: !!workflow.description_de,
+      },
+      similar: similar.map(s => ({
+        ...s,
+        description_fr: locale === 'en' && s.description_en ? s.description_en : s.description_fr,
+      })),
     };
 
     return NextResponse.json(response);

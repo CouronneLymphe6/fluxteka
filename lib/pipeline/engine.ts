@@ -142,36 +142,59 @@ async function enrichWithClaude(
 
 // ── Fallback enrichment (no AI) ──
 
+// ── Weighted multi-criteria category classifier ──────────────────────────────
+// Fix: first-match logic + generic words ("workflow", "automation") biased
+//      everything towards "operations". Now uses scoring across all categories.
+
+const CATEGORY_RULES: Array<{
+  slug: string;
+  primary: string[];    // weight 3
+  secondary: string[];  // weight 1
+  tools: string[];      // weight 5 — high confidence via tools_connected
+}> = [
+  { slug: 'ai-agents', primary: ['agent ', 'llm', 'gpt', 'openai', 'claude', 'langchain', 'mistral', 'gemini', 'embedding', 'vector', 'rag', 'crewai', 'autogen'], secondary: ['ai ', 'neural', 'nlp', 'prompt'], tools: ['openai', 'anthropic', 'langchain', 'pinecone', 'weaviate', 'mistral'] },
+  { slug: 'sales-prospection', primary: ['sales', 'prospect', 'outreach', 'cold email', 'lead generation', 'apollo', 'lemlist', 'hunter', 'deal', 'closing'], secondary: ['lead', 'pipeline crm', 'opportunity', 'revenue'], tools: ['hubspot', 'salesforce', 'pipedrive', 'apollo', 'lemlist', 'close'] },
+  { slug: 'marketing-content', primary: ['marketing', 'content creation', 'copywriting', 'seo', 'campaign', 'advertisement', 'ads ', 'growth hacking', 'funnel', 'a/b test'], secondary: ['publish', 'audience', 'brand', 'funnel'], tools: ['wordpress', 'webflow', 'mailchimp', 'brevo', 'convertkit', 'semrush', 'ahrefs', 'buffer'] },
+  { slug: 'social-media', primary: ['linkedin', 'twitter', 'instagram', 'facebook', 'tiktok', 'youtube', 'social media', 'hashtag', 'followers'], secondary: ['post', 'story', 'reel', 'share', 'engagement'], tools: ['linkedin', 'twitter', 'instagram', 'facebook', 'tiktok', 'buffer', 'hootsuite', 'later'] },
+  { slug: 'email', primary: ['email ', 'gmail', 'outlook', 'smtp', 'sendgrid', 'mailbox', 'inbox', 'drip campaign', 'mail merge'], secondary: ['subject line', 'bounce', 'deliverability', 'open rate'], tools: ['gmail', 'outlook', 'sendgrid', 'mailgun', 'postmark', 'amazon ses'] },
+  { slug: 'customer-success', primary: ['support ticket', 'helpdesk', 'zendesk', 'intercom', 'freshdesk', 'nps score', 'customer satisfaction', 'churn', 'csat'], secondary: ['support', 'customer', 'feedback', 'survey'], tools: ['zendesk', 'intercom', 'freshdesk', 'crisp', 'drift'] },
+  { slug: 'data-analytics', primary: ['data pipeline', 'etl', 'analytics', 'dashboard', 'scraping', 'web scraping', 'bigquery', 'data warehouse', 'data sync', 'airtable', 'google sheets'], secondary: ['metric', 'kpi', 'visualization', 'aggregation'], tools: ['google analytics', 'bigquery', 'tableau', 'looker', 'metabase', 'airtable'] },
+  { slug: 'ecommerce', primary: ['shopify', 'woocommerce', 'ecommerce', 'e-commerce', 'inventory', 'order management', 'cart abandonment', 'product catalog'], secondary: ['product', 'order', 'shipping', 'stock'], tools: ['shopify', 'woocommerce', 'magento', 'bigcommerce', 'amazon', 'etsy'] },
+  { slug: 'finance-admin', primary: ['invoice', 'billing', 'accounting', 'payroll', 'expense management', 'tax', 'quickbooks', 'xero', 'stripe payment'], secondary: ['bank', 'transaction', 'budget', 'revenue'], tools: ['stripe', 'paypal', 'quickbooks', 'xero', 'freshbooks', 'chargebee'] },
+  { slug: 'hr-recrutement', primary: ['recruit', 'hiring', 'candidate', 'resume', 'ats', 'bamboohr', 'workday', 'job posting', 'employee onboarding'], secondary: ['hr', 'interview', 'performance review', 'payroll'], tools: ['workday', 'bamboohr', 'greenhouse', 'lever', 'personio', 'gusto'] },
+  { slug: 'dev-tech', primary: ['github', 'gitlab', 'bitbucket', 'deploy', 'ci/cd', 'docker', 'kubernetes', 'pull request', 'code review', 'devops', 'monitoring'], secondary: ['server', 'staging', 'production deploy', 'api endpoint', 'webhook'], tools: ['github', 'gitlab', 'jira', 'linear', 'datadog', 'sentry', 'aws', 'gcp'] },
+  { slug: 'communication', primary: ['slack', 'discord', 'telegram', 'whatsapp', 'microsoft teams', 'sms alert', 'push notification'], secondary: ['channel', 'workspace', 'mention', 'bot'], tools: ['slack', 'discord', 'microsoft teams', 'telegram', 'twilio'] },
+  { slug: 'crm', primary: ['crm', 'customer relationship', 'contact management', 'account management', 'deal stage'], secondary: ['follow up', 'activity log', 'next step'], tools: ['hubspot crm', 'salesforce', 'pipedrive', 'zoho', 'attio', 'copper'] },
+  { slug: 'project-management', primary: ['asana', 'trello', 'monday.com', 'clickup', 'jira', 'kanban', 'sprint', 'backlog', 'roadmap'], secondary: ['task', 'milestone', 'deadline', 'agile'], tools: ['asana', 'trello', 'monday', 'linear', 'basecamp', 'clickup', 'height'] },
+  // Operations is LAST and only captures specific terms — no generic "workflow"/"automation"
+  { slug: 'operations', primary: ['approval workflow', 'signature', 'contract management', 'docusign', 'hellosign', 'scheduling', 'calendly', 'jotform', 'typeform response'], secondary: ['process', 'checklist', 'delegation', 'audit trail'], tools: ['docusign', 'hellosign', 'calendly', 'typeform', 'jotform', 'pandadoc'] },
+];
+
 function guessCategory(raw: RawWorkflow): string {
   const text = `${raw.title} ${raw.rawContent}`.toLowerCase();
-  const map: [string[], string][] = [
-    // Agents IA — highest priority (keywords overlap with everything)
-    [['agent', 'multi-agent', 'langgraph', 'crewai', 'autogen', 'rag', 'llm', 'chatbot', 'openai', 'claude', 'langchain', 'gpt', 'mistral', 'embedding', 'vector', 'pinecone'], 'ai-agents'],
-    // Ventes & Prospection
-    [['crm', 'hubspot', 'salesforce', 'pipedrive', 'lead', 'prospect', 'deal', 'sales', 'pipeline', 'cold email', 'outreach', 'apollo', 'lemlist', 'hunter'], 'sales-prospection'],
-    // Marketing & Contenu
-    [['blog', 'seo', 'article', 'wordpress', 'linkedin', 'twitter', 'instagram', 'social', 'post', 'publish', 'newsletter', 'campaign', 'mailchimp', 'brevo', 'sendgrid', 'substack', 'content', 'copywriting', 'ad ', 'ads', 'marketing', 'funnel'], 'marketing-content'],
-    // Relation Client
-    [['support', 'ticket', 'zendesk', 'intercom', 'freshdesk', 'customer', 'nps', 'review', 'feedback', 'satisfaction', 'churn', 'helpdesk'], 'customer-success'],
-    // Communication (interne, notifications)
-    [['slack', 'discord', 'teams', 'telegram', 'whatsapp', 'notification', 'alert', 'message', 'chat', 'email', 'mail', 'gmail', 'outlook', 'smtp', 'inbox'], 'communication'],
-    // Data & Analytics
-    [['data', 'analytics', 'dashboard', 'scraping', 'extract', 'csv', 'json', 'database', 'airtable', 'notion', 'google sheets', 'bigquery', 'report', 'etl', 'sync', 'migrate'], 'data-analytics'],
-    // Dev & Tech
-    [['github', 'gitlab', 'deploy', 'ci/cd', 'docker', 'kubernetes', 'api', 'webhook', 'monitoring', 'devops', 'server', 'cron', 'script', 'code review', 'pull request'], 'dev-tech'],
-    // Finance & Admin
-    [['invoice', 'payment', 'stripe', 'billing', 'accounting', 'finance', 'bank', 'tax', 'facture', 'comptabilité', 'expense', 'quickbooks', 'xero'], 'finance-admin'],
-    // E-commerce
-    [['shopify', 'woocommerce', 'product', 'order', 'cart', 'store', 'ecommerce', 'inventory', 'stock', 'shipping', 'amazon', 'ebay'], 'ecommerce'],
-    // RH & Recrutement
-    [['hr', 'recruit', 'cv', 'resume', 'employee', 'onboarding', 'bamboo', 'hiring', 'job', 'indeed', 'linkedin recruit', 'workday', 'vacation', 'payroll'], 'hr-recrutement'],
-    // Opérations (fourre-tout métier non catégorisé)
-    [['workflow', 'automation', 'process', 'task', 'project', 'asana', 'trello', 'jira', 'monday', 'approval', 'signature', 'document', 'pdf', 'form', 'calendar', 'meeting', 'zoom'], 'operations'],
-  ];
-  for (const [keywords, cat] of map) {
-    if (keywords.some(k => text.includes(k))) return cat;
+  const tags = (raw.tags || []).join(' ').toLowerCase();
+  const allTools = [raw.tool, ...(raw.tags || [])].map(t => t.toLowerCase());
+
+  const scores: Array<{ slug: string; score: number }> = [];
+
+  for (const rule of CATEGORY_RULES) {
+    let score = 0;
+    for (const kw of rule.primary) {
+      if (text.includes(kw)) score += 3;
+      if (tags.includes(kw)) score += 2;
+    }
+    for (const kw of rule.secondary) {
+      if (text.includes(kw)) score += 1;
+    }
+    for (const st of rule.tools) {
+      if (allTools.some(t => t.includes(st) || st.includes(t))) score += 5;
+    }
+    if (score > 0) scores.push({ slug: rule.slug, score });
   }
-  return 'operations'; // default: opérations plutôt que 'other'
+
+  if (scores.length === 0) return 'operations';
+  scores.sort((a, b) => b.score - a.score);
+  return scores[0].slug;
 }
 
 function enrichFromRaw(raw: RawWorkflow): EnrichedWorkflow {

@@ -252,10 +252,34 @@ model SmokeTestLead {
   @@index([created_at])
 }
 
+
 model RateLimit {
   key        String   @id
   count      Int      @default(1)
   reset_time DateTime
   
   @@index([reset_time])
+}
+
+// Newsletter subscribers — stockage local + double opt-in
+// Utilisé comme fallback quand RESEND_AUDIENCE_ID n'est pas configuré
+// ET comme source de vérité locale même quand Resend est actif
+model NewsletterSubscriber {
+  id                String    @id @default(uuid())
+  email             String    @unique
+  locale            String    @default("fr")           // fr | en | es | de
+  source            String    @default("homepage")     // homepage | workflow_detail | premium | footer
+  status            String    @default("pending")      // pending | confirmed | unsubscribed
+  confirmation_token String?  @unique                  // Pour double opt-in
+  confirmed_at      DateTime?
+  unsubscribed_at   DateTime?
+  resend_contact_id String?                            // ID Resend si audience configurée
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([locale])
+  @@index([created_at])
+  @@index([confirmation_token])
 }
