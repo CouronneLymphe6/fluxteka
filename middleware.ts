@@ -15,7 +15,8 @@ export async function middleware(request: NextRequest) {
   const isNextInternal = pathname.startsWith('/_next/') || pathname === '/favicon.ico';
   const isStaticFile = /\.(png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|css|js)$/.test(pathname);
 
-  let intlCookiesToForward: string[] = [];
+  // ── Step 1: Initialize Base Response (with next-intl if applicable) ────────
+  let response: NextResponse;
 
   if (!isApiRoute && !isNextInternal && !isStaticFile) {
     const intlResponse = intlMiddleware(request);
@@ -23,24 +24,17 @@ export async function middleware(request: NextRequest) {
     if (intlResponse.headers.get('location')) {
       return intlResponse;
     }
-    // Collect locale cookie to forward to the final response
-    const setCookie = intlResponse.headers.get('set-cookie');
-    if (setCookie) intlCookiesToForward = [setCookie];
+    response = intlResponse;
+  } else {
+    response = NextResponse.next({
+      request: { headers: request.headers },
+    });
   }
 
   // ── Step 2: Auth checks (Supabase) ─────────────────────────────────────────
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return NextResponse.next();
+    return response;
   }
-
-  const response = NextResponse.next({
-    request: { headers: request.headers },
-  });
-
-  // Forward locale cookies from next-intl
-  intlCookiesToForward.forEach(cookie => {
-    response.headers.append('set-cookie', cookie);
-  });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
