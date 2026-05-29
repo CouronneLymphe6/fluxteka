@@ -1,5 +1,5 @@
 /**
- * app/api/cron/sync-integrations/route.ts
+ * app/api/cron/sync-integrations/[[...source]]/route.ts
  * Cron Vercel — Synchronisation automatique des intégrations API
  *
  * Planification : toutes les 24h (voir vercel.json)
@@ -13,7 +13,10 @@ import { syncZapier, syncMake, syncN8n } from '@/lib/integrations/sync';
 export const runtime = 'nodejs';
 export const maxDuration = 300; // 5 min max (Vercel Pro)
 
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ source?: string[] }> }
+) {
   // Authentification cron
   const auth = request.headers.get('authorization');
   const secret = process.env.CRON_SECRET;
@@ -27,7 +30,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const source = request.nextUrl.searchParams.get('source') || 'all';
+  const resolvedParams = await params;
+  const sourceParam = resolvedParams.source?.[0]; // 'zapier', 'make', etc.
+  const source = sourceParam || request.nextUrl.searchParams.get('source') || 'all';
   const results: Record<string, unknown> = {};
   const errors: Record<string, string> = {};
 

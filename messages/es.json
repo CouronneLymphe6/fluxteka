@@ -160,9 +160,12 @@
     "subtitle": "Cada semana, recibe el mejor flujo de trabajo del momento — explicado de forma sencilla y listo para usar.",
     "placeholder": "tu@ejemplo.com",
     "subscribe": "Me suscribo →",
+    "loading": "Inscribiéndose...",
     "successTitle": "¡Te has suscrito! 🎉",
     "successMessage": "Te enviaremos el próximo flujo de trabajo tan pronto como esté listo.",
-    "disclaimer": "Gratis · Sin spam · Date de baja con 1 clic"
+    "disclaimer": "Gratis · Sin spam · Date de baja con 1 clic",
+    "errorRegister": "Error al suscribirse",
+    "errorConnection": "Error de conexión"
   },
   "cta": {
     "title": "¿Listo para automatizar?",

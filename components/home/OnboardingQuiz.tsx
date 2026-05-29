@@ -1,52 +1,55 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, ChevronRight, ArrowRight } from 'lucide-react';
-
-const profiles = [
-  {
-    id: 'beginner',
-    emoji: '🌱',
-    title: 'Débutant',
-    description: 'Je découvre l\'automatisation',
-    query: '/recherche?tool=zapier&tri=score',
-    tip: 'On te recommande de commencer avec Zapier — le plus simple à prendre en main.',
-    platform: 'zapier',
-  },
-  {
-    id: 'business',
-    emoji: '🏢',
-    title: 'PME / Agence',
-    description: 'J\'automatise mes process métier',
-    query: '/recherche?tool=make&tri=score',
-    tip: 'Make est parfait pour les PMEs et agences — puissant et flexible.',
-    platform: 'make',
-  },
-  {
-    id: 'developer',
-    emoji: '💻',
-    title: 'Développeur',
-    description: 'Je veux du contrôle et de la flexibilité',
-    query: '/recherche?tool=n8n&tri=score',
-    tip: 'n8n est fait pour toi — open-source, self-hostable, et ultra-puissant.',
-    platform: 'n8n',
-  },
-  {
-    id: 'ai',
-    emoji: '🤖',
-    title: 'Passionné IA',
-    description: 'Je construis des agents autonomes',
-    query: '/recherche?categorie=ai-agents&tri=score',
-    tip: 'LangChain et les agents IA n8n sont tes meilleurs alliés.',
-    platform: 'langchain',
-  },
-];
+import { CheckCircle, ArrowRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function OnboardingQuiz() {
+  const t = useTranslations('onboarding');
   const router = useRouter();
   const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
+
+  const profiles = [
+    {
+      id: 'beginner',
+      emoji: '🌱',
+      title: t('beginner.title'),
+      description: t('beginner.description'),
+      query: '/recherche?tool=zapier&tri=score',
+      tip: t('beginner.tip'),
+      platform: 'zapier',
+    },
+    {
+      id: 'business',
+      emoji: '🏢',
+      title: t('business.title'),
+      description: t('business.description'),
+      query: '/recherche?tool=make&tri=score',
+      tip: t('business.tip'),
+      platform: 'make',
+    },
+    {
+      id: 'developer',
+      emoji: '💻',
+      title: t('developer.title'),
+      description: t('developer.description'),
+      query: '/recherche?tool=n8n&tri=score',
+      tip: t('developer.tip'),
+      platform: 'n8n',
+    },
+    {
+      id: 'ai',
+      emoji: '🤖',
+      title: t('ai.title'),
+      description: t('ai.description'),
+      query: '/recherche?categorie=ai-agents&tri=score',
+      tip: t('ai.tip'),
+      platform: 'langchain',
+    },
+  ];
+
   const activeProfile = profiles.find((p) => p.id === selectedProfile);
 
   return (
@@ -61,8 +64,6 @@ export default function OnboardingQuiz() {
             transition={{ delay: i * 0.08 }}
             onClick={() => {
               setSelectedProfile(profile.id);
-              // Optionnel: router.push(profile.query) pour redirection immédiate
-              // Mais afficher l'astuce et le bouton est plus clair.
             }}
             className={`group flex flex-col items-center gap-2 rounded-2xl border-2 p-5 text-center transition-all duration-200 hover:shadow-md ${
               selectedProfile === profile.id
@@ -96,7 +97,7 @@ export default function OnboardingQuiz() {
               onClick={() => router.push(activeProfile.query)}
               className="flex-shrink-0 inline-flex items-center gap-1.5 rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-primary-700 active:scale-[0.98]"
             >
-              Voir les workflows
+              {t('viewWorkflows')}
               <ArrowRight className="h-4 w-4" />
             </button>
           </motion.div>

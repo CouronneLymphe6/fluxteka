@@ -160,9 +160,12 @@
     "subtitle": "Chaque semaine, reçois le meilleur workflow du moment — expliqué simplement, applicable immédiatement.",
     "placeholder": "toi@example.com",
     "subscribe": "Je m'inscris →",
+    "loading": "Inscription...",
     "successTitle": "Tu es inscrit(e) ! 🎉",
     "successMessage": "On t'envoie le prochain workflow dès qu'il est prêt.",
-    "disclaimer": "Gratuit · Pas de spam · Désinscription en 1 clic"
+    "disclaimer": "Gratuit · Pas de spam · Désinscription en 1 clic",
+    "errorRegister": "Erreur lors de l'inscription",
+    "errorConnection": "Erreur de connexion"
   },
   "cta": {
     "title": "Prêt à automatiser ?",

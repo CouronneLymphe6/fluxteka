@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { Search, MapPin, Zap, ExternalLink } from 'lucide-react';
 import type { Metadata } from 'next';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Eye, Bookmark, Flag, Clock, Zap, CheckCircle, TrendingUp, Sparkles, ExternalLink, Globe } from 'lucide-react';
 import ScoreBadge from './ScoreBadge';

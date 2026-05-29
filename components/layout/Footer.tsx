@@ -1,32 +1,19 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { locales, localeNames, localeFlags, defaultLocale, type Locale } from '@/i18n/config';
-import { useTranslations } from 'next-intl';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
+import { locales, localeNames, localeFlags, type Locale } from '@/i18n/config';
+import { useTranslations, useLocale } from 'next-intl';
 
 // Removed static footerLinks and legalLinks to move them inside the component
 
 function LanguageSwitcher() {
   const pathname = usePathname();
   const router = useRouter();
-
-  // Detect current locale from URL prefix
-  const currentLocale = (locales.find(l => pathname.startsWith(`/${l}/`) || pathname === `/${l}`) || defaultLocale) as Locale;
+  const currentLocale = useLocale() as Locale;
 
   const switchLocale = (locale: Locale) => {
     if (locale === currentLocale) return;
-
-    if (locale === defaultLocale) {
-      // Going to default locale: strip the current locale prefix
-      const stripped = pathname.replace(/^\/(en|es|de)(\/|$)/, '/') || '/';
-      router.push(stripped);
-    } else {
-      // Going to a non-default locale: add the prefix
-      const pathWithoutLocale = pathname.replace(/^\/(en|es|de)(\/|$)/, '/');
-      const newPath = `/${locale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
-      router.push(newPath);
-    }
+    router.push(pathname, { locale });
   };
 
   return (

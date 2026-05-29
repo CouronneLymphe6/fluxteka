@@ -26,32 +26,7 @@ const SOURCES: Record<string, () => CrawlerSource> = {
   youtube: () => new YouTubeCrawler(),
 };
 
-export async function POST(request: NextRequest) {
-  // ── Auth: Verify CRON_SECRET ──
-  const authHeader = request.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-
-  if (!cronSecret) {
-    return NextResponse.json({ error: 'CRON_SECRET not configured' }, { status: 500 });
-  }
-
-  if (authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  // ── Parse options ──
-  let body: { sources?: string[]; maxPerSource?: number; dryRun?: boolean } = {};
-  try {
-    body = await request.json();
-  } catch {
-    // Empty body is OK — use defaults
-  }
-
-  const sourcesToRun = body.sources || Object.keys(SOURCES);
-  const maxPerSource = body.maxPerSource ?? 50;
-  const dryRun = body.dryRun ?? false;
-
-  // ── Run pipeline for each source ──
+async function executePipeline(sourcesToRun: string[], maxPerSource: number, dryRun: boolean) {
   const results: PipelineResult[] = [];
   const startTime = Date.now();
 
@@ -101,8 +76,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // ── Summary ──
-  const summary = {
+  return {
     totalDurationMs: Date.now() - startTime,
     dryRun,
     totalFound: results.reduce((s, r) => s + r.found, 0),
@@ -114,6 +88,61 @@ export async function POST(request: NextRequest) {
     totalTokensOutput: results.reduce((s, r) => s + r.tokensOutput, 0),
     sources: results,
   };
+}
 
+export async function GET(request: NextRequest) {
+  // ── Auth: Verify CRON_SECRET ──
+  const authHeader = request.headers.get('authorization');
+  const cronSecret = process.env.CRON_SECRET;
+
+  if (!cronSecret) {
+    return NextResponse.json({ error: 'CRON_SECRET not configured' }, { status: 500 });
+  }
+
+  if (authHeader !== `Bearer ${cronSecret}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // ── Parse options from query parameters ──
+  const { searchParams } = request.nextUrl;
+  const sourcesParam = searchParams.get('sources');
+  const sourcesToRun = sourcesParam ? sourcesParam.split(',') : Object.keys(SOURCES);
+  
+  const maxPerSource = searchParams.has('maxPerSource') 
+    ? parseInt(searchParams.get('maxPerSource')!, 10) 
+    : 50;
+    
+  const dryRun = searchParams.get('dryRun') === 'true';
+
+  const summary = await executePipeline(sourcesToRun, maxPerSource, dryRun);
+  return NextResponse.json(summary);
+}
+
+export async function POST(request: NextRequest) {
+  // ── Auth: Verify CRON_SECRET ──
+  const authHeader = request.headers.get('authorization');
+  const cronSecret = process.env.CRON_SECRET;
+
+  if (!cronSecret) {
+    return NextResponse.json({ error: 'CRON_SECRET not configured' }, { status: 500 });
+  }
+
+  if (authHeader !== `Bearer ${cronSecret}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // ── Parse options ──
+  let body: { sources?: string[]; maxPerSource?: number; dryRun?: boolean } = {};
+  try {
+    body = await request.json();
+  } catch {
+    // Empty body is OK — use defaults
+  }
+
+  const sourcesToRun = body.sources || Object.keys(SOURCES);
+  const maxPerSource = body.maxPerSource ?? 50;
+  const dryRun = body.dryRun ?? false;
+
+  const summary = await executePipeline(sourcesToRun, maxPerSource, dryRun);
   return NextResponse.json(summary);
 }

@@ -1,9 +1,7 @@
 'use client';
 
-
 import { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Zap, Globe, Gift, Sparkles, CheckCircle, ChevronRight } from 'lucide-react';
 import SearchBar from '@/components/search/SearchBar';
@@ -12,82 +10,6 @@ import { SkeletonGrid } from '@/components/shared/SkeletonCard';
 import { useTranslations } from 'next-intl';
 import NewsletterForm from '@/components/home/NewsletterForm';
 import OnboardingQuiz from '@/components/home/OnboardingQuiz';
-
-// ── Data ──────────────────────────────────────────────────────────────────────
-
-const suggestions = [
-  { emoji: '📧', label: 'Email auto', query: 'email automatisation' },
-  { emoji: '💰', label: 'Notifier Stripe', query: 'stripe notification' },
-  { emoji: '📝', label: 'Publier LinkedIn', query: 'linkedin publication' },
-  { emoji: '🤖', label: 'Résumer PDF', query: 'résumer pdf ia' },
-  { emoji: '📊', label: 'Rapport auto', query: 'rapport automatique' },
-];
-
-const categories = [
-  { emoji: '🎯', label: 'Ventes & Prospection',  slug: 'sales-prospection',  color: 'from-blue-50 to-indigo-50 border-blue-200 hover:border-blue-400' },
-  { emoji: '📣', label: 'Marketing & Contenu',   slug: 'marketing-content',  color: 'from-purple-50 to-violet-50 border-purple-200 hover:border-purple-400' },
-  { emoji: '🤖', label: 'Agents IA',             slug: 'ai-agents',          color: 'from-amber-50 to-orange-50 border-amber-200 hover:border-amber-400' },
-  { emoji: '⚙️', label: 'Opérations',            slug: 'operations',         color: 'from-slate-50 to-gray-50 border-slate-200 hover:border-slate-400' },
-  { emoji: '🤝', label: 'Relation Client',        slug: 'customer-success',   color: 'from-emerald-50 to-green-50 border-emerald-200 hover:border-emerald-400' },
-  { emoji: '📊', label: 'Data & Analytics',       slug: 'data-analytics',     color: 'from-cyan-50 to-sky-50 border-cyan-200 hover:border-cyan-400' },
-  { emoji: '🛒', label: 'E-commerce',             slug: 'ecommerce',          color: 'from-rose-50 to-pink-50 border-rose-200 hover:border-rose-400' },
-  { emoji: '💰', label: 'Finance & Admin',         slug: 'finance-admin',      color: 'from-yellow-50 to-amber-50 border-yellow-200 hover:border-yellow-400' },
-];
-
-const platforms = [
-  {
-    slug: 'n8n',
-    name: 'n8n',
-    emoji: '🔶',
-    tagline: 'Open-source & self-hosted',
-    color: 'from-orange-50 to-red-50',
-    border: 'border-orange-200 hover:border-orange-400',
-    text: 'text-orange-700',
-    badge: 'bg-orange-100 text-orange-700',
-    commission: '30% affilié',
-  },
-  {
-    slug: 'make',
-    name: 'Make',
-    emoji: '🟣',
-    tagline: 'Visuel & puissant',
-    color: 'from-purple-50 to-violet-50',
-    border: 'border-purple-200 hover:border-purple-400',
-    text: 'text-purple-700',
-    badge: 'bg-purple-100 text-purple-700',
-    commission: '35% affilié',
-  },
-  {
-    slug: 'zapier',
-    name: 'Zapier',
-    emoji: '⚡',
-    tagline: 'Le plus simple',
-    color: 'from-amber-50 to-yellow-50',
-    border: 'border-amber-200 hover:border-amber-400',
-    text: 'text-amber-700',
-    badge: 'bg-amber-100 text-amber-700',
-    commission: '8 000+ apps',
-  },
-  {
-    slug: 'langchain',
-    name: 'LangChain',
-    emoji: '🦜',
-    tagline: 'Agents IA avancés',
-    color: 'from-emerald-50 to-teal-50',
-    border: 'border-emerald-200 hover:border-emerald-400',
-    text: 'text-emerald-700',
-    badge: 'bg-emerald-100 text-emerald-700',
-    commission: 'Open-source',
-  },
-];
-
-const steps = [
-  { emoji: '🔍', title: 'Décris ton besoin', description: 'Recherche par mots-clés ou explore les catégories métier.' },
-  { emoji: '⚡', title: 'Fluxteka trouve la recette', description: 'Notre moteur indexe les meilleurs workflows du web.' },
-  { emoji: '🚀', title: 'Applique ou télécharge', description: 'Utilise directement ou adapte à ton cas en quelques minutes.' },
-];
-
-// ── Component ─────────────────────────────────────────────────────────────────
 
 export default function HomePageClient({ 
   initialTrending, 
@@ -111,6 +33,78 @@ export default function HomePageClient({
   const [trending] = useState<WorkflowData[]>(initialTrending);
   const [workflowCount] = useState<number>(initialWorkflowCount);
   const loading = false;
+
+  const suggestions = [
+    { emoji: '📧', label: tSug('emailAuto'), query: 'email automatisation' },
+    { emoji: '💰', label: tSug('notifyStripe'), query: 'stripe notification' },
+    { emoji: '📝', label: tSug('publishLinkedin'), query: 'linkedin publication' },
+    { emoji: '🤖', label: tSug('summarizePdf'), query: 'résumer pdf ia' },
+    { emoji: '📊', label: tSug('autoReport'), query: 'rapport automatique' },
+  ];
+
+  const categories = [
+    { emoji: '🎯', label: tCat('salesProspection'), slug: 'sales-prospection',  color: 'from-blue-50 to-indigo-50 border-blue-200 hover:border-blue-400' },
+    { emoji: '📣', label: tCat('marketingContent'), slug: 'marketing-content',  color: 'from-purple-50 to-violet-50 border-purple-200 hover:border-purple-400' },
+    { emoji: '🤖', label: tCat('aiAgents'),         slug: 'ai-agents',          color: 'from-amber-50 to-orange-50 border-amber-200 hover:border-amber-400' },
+    { emoji: '⚙️', label: tCat('operations'),       slug: 'operations',         color: 'from-slate-50 to-gray-50 border-slate-200 hover:border-slate-400' },
+    { emoji: '🤝', label: tCat('customerSuccess'),   slug: 'customer-success',   color: 'from-emerald-50 to-green-50 border-emerald-200 hover:border-emerald-400' },
+    { emoji: '📊', label: tCat('dataAnalytics'),    slug: 'data-analytics',     color: 'from-cyan-50 to-sky-50 border-cyan-200 hover:border-cyan-400' },
+    { emoji: '🛒', label: tCat('ecommerce'),        slug: 'ecommerce',          color: 'from-rose-50 to-pink-50 border-rose-200 hover:border-rose-400' },
+    { emoji: '💰', label: tCat('financeAdmin'),     slug: 'finance-admin',      color: 'from-yellow-50 to-amber-50 border-yellow-200 hover:border-yellow-400' },
+  ];
+
+  const platforms = [
+    {
+      slug: 'n8n',
+      name: 'n8n',
+      emoji: '🔶',
+      tagline: tPlat('n8n.tagline'),
+      color: 'from-orange-50 to-red-50',
+      border: 'border-orange-200 hover:border-orange-400',
+      text: 'text-orange-700',
+      badge: 'bg-orange-100 text-orange-700',
+      commission: tPlat('n8n.commission'),
+    },
+    {
+      slug: 'make',
+      name: 'Make',
+      emoji: '🟣',
+      tagline: tPlat('make.tagline'),
+      color: 'from-purple-50 to-violet-50',
+      border: 'border-purple-200 hover:border-purple-400',
+      text: 'text-purple-700',
+      badge: 'bg-purple-100 text-purple-700',
+      commission: tPlat('make.commission'),
+    },
+    {
+      slug: 'zapier',
+      name: 'Zapier',
+      emoji: '⚡',
+      tagline: tPlat('zapier.tagline'),
+      color: 'from-amber-50 to-yellow-50',
+      border: 'border-amber-200 hover:border-amber-400',
+      text: 'text-amber-700',
+      badge: 'bg-amber-100 text-amber-700',
+      commission: tPlat('zapier.commission'),
+    },
+    {
+      slug: 'langchain',
+      name: 'LangChain',
+      emoji: '🦜',
+      tagline: tPlat('langchain.tagline'),
+      color: 'from-emerald-50 to-teal-50',
+      border: 'border-emerald-200 hover:border-emerald-400',
+      text: 'text-emerald-700',
+      badge: 'bg-emerald-100 text-emerald-700',
+      commission: tPlat('langchain.commission'),
+    },
+  ];
+
+  const steps = [
+    { emoji: '🔍', title: tHow('step1Title'), description: tHow('step1Description') },
+    { emoji: '⚡', title: tHow('step2Title'), description: tHow('step2Description') },
+    { emoji: '🚀', title: tHow('step3Title'), description: tHow('step3Description') },
+  ];
 
   const formattedCount = workflowCount ? workflowCount.toLocaleString('fr-FR') : '—';
   const stats = [
@@ -228,10 +222,10 @@ export default function HomePageClient({
             className="text-center"
           >
             <h2 className="text-2xl font-heading font-bold text-text-primary">
-              Je suis…
+              {tOnb('title')}
             </h2>
             <p className="mt-2 text-sm text-text-secondary">
-              Sélectionne ton profil pour des recommandations personnalisées
+              {tOnb('subtitle')}
             </p>
           </motion.div>
 
@@ -249,10 +243,10 @@ export default function HomePageClient({
             className="text-center"
           >
             <h2 className="text-2xl font-heading font-bold text-text-primary">
-              Toutes les plateformes, un seul endroit
+              {tPlat('title')}
             </h2>
             <p className="mt-2 text-sm text-text-secondary">
-              Comparez n8n, Make, Zapier et LangChain pour chaque besoin métier
+              {tPlat('subtitle')}
             </p>
           </motion.div>
 
@@ -331,7 +325,7 @@ export default function HomePageClient({
               href="/recherche?tri=score"
               className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700"
             >
-              Voir tous les workflows <ArrowRight className="h-4 w-4" />
+              {tTrend('viewAllWorkflows')} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
@@ -346,10 +340,10 @@ export default function HomePageClient({
             viewport={{ once: true }}
           >
             <h2 className="text-2xl font-heading font-bold text-text-primary text-center">
-              Explorer par catégorie
+              {tCat('title')}
             </h2>
             <p className="mt-2 text-center text-sm text-text-secondary">
-              Trouve le workflow adapté à ton métier
+              {tCat('subtitle')}
             </p>
           </motion.div>
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 md:gap-4">
@@ -383,8 +377,8 @@ export default function HomePageClient({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-2xl font-heading font-bold text-text-primary text-center">Comment ça marche</h2>
-            <p className="mt-2 text-center text-sm text-text-secondary">En 3 étapes simples</p>
+            <h2 className="text-2xl font-heading font-bold text-text-primary text-center">{tHow('title')}</h2>
+            <p className="mt-2 text-center text-sm text-text-secondary">{tHow('subtitle')}</p>
           </motion.div>
           <div className="mt-10 grid gap-8 md:grid-cols-3">
             {steps.map((step, i) => (
@@ -422,19 +416,19 @@ export default function HomePageClient({
             className="mx-auto max-w-xl text-center"
           >
             <span className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700 mb-4">
-              📬 Newsletter gratuite
+              {tNews('badge')}
             </span>
             <h2 className="text-2xl font-heading font-bold text-text-primary">
-              Workflow de la semaine
+              {tNews('title')}
             </h2>
             <p className="mt-2 text-sm text-text-secondary">
-              Chaque semaine, reçois le meilleur workflow du moment — expliqué simplement, applicable immédiatement.
+              {tNews('subtitle')}
             </p>
 
             <NewsletterForm />
 
             <p className="mt-3 text-xs text-text-secondary">
-              Gratuit · Pas de spam · Désinscription en 1 clic
+              {tNews('disclaimer')}
             </p>
           </motion.div>
         </div>
@@ -446,10 +440,10 @@ export default function HomePageClient({
         <div className="bg-gradient-to-r from-primary-600 to-primary-700 py-12 md:py-16 pt-20 md:pt-24">
           <div className="container-page text-center">
             <h2 className="text-2xl font-heading font-bold text-white md:text-3xl">
-              Prêt à automatiser ?
+              {tCta('title')}
             </h2>
             <p className="mt-3 text-primary-200">
-              Rejoins des professionnels qui gagnent du temps chaque jour.
+              {tCta('subtitle')}
             </p>
             <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <Link

@@ -5,11 +5,11 @@
       "schedule": "0 3 * * *"
     },
     {
-      "path": "/api/cron/sync-integrations?source=zapier",
+      "path": "/api/cron/sync-integrations/zapier",
       "schedule": "0 4 * * *"
     },
     {
-      "path": "/api/cron/sync-integrations?source=make",
+      "path": "/api/cron/sync-integrations/make",
       "schedule": "0 5 * * *"
     }
   ]

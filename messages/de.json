@@ -160,9 +160,12 @@
     "subtitle": "Erhalte jede Woche den besten aktuellen Workflow — einfach erklärt, sofort anwendbar.",
     "placeholder": "du@beispiel.de",
     "subscribe": "Abonnieren →",
+    "loading": "Anmelden...",
     "successTitle": "Du bist angemeldet! 🎉",
     "successMessage": "Wir schicken dir den nächsten Workflow, sobald er fertig ist.",
-    "disclaimer": "Kostenlos · Kein Spam · 1-Klick-Abmeldung"
+    "disclaimer": "Kostenlos · Kein Spam · 1-Klick-Abmeldung",
+    "errorRegister": "Fehler beim Abonnieren",
+    "errorConnection": "Verbindungsfehler"
   },
   "cta": {
     "title": "Bereit zu automatisieren?",

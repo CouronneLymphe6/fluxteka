@@ -160,9 +160,12 @@
     "subtitle": "Every week, receive the best workflow of the moment — simply explained, immediately applicable.",
     "placeholder": "you@example.com",
     "subscribe": "Subscribe →",
+    "loading": "Subscribing...",
     "successTitle": "You're subscribed! 🎉",
     "successMessage": "We'll send you the next workflow as soon as it's ready.",
-    "disclaimer": "Free · No spam · 1-click unsubscribe"
+    "disclaimer": "Free · No spam · 1-click unsubscribe",
+    "errorRegister": "Error subscribing",
+    "errorConnection": "Connection error"
   },
   "cta": {
     "title": "Ready to automate?",
