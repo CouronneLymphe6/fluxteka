@@ -76,7 +76,7 @@ export default async function AgencesPage() {
                         <img src={user.avatar} alt={user.name} className="h-12 w-12 rounded-full object-cover border border-border" />
                       ) : (
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-lg font-bold text-white shadow-sm">
-                          {user.company_name ? user.company_name.charAt(0).toUpperCase() : user.name.charAt(0).toUpperCase()}
+                        {user.company_name ? user.company_name.charAt(0).toUpperCase() : (user.name ?? '?').charAt(0).toUpperCase()}
                         </div>
                       )}
                       <div>
@@ -104,7 +104,7 @@ export default async function AgencesPage() {
 
                   <div className="mt-6 border-t border-border pt-4 flex items-center justify-between">
                     <div className="text-xs font-medium text-text-primary">
-                      {user.hourly_rate ? `À partir de ${user.hourly_rate}€ / h` : 'Sur devis'}
+                    {user.hourly_rate ? `${user.hourly_rate}€ / h` : '—'}
                     </div>
                     {user.website_url && (
                       <a

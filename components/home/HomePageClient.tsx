@@ -35,11 +35,11 @@ export default function HomePageClient({
   const loading = false;
 
   const suggestions = [
-    { emoji: '📧', label: tSug('emailAuto'), query: 'email automatisation' },
-    { emoji: '💰', label: tSug('notifyStripe'), query: 'stripe notification' },
-    { emoji: '📝', label: tSug('publishLinkedin'), query: 'linkedin publication' },
-    { emoji: '🤖', label: tSug('summarizePdf'), query: 'résumer pdf ia' },
-    { emoji: '📊', label: tSug('autoReport'), query: 'rapport automatique' },
+    { emoji: '📧', label: tSug('emailAuto'),       query: tSug('emailAuto') },
+    { emoji: '💰', label: tSug('notifyStripe'),    query: tSug('notifyStripe') },
+    { emoji: '📝', label: tSug('publishLinkedin'), query: tSug('publishLinkedin') },
+    { emoji: '🤖', label: tSug('summarizePdf'),    query: tSug('summarizePdf') },
+    { emoji: '📊', label: tSug('autoReport'),      query: tSug('autoReport') },
   ];
 
   const categories = [
@@ -106,10 +106,10 @@ export default function HomePageClient({
     { emoji: '🚀', title: tHow('step3Title'), description: tHow('step3Description') },
   ];
 
-  const formattedCount = workflowCount ? workflowCount.toLocaleString('fr-FR') : '—';
+  const formattedCount = workflowCount ? workflowCount.toLocaleString() : '—';
   const stats = [
     { value: formattedCount, label: tStats('workflowsIndexed'), icon: Zap },
-    { value: '6', label: tStats('platforms'), icon: Globe },
+    { value: '4', label: tStats('platforms'), icon: Globe },
     { value: '100%', label: tStats('free'), icon: Gift },
   ];
 
@@ -450,13 +450,13 @@ export default function HomePageClient({
                 href="/recherche"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-lg transition-all hover:bg-primary-50 active:scale-[0.98]"
               >
-                🔍 {tCta('searchWorkflow')}
+              {tCta('searchWorkflow')}
               </Link>
               <Link
                 href="/soumettre"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/30 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10"
               >
-                📤 {tCta('submitMine')}
+                {tCta('submitMine')}
               </Link>
             </div>
           </div>

@@ -58,7 +58,7 @@ export default function Footer() {
     { href: '/legal/confidentialite', label: t('privacy') },
     { href: '/legal/cgu', label: t('terms') },
     { href: '/legal/mentions-legales', label: t('legalNotices') },
-    { href: 'mailto:contact@fluxteka.com', label: t('contact') },
+    { href: 'mailto:contact@fluxteka.com', label: t('contact'), isExternal: true },
   ];
 
   return (
@@ -117,12 +117,21 @@ export default function Footer() {
               <ul className="space-y-2.5">
                 {legalLinks.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-text-secondary transition-colors hover:text-primary-600"
-                    >
-                      {link.label}
-                    </Link>
+                    {(link as any).isExternal ? (
+                      <a
+                        href={link.href}
+                        className="text-sm text-text-secondary transition-colors hover:text-primary-600"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-sm text-text-secondary transition-colors hover:text-primary-600"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

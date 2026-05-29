@@ -20,11 +20,19 @@ export default async function Page() {
     }),
   ]);
 
-  // Parse JSON strings to arrays for the client component
+  // Safely parse JSON strings to arrays — bare JSON.parse would crash the page on corrupt data
+  const safeParse = (val: unknown): unknown[] => {
+    if (Array.isArray(val)) return val;
+    if (typeof val === 'string') {
+      try { return JSON.parse(val || '[]'); } catch { return []; }
+    }
+    return [];
+  };
+
   const parsedTrending = trendingWorkflows.map((w: any) => ({
     ...w,
-    tags: Array.isArray(w.tags) ? w.tags : (typeof w.tags === 'string' ? JSON.parse(w.tags || '[]') : []),
-    tools_connected: Array.isArray(w.tools_connected) ? w.tools_connected : (typeof w.tools_connected === 'string' ? JSON.parse(w.tools_connected || '[]') : []),
+    tags: safeParse(w.tags),
+    tools_connected: safeParse(w.tools_connected),
   }));
 
   return (
