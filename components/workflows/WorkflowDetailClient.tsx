@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ExternalLink, Bookmark, Flag, Star, Eye, Calendar,
@@ -893,6 +893,21 @@ export default function WorkflowDetailClient({ initialWorkflow }: { initialWorkf
                   </div>
                 </div>
               )}
+            </motion.div>
+
+            {/* Contact creator CTA — core business model */}
+            <motion.div initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
+              className="rounded-2xl border-2 border-primary-200 bg-gradient-to-br from-primary-50 to-white p-5 shadow-sm">
+              <h3 className="text-sm font-bold text-text-primary mb-1">💬 Besoin d&apos;aide pour déployer ?</h3>
+              <p className="text-xs text-text-secondary mb-4 leading-relaxed">
+                Un expert certifié peut configurer ce workflow pour ton cas d&apos;usage spécifique en moins de 48h.
+              </p>
+              <Link href="/partenaires"
+                id={`workflow-contact-expert-${workflow.slug}`}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-primary-700 active:scale-[0.98] transition-all">
+                Trouver un expert →
+              </Link>
+              <p className="mt-2 text-center text-[10px] text-text-secondary">Mis en relation en 24h · Sans engagement</p>
             </motion.div>
 
             {/* Back link */}

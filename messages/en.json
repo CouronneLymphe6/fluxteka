@@ -7,10 +7,10 @@
   "metadata": {
     "title": "Fluxteka — AI Automation Workflow Library",
     "titleTemplate": "%s — Fluxteka",
-    "description": "Discover, apply, and share the best AI workflows. N8N, Make, Zapier, LangChain — 24,000+ ready-to-use automations.",
-    "ogDescription": "Discover, apply, and share the best AI workflows. N8N, Make, Zapier, LangChain — 24,000+ automations.",
+    "description": "Discover, apply, and share the best AI workflows. N8N, Make, Zapier, LangChain — 1,800+ ready-to-use automations.",
+    "ogDescription": "Discover, apply, and share the best AI workflows. N8N, Make, Zapier, LangChain — 1,800+ automations.",
     "searchTitle": "Search Workflows — Fluxteka",
-    "searchDescription": "Explore and filter 24,000+ free AI automation workflows. N8N, Make, Zapier, LangChain — find the perfect recipe.",
+    "searchDescription": "Explore and filter 1,800+ free AI automation workflows. N8N, Make, Zapier, LangChain — find the perfect recipe.",
     "loginTitle": "Login — Fluxteka",
     "loginDescription": "Log in to Fluxteka with Google, GitHub, or a magic link. No password required."
   },
@@ -245,7 +245,10 @@
     "beginner": "Beginner",
     "intermediate": "Intermediate",
     "advanced": "Advanced",
-    "other": "Other"
+    "other": "Other",
+    "new": "New",
+    "trending": "Trending",
+    "alsoOn": "Also on"
   },
   "filterBar": {
     "allTools": "All",

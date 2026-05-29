@@ -117,6 +117,21 @@ export default function SoumettreWorkflowPage() {
             </p>
           </div>
 
+          {/* Creator value proposition */}
+          <div className="mb-6 grid grid-cols-3 gap-3 text-center">
+            {[
+              { emoji: '👀', label: 'Visibilité', desc: 'Tes workflows sont indexés et référencés' },
+              { emoji: '💼', label: 'Missions', desc: 'Les entreprises te contactent directement' },
+              { emoji: '💰', label: 'Revenus', desc: 'Commission sur tes workflows Premium' },
+            ].map(item => (
+              <div key={item.label} className="rounded-xl border border-border bg-white p-3 shadow-sm">
+                <div className="text-2xl mb-1">{item.emoji}</div>
+                <p className="text-xs font-semibold text-text-primary">{item.label}</p>
+                <p className="text-[10px] text-text-secondary mt-0.5">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
           {/* Info banner */}
           <div className="mb-6 flex items-start gap-3 rounded-xl border border-primary-200 bg-primary-50 p-4 text-sm text-primary-800">
             <Info className="h-4 w-4 shrink-0 mt-0.5" />

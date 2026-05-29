@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import { Link } from '@/i18n/navigation';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Eye, Bookmark, Flag, Clock, Zap, CheckCircle, TrendingUp, Sparkles, ExternalLink, Globe } from 'lucide-react';
+import { Eye, Bookmark, Flag, Clock, Zap, CheckCircle, TrendingUp, Sparkles, ExternalLink, Globe, Heart } from 'lucide-react';
 import ScoreBadge from './ScoreBadge';
 import AffiliateButton from './AffiliateButton';
 import { getPlatform } from '@/lib/platforms';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 // Plateformes avec affiliation — suggérées sur les cartes des autres
 const AFFILIATE_SUGGESTIONS = [
@@ -18,6 +18,7 @@ const FREE_PLATFORMS = new Set(['n8n', 'activepieces', 'pipedream', 'flowise', '
 
 function CrossPlatformBadge({ tool, workflowId }: { tool: string; workflowId: string }) {
   if (!FREE_PLATFORMS.has(tool)) return null;
+  const t = useTranslations('workflowCard');
   const trackAndOpen = async (key: string, url: string, e: React.MouseEvent) => {
     e.preventDefault(); e.stopPropagation();
     try { await fetch('/api/affiliate/click', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tool: key, workflow_id: workflowId }) }); } catch {}
@@ -25,7 +26,7 @@ function CrossPlatformBadge({ tool, workflowId }: { tool: string; workflowId: st
   };
   return (
     <div className="mt-2 flex items-center gap-1.5 flex-wrap">
-      <span className="text-[10px] text-text-secondary font-medium">Aussi sur :</span>
+      <span className="text-[10px] text-text-secondary font-medium">{t('alsoOn')} :</span>
       {AFFILIATE_SUGGESTIONS.map(aff => (
         <button key={aff.key} onClick={e => trackAndOpen(aff.key, aff.url, e)}
           className={`relative z-20 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-semibold transition-colors ${aff.color}`}>
@@ -107,6 +108,7 @@ export default function WorkflowCard({
   compact?: boolean;
 }) {
   const t = useTranslations('workflowCard');
+  const locale = useLocale();
   const [saved, setSaved] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const platform = getPlatform(workflow.tool);
@@ -142,13 +144,13 @@ export default function WorkflowCard({
             {showNew && (
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
                 <Sparkles className="h-2.5 w-2.5" />
-                Nouveau
+                {t('new')}
               </span>
             )}
             {showTrending && (
               <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
                 <TrendingUp className="h-2.5 w-2.5" />
-                Tendance
+                {t('trending')}
               </span>
             )}
           </div>
@@ -183,7 +185,7 @@ export default function WorkflowCard({
             {/* Views */}
             <div className="flex items-center gap-1 text-xs text-text-secondary mt-1">
               <Eye className="h-3.5 w-3.5" />
-              <span>{(workflow.views ?? 0).toLocaleString('fr-FR')}</span>
+              <span>{(workflow.views ?? 0).toLocaleString(locale)}</span>
             </div>
           </div>
 
@@ -276,9 +278,13 @@ export default function WorkflowCard({
           {/* Actions */}
           <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
             <div className="flex items-center gap-2 relative z-20">
-              <span className="text-sm font-medium text-primary-600 transition-colors group-hover:text-primary-700 mr-2">
+              <Link
+                href={`/workflow/${workflow.slug}`}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-semibold text-white transition-all hover:bg-primary-700 active:scale-[0.98] shadow-sm"
+                id={`workflow-cta-${workflow.slug}`}
+              >
                 {t('viewWorkflow')}
-              </span>
+              </Link>
               <AffiliateButton 
                 tool={workflow.tool} 
                 workflowId={workflow.id} 

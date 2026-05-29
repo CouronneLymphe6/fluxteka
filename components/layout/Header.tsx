@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { Search, Menu, X, Upload, User, LogOut, Map, Bookmark, Shield, Home, Compass, Users } from 'lucide-react';
+import { Search, Menu, X, Upload, User, LogOut, Map, Bookmark, Shield, Home, Compass, Users, Crown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -149,6 +149,16 @@ export default function Header() {
             {t('agencies')}
           </Link>
 
+          <Link href="/premium"
+            className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+              pathname === '/premium' 
+                ? 'bg-accent-50 text-accent-700 border border-accent-200' 
+                : 'text-accent-600 border border-accent-200 hover:bg-accent-50 hover:border-accent-400'
+            }`} id="nav-premium">
+            <Crown className="h-4 w-4" />
+            {t('premium')}
+          </Link>
+
           <Link href="/soumettre"
             className="rounded-lg border border-primary-200 px-4 py-2 text-sm font-medium text-primary-600 transition-all hover:bg-primary-50 hover:border-primary-400"
             id="nav-submit">
@@ -267,6 +277,11 @@ export default function Header() {
                 className={`flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/agences' ? 'bg-primary-50 text-primary-600' : 'text-text-secondary hover:bg-gray-50'}`}
                 id="mobile-nav-agences">
                 <Users className="h-4 w-4" /> {t('agencies')}
+              </Link>
+              <Link href="/premium"
+                className={`flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === '/premium' ? 'bg-accent-50 text-accent-600' : 'text-accent-600 hover:bg-accent-50'}`}
+                id="mobile-nav-premium">
+                <Crown className="h-4 w-4" /> {t('premium')}
               </Link>
               <hr className="my-2 border-border" />
               <Link href="/soumettre"

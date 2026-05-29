@@ -35,11 +35,11 @@ export default function HomePageClient({
   const loading = false;
 
   const suggestions = [
-    { emoji: '📧', label: tSug('emailAuto'),       query: tSug('emailAuto') },
-    { emoji: '💰', label: tSug('notifyStripe'),    query: tSug('notifyStripe') },
-    { emoji: '📝', label: tSug('publishLinkedin'), query: tSug('publishLinkedin') },
-    { emoji: '🤖', label: tSug('summarizePdf'),    query: tSug('summarizePdf') },
-    { emoji: '📊', label: tSug('autoReport'),      query: tSug('autoReport') },
+    { emoji: '📧', label: tSug('emailAuto'),       query: 'email' },
+    { emoji: '💰', label: tSug('notifyStripe'),    query: 'stripe' },
+    { emoji: '📝', label: tSug('publishLinkedin'), query: 'linkedin' },
+    { emoji: '🤖', label: tSug('summarizePdf'),    query: 'pdf' },
+    { emoji: '📊', label: tSug('autoReport'),      query: 'report automation' },
   ];
 
   const categories = [
@@ -63,7 +63,7 @@ export default function HomePageClient({
       border: 'border-orange-200 hover:border-orange-400',
       text: 'text-orange-700',
       badge: 'bg-orange-100 text-orange-700',
-      commission: tPlat('n8n.commission'),
+      commission: 'Open-source',
     },
     {
       slug: 'make',
@@ -400,6 +400,54 @@ export default function HomePageClient({
                   <h3 className="font-heading font-semibold text-text-primary">{step.title}</h3>
                 </div>
                 <p className="mt-2 text-sm text-text-secondary max-w-xs">{step.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════ SOCIAL PROOF ═══════════ */}
+      <section className="py-12 md:py-16 bg-white border-t border-border">
+        <div className="container-page">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-10"
+          >
+            <h2 className="text-2xl font-heading font-bold text-text-primary">
+              Ils automatisent avec Fluxteka
+            </h2>
+            <p className="mt-2 text-sm text-text-secondary">Rejoins des milliers de professionnels qui gagnent du temps</p>
+          </motion.div>
+          <div className="grid gap-5 sm:grid-cols-3">
+            {[
+              { name: 'Lucas B.', role: 'Growth Hacker · Paris', avatar: 'L', text: 'En 10 minutes j\'avais mon workflow Stripe → Slack configuré. Ça m\'a économisé une demi-journée de dev.', stars: 5 },
+              { name: 'Marie T.', role: 'Directrice Marketing · Bordeaux', avatar: 'M', text: 'La recherche est ultra rapide. J\'ai trouvé un workflow LinkedIn automation que je cherchais depuis des semaines.', stars: 5 },
+              { name: 'Kevin D.', role: 'CTO startup · Lyon', avatar: 'K', text: 'La qualité des workflows N8N est vraiment au niveau. Tout est bien documenté et applicable directement.', stars: 5 },
+            ].map((item, i) => (
+              <motion.div key={item.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="rounded-2xl border border-border bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex gap-0.5 mb-3">
+                  {[1,2,3,4,5].map(s => (
+                    <svg key={s} className="h-4 w-4 fill-amber-400 text-amber-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                  ))}
+                </div>
+                <p className="text-sm text-text-secondary leading-relaxed italic">&quot;{item.text}&quot;</p>
+                <div className="mt-4 flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-sm font-bold text-white">
+                    {item.avatar}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-text-primary">{item.name}</p>
+                    <p className="text-xs text-text-secondary">{item.role}</p>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>

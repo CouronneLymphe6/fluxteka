@@ -7,10 +7,10 @@
   "metadata": {
     "title": "Fluxteka — Bibliothèque de workflows d'automatisation IA",
     "titleTemplate": "%s — Fluxteka",
-    "description": "Découvrez, appliquez et partagez les meilleurs workflows IA. N8N, Make, Zapier, LangChain — 24 000+ automatisations prêtes à l'emploi.",
-    "ogDescription": "Découvrez, appliquez et partagez les meilleurs workflows IA. N8N, Make, Zapier, LangChain — 24 000+ automatisations.",
+    "description": "Découvrez, appliquez et partagez les meilleurs workflows IA. N8N, Make, Zapier, LangChain — 1 800+ automatisations prêtes à l'emploi.",
+    "ogDescription": "Découvrez, appliquez et partagez les meilleurs workflows IA. N8N, Make, Zapier, LangChain — 1 800+ automatisations.",
     "searchTitle": "Rechercher des workflows — Fluxteka",
-    "searchDescription": "Explore et filtre 24 000+ workflows d'automatisation IA gratuits. N8N, Make, Zapier, LangChain — trouve la recette parfaite.",
+    "searchDescription": "Explore et filtre 1 800+ workflows d'automatisation IA gratuits. N8N, Make, Zapier, LangChain — trouve la recette parfaite.",
     "loginTitle": "Connexion — Fluxteka",
     "loginDescription": "Connecte-toi à Fluxteka avec Google, GitHub ou un lien magique. Aucun mot de passe requis."
   },
@@ -107,11 +107,11 @@
     "subtitle": "Comparez n8n, Make, Zapier et LangChain pour chaque besoin métier",
     "n8n": {
       "tagline": "Open-source & self-hosted",
-      "commission": "30% affilié"
+      "commission": "Open-source"
     },
     "make": {
       "tagline": "Visuel & puissant",
-      "commission": "35% affilié"
+      "commission": "Programme partenaires"
     },
     "zapier": {
       "tagline": "Le plus simple",
@@ -245,7 +245,10 @@
     "beginner": "Débutant",
     "intermediate": "Intermédiaire",
     "advanced": "Avancé",
-    "other": "Autre"
+    "other": "Autre",
+    "new": "Nouveau",
+    "trending": "Tendance",
+    "alsoOn": "Aussi sur"
   },
   "filterBar": {
     "allTools": "Tous",

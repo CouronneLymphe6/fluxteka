@@ -245,7 +245,10 @@
     "beginner": "Principiante",
     "intermediate": "Intermedio",
     "advanced": "Avanzado",
-    "other": "Otro"
+    "other": "Otro",
+    "new": "Nuevo",
+    "trending": "Tendencia",
+    "alsoOn": "También en"
   },
   "filterBar": {
     "allTools": "Todos",
