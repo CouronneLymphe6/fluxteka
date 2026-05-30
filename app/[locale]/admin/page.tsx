@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -181,12 +181,12 @@ export default function AdminDashboard() {
           </Link>
           <Link href="/admin/leads"
             className="flex items-center gap-3 rounded-xl border border-border bg-white p-4 shadow-sm text-left hover:border-primary-300 hover:shadow-md transition-all">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-100">
-              <Users className="h-5 w-5 text-accent-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100">
+              <Users className="h-5 w-5 text-indigo-600" />
             </div>
             <div>
-              <p className="font-medium text-text-primary text-sm">Leads waitlist</p>
-              <p className="text-xs text-text-secondary">Premium & partenaires</p>
+              <p className="font-medium text-text-primary text-sm">Leads & Experts</p>
+              <p className="text-xs text-text-secondary">Demandes expert + candidatures agences</p>
             </div>
           </Link>
         </div>

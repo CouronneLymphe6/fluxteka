@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useTranslations } from 'next-intl';
+import { FindExpertButton } from '@/components/experts/FindExpertButton';
 
 export default function Header() {
   const t = useTranslations('nav');
@@ -149,6 +150,8 @@ export default function Header() {
             {t('agencies')}
           </Link>
 
+
+          <FindExpertButton variant="secondary" size="sm" label="Trouver un expert" />
 
           <Link href="/soumettre"
             className="rounded-lg border border-primary-200 px-4 py-2 text-sm font-medium text-primary-600 transition-all hover:bg-primary-50 hover:border-primary-400"

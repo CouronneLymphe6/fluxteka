@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/lib/ai/chatRateLimiter';
+import { prisma } from '@/lib/prisma';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -8,11 +9,22 @@ export const dynamic = 'force-dynamic';
 const SYSTEM_PROMPT = `Tu es l'Assistant Fluxteka, un expert en automatisation et IA au service des entreprises et professionnels.
 
 TON RÔLE :
-- Aider les visiteurs à comprendre comment automatiser leur business
-- Recommander les workflows adaptés à leur situation
-- Qualifier leur niveau technique (débutant/intermédiaire/expert)
-- Orienter vers un expert quand le besoin dépasse le DIY (projet > 2h de setup ou budget > 500€)
-- Capturer leur email quand c'est pertinent (après 3 échanges utiles)
+- Comprendre précisément le besoin d'automatisation de l'utilisateur
+- Proposer des workflows concrets depuis la bibliothèque Fluxteka (ils te seront fournis dans le contexte)
+- Recommander les outils adaptés à leur situation (N8N, Make, Zapier, OpenAI, Notion, etc.)
+- Orienter vers un expert quand le besoin est complexe (> 3 outils, budget > 500€, ou pas technique)
+- Capturer leur email si pertinent (après 3 échanges utiles)
+
+PRIORITÉ DE TES RECOMMANDATIONS :
+1. D'abord : propose des workflows de la bibliothèque Fluxteka (si disponibles dans le contexte)
+2. Ensuite : recommande les outils/plateformes adaptés avec leurs forces/faiblesses
+3. Enfin : propose de connecter avec un expert si le projet est complexe
+
+QUAND TU AS DES WORKFLOWS DANS LE CONTEXTE :
+- Cite le titre exact du workflow
+- Explique en 1 phrase pourquoi il correspond au besoin
+- Dis que l'utilisateur peut le trouver en recherchant sur Fluxteka
+- Ne génère JAMAIS de faux slugs ou URLs
 
 TON STYLE :
 - Langage simple, jamais de jargon technique incompréhensible
@@ -21,23 +33,71 @@ TON STYLE :
 - Réponses courtes (3-5 phrases max sauf si besoin d'explication)
 - Toujours proposer une prochaine étape claire
 
-CE QUE TU SAIS :
-- Fluxteka est une marketplace de workflows d'automatisation (N8N, Make, Zapier, LangChain)
-- 1 854 workflows disponibles, gratuits, dans toutes les catégories
-- Des agences et freelances experts en automatisation sont disponibles sur la plateforme
-- Les principaux cas d'usage : email automatique, CRM, facturation, réseaux sociaux, leads, support
+CE QUE TU SAIS SUR FLUXTEKA :
+- Marketplace de workflows d'automatisation (N8N, Make, Zapier, LangChain, OpenAI, Notion, Airtable…)
+- +1 800 workflows disponibles, gratuits
+- Des agences et freelances experts en automatisation disponibles
+- Principaux cas d'usage : email automatique, CRM, facturation, réseaux sociaux, leads, support
 
 QUAND PROPOSER UN EXPERT :
 - Si le projet semble complexe (> 3 outils, logique conditionnelle avancée)
 - Si l'utilisateur dit qu'il n'est pas technique
 - Si le budget mentionné dépasse 500€
-- Toujours après avoir essayé d'aider soi-même d'abord
+- Dis : "Je peux te mettre en contact avec un expert Fluxteka qui peut déployer ça en quelques heures"
 
 CAPTURE D'EMAIL :
 Après 3 échanges pertinents, propose naturellement :
 "Pour te suivre et t'envoyer les workflows adaptés à ton cas, puis-je avoir ton email ?"
 
 LANGUE : Réponds TOUJOURS dans la langue dans laquelle l'utilisateur t'écrit.`;
+
+// ── Search relevant workflows from DB ──────────────────────────────────────────
+async function searchRelevantWorkflows(userMessage: string): Promise<string> {
+  try {
+    // Extract keywords from the message
+    const keywords = userMessage
+      .toLowerCase()
+      .replace(/[^\w\sàâäéèêëîïôùûüçœæ]/g, ' ')
+      .split(/\s+/)
+      .filter(w => w.length > 3)
+      .slice(0, 5);
+
+    if (keywords.length === 0) return '';
+
+    // Search in DB — use OR on title and description_fr
+    const workflows = await prisma.workflow.findMany({
+      where: {
+        status: 'active',
+        OR: keywords.flatMap(kw => [
+          { title: { contains: kw, mode: 'insensitive' } },
+          { description_fr: { contains: kw, mode: 'insensitive' } },
+        ]),
+      },
+      orderBy: { score_total: 'desc' },
+      take: 4,
+      select: {
+        title: true,
+        description_fr: true,
+        tool: true,
+        category: true,
+        slug: true,
+        difficulty: true,
+      },
+    });
+
+    if (workflows.length === 0) return '';
+
+    const formatted = workflows.map((w, i) =>
+      `${i + 1}. "${w.title}" (${w.tool}, ${w.category}) — ${w.description_fr?.slice(0, 120)}...`
+    ).join('\n');
+
+    return `\n\nWORKFLOWS PERTINENTS TROUVÉS DANS LA BIBLIOTHÈQUE FLUXTEKA :\n${formatted}\n\nUtilise ces workflows dans ta réponse si pertinents. L'utilisateur peut les trouver en cherchant leur titre sur fluxteka.com/recherche.`;
+  } catch (err) {
+    // Graceful — DB error doesn't break the chat
+    console.warn('[chat] DB search failed:', err);
+    return '';
+  }
+}
 
 // ── Fallback responses (no API key) ──────────────────────────────────────────
 const FALLBACK_RESPONSES = [
@@ -79,8 +139,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Messages requis' }, { status: 400 });
   }
 
+  // Get the last user message for DB search
+  const lastUserMessage = [...messages].reverse().find(m => m.role === 'user')?.content || '';
+
+  // Search relevant workflows in parallel with prompt building
+  const dbContext = await searchRelevantWorkflows(lastUserMessage);
+
   // Build contextual system prompt
   let systemPrompt = SYSTEM_PROMPT;
+
   if (workflowContext) {
     systemPrompt += `\n\nCONTEXTE ACTUEL : L'utilisateur regarde le workflow "${workflowContext.title}"`;
     if (workflowContext.description) {
@@ -95,6 +162,11 @@ export async function POST(request: NextRequest) {
     systemPrompt += '\nTu peux donc répondre de manière très contextualisée à ce workflow précis.';
   }
 
+  // Inject real DB results into prompt
+  if (dbContext) {
+    systemPrompt += dbContext;
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
   // ── No API key: return fallback ──
@@ -104,7 +176,6 @@ export async function POST(request: NextRequest) {
     const stream = new ReadableStream({
       start(controller) {
         const encoder = new TextEncoder();
-        // Simulate streaming word by word
         const words = response.split(' ');
         let i = 0;
         const interval = setInterval(() => {
@@ -144,7 +215,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5',
-        max_tokens: 512,
+        max_tokens: 600,
         system: systemPrompt,
         messages: anthropicMessages,
         stream: true,
@@ -203,7 +274,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (err) {
     console.error('[/api/chat] Error:', err);
-    // Graceful fallback
     const fallback = "Désolé, je rencontre une difficulté technique. Tu peux rechercher directement dans notre bibliothèque de workflows ou contacter notre équipe.";
     return new Response(fallback, {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
