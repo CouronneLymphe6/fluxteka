@@ -14,25 +14,42 @@ function safeParseJson(val: unknown): string[] {
   return [];
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string; locale: string }> }
+): Promise<Metadata> {
+  const { slug, locale } = await params;
   const workflow = await prisma.workflow.findUnique({
     where: { slug },
-    select: { title: true, description_fr: true }
+    select: { title: true, description_fr: true, description_en: true, description_es: true, description_de: true }
   });
 
   if (!workflow) {
     return { title: 'Workflow introuvable - Fluxteka' };
   }
 
+  const description =
+    locale === 'en' ? (workflow.description_en || workflow.description_fr) :
+    locale === 'es' ? (workflow.description_es || workflow.description_fr) :
+    locale === 'de' ? (workflow.description_de || workflow.description_fr) :
+    workflow.description_fr;
+
   return {
     title: `${workflow.title} - Fluxteka`,
-    description: workflow.description_fr.substring(0, 160),
+    description: description.substring(0, 160),
   };
 }
 
-export default async function WorkflowPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function WorkflowPage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
+  const { slug, locale = 'fr' } = await params;
+
+  // Helper to pick the best description for this locale
+  function resolveDesc(wf: Record<string, unknown>): string {
+    const fr = (wf.description_fr as string) || '';
+    if (locale === 'en') return (wf.description_en as string) || fr;
+    if (locale === 'es') return (wf.description_es as string) || fr;
+    if (locale === 'de') return (wf.description_de as string) || fr;
+    return fr;
+  }
 
   const workflow = await prisma.workflow.findUnique({
     where: { slug },
@@ -80,16 +97,22 @@ export default async function WorkflowPage({ params }: { params: Promise<{ slug:
     select: {
       id: true, slug: true, title: true, tool: true,
       category: true, score_total: true, views: true,
-      description_fr: true,
+      description_fr: true, description_en: true, description_es: true, description_de: true,
       _count: { select: { saved_by: true } },
     },
   });
 
+  const wfRecord = workflow as unknown as Record<string, unknown>;
   const parsedWorkflow = {
     ...workflow,
+    // Override description with locale-resolved version
+    description_fr: resolveDesc(wfRecord),
     tags,
     tools_connected: toolsConnected,
-    similar,
+    similar: similar.map(s => ({
+      ...s,
+      description_fr: resolveDesc(s as unknown as Record<string, unknown>),
+    })),
   };
 
   const jsonLd = {

@@ -58,9 +58,10 @@ export async function GET(request: NextRequest) {
       }),
     ]);
 
-    // Get locale
+    // Get locale — query param takes priority (passed by client), fallback to cookie or 'fr'
+    const localeParam = searchParams.get('locale');
     const cookieStore = await cookies();
-    const locale = cookieStore.get('NEXT_LOCALE')?.value || 'fr';
+    const locale = localeParam || cookieStore.get('NEXT_LOCALE')?.value || 'fr';
 
     // Parse JSON string fields back to arrays for frontend
     const parsed = workflows.map((w: any) => ({

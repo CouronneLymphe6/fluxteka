@@ -120,7 +120,7 @@ export default function HomePageClient({
   return (
     <div className="min-h-screen">
       {/* ═══════════ HERO ═══════════ */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary-50 via-white to-white pb-16 pt-12 md:pb-24 md:pt-20">
+      <section className="relative overflow-hidden bg-gradient-to-b from-primary-50 via-white to-white pb-10 pt-8 md:pb-16 md:pt-14">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary-100/40 blur-3xl" />
           <div className="absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-accent-100/30 blur-3xl" />
@@ -194,7 +194,7 @@ export default function HomePageClient({
             ))}
           </motion.div>
           {/* Ticker — résultats concrets */}
-          <div className="mt-8 overflow-hidden rounded-xl border border-primary-100 bg-white/80 backdrop-blur-sm py-2.5">
+          <div className="mt-5 overflow-hidden rounded-xl border border-primary-100 bg-white/80 backdrop-blur-sm py-2.5">
             <motion.div
               className="flex gap-8 whitespace-nowrap"
               animate={{ x: ['0%', '-50%'] }}

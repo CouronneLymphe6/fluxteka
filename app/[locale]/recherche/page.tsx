@@ -8,11 +8,12 @@ import WorkflowCard, { type WorkflowData } from '@/components/workflows/Workflow
 import FilterBar from '@/components/workflows/FilterBar';
 import { SkeletonGrid } from '@/components/shared/SkeletonCard';
 import EmptyState from '@/components/shared/EmptyState';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 function RechercheContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const locale = useLocale();
   const tCat = useTranslations('categories');
   const t = useTranslations('search');
 
@@ -66,6 +67,7 @@ function RechercheContent() {
       if (sort) params.set('tri', sort);
       if (category) params.set('categorie', category);
       params.set('page', String(page));
+      params.set('locale', locale);   // ← pass current locale for description resolution
       const res = await fetch(`/api/workflows?${params}`);
       if (!res.ok) throw new Error();
       const data = await res.json();
@@ -77,7 +79,7 @@ function RechercheContent() {
     } finally {
       setLoading(false);
     }
-  }, [query, tool, sort, category, page]);
+  }, [query, tool, sort, category, page, locale]);
 
   useEffect(() => { fetchWorkflows(); }, [fetchWorkflows]);
 

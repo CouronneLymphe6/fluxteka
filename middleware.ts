@@ -12,13 +12,14 @@ export async function middleware(request: NextRequest) {
 
   // ── Step 1: i18n locale detection ──────────────────────────────────────────
   const isApiRoute = pathname.startsWith('/api/');
+  const isAuthRoute = pathname.startsWith('/auth/');          // ← Supabase OAuth callbacks
   const isNextInternal = pathname.startsWith('/_next/') || pathname === '/favicon.ico';
   const isStaticFile = /\.(png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|css|js)$/.test(pathname);
 
-  // ── Step 1: Initialize Base Response (with next-intl if applicable) ────────
+  // ── Step 2: Initialize Base Response (with next-intl if applicable) ────────
   let response: NextResponse;
 
-  if (!isApiRoute && !isNextInternal && !isStaticFile) {
+  if (!isApiRoute && !isAuthRoute && !isNextInternal && !isStaticFile) {
     const intlResponse = intlMiddleware(request);
     // If next-intl wants to redirect (locale prefix handling), let it
     if (intlResponse.headers.get('location')) {
@@ -89,7 +90,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Match all paths except Next.js internals, API routes, and static files
-    '/((?!_next/static|_next/image|favicon.ico|api/).*)',
+    // Match all paths EXCEPT: Next.js internals, API routes, auth callbacks, static files
+    '/((?!_next/static|_next/image|favicon.ico|api/|auth/).*)',
   ],
 };

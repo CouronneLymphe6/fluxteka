@@ -24,7 +24,7 @@ export default function AgencesPage() {
           <div className="absolute -bottom-16 -left-16 h-64 w-64 rounded-full bg-purple-100/30 blur-3xl" />
         </div>
 
-        <div className="container-page relative py-20 text-center">
+        <div className="container-page relative py-14 text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-sm font-medium text-indigo-700">
             🏆 Réseau Expert Fluxteka — 100% gratuit pour les 50 premiers
           </span>
@@ -61,7 +61,7 @@ export default function AgencesPage() {
 
       {/* ── Stats ── */}
       <div className="border-b border-gray-100 bg-white">
-        <div className="container-page py-8">
+        <div className="container-page py-6">
           <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             {STATS.map((s) => (
               <div key={s.label} className="text-center">
@@ -74,7 +74,7 @@ export default function AgencesPage() {
         </div>
       </div>
 
-      <div className="container-page py-16">
+      <div className="container-page py-12">
         <div className="grid gap-16 lg:grid-cols-2">
 
           {/* ── Left: Benefits + Testimonials ── */}

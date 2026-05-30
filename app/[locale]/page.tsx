@@ -4,7 +4,9 @@ import HomePageClient from '@/components/home/HomePageClient';
 // Cache the page for 1 hour
 export const revalidate = 3600;
 
-export default async function Page() {
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale = 'fr' } = await params;
+
   // Fetch data on the server
   const [workflowCount, trendingWorkflows] = await Promise.all([
     prisma.workflow.count({ where: { status: 'active' } }),
@@ -29,10 +31,17 @@ export default async function Page() {
     return [];
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const parsedTrending = trendingWorkflows.map((w: any) => ({
     ...w,
     tags: safeParse(w.tags),
     tools_connected: safeParse(w.tools_connected),
+    // Resolve description for current locale
+    description_fr:
+      locale === 'en' ? (w.description_en || w.description_fr) :
+      locale === 'es' ? (w.description_es || w.description_fr) :
+      locale === 'de' ? (w.description_de || w.description_fr) :
+      w.description_fr,
   }));
 
   return (
