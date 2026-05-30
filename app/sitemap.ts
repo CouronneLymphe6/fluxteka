@@ -17,7 +17,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${siteUrl}/soumettre`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${siteUrl}/connexion`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.4 },
     { url: `${siteUrl}/partenaires`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${siteUrl}/premium`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
   ];
 
   // Dynamic workflow pages

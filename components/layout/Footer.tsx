@@ -49,7 +49,6 @@ export default function Footer() {
   const footerLinks = [
     { href: '/recherche', label: tNav('search') },
     { href: '/partenaires', label: tNav('partners') },
-    { href: '/premium', label: tNav('premium') },
     { href: '/mission', label: tNav('mission') },
     { href: '/soumettre', label: tNav('submit') },
   ];

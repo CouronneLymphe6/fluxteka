@@ -64,7 +64,7 @@ interface WorkflowDetail {
   description_fr: string; how_to_use?: string; prerequisites?: string;
   tool: string; tools_connected: string[]; category: string; tags: string[];
   source_url?: string; source_type?: string; source_stars: number;
-  price: number; is_premium: boolean; status: string;
+  price: number; status: string;
   score_total: number; score_users: number; score_popularity: number;
   score_freshness: number; score_reports: number;
   views: number; downloads: number; created_at: string;
@@ -467,11 +467,6 @@ export default function WorkflowDetailClient({ initialWorkflow }: { initialWorkf
                   {source && (
                     <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${source.color}`}>
                       {source.emoji} {source.label}
-                    </span>
-                  )}
-                  {workflow.is_premium && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-100 border border-accent-200 px-2.5 py-1 text-xs font-semibold text-accent-700">
-                      <Star className="h-3 w-3 fill-accent-500" /> Premium
                     </span>
                   )}
                 </div>

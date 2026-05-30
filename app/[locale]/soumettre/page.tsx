@@ -122,7 +122,7 @@ export default function SoumettreWorkflowPage() {
             {[
               { emoji: '👀', label: 'Visibilité', desc: 'Tes workflows sont indexés et référencés' },
               { emoji: '💼', label: 'Missions', desc: 'Les entreprises te contactent directement' },
-              { emoji: '💰', label: 'Revenus', desc: 'Commission sur tes workflows Premium' },
+              { emoji: '💰', label: 'Revenus', desc: 'Visibilité auprès de milliers d\'entreprises' },
             ].map(item => (
               <div key={item.label} className="rounded-xl border border-border bg-white p-3 shadow-sm">
                 <div className="text-2xl mb-1">{item.emoji}</div>

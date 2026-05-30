@@ -59,7 +59,6 @@ export interface WorkflowData {
   views?: number;
   downloads?: number;
   price?: number;
-  is_premium?: boolean;
   difficulty?: string | null;
   setup_time_minutes?: number | null;
   verified_at?: string | null;
