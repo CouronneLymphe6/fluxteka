@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Link, useRouter } from '@/i18n/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Zap, Globe, Gift, Sparkles, CheckCircle, ChevronRight } from 'lucide-react';
+import { ArrowRight, Zap, Globe, Gift, Sparkles, CheckCircle, ChevronRight, Clock } from 'lucide-react';
 import SearchBar from '@/components/search/SearchBar';
 import WorkflowCard, { type WorkflowData } from '@/components/workflows/WorkflowCard';
 import { SkeletonGrid } from '@/components/shared/SkeletonCard';
@@ -111,6 +111,7 @@ export default function HomePageClient({
     { value: formattedCount, label: tStats('workflowsIndexed'), icon: Zap },
     { value: '4', label: tStats('platforms'), icon: Globe },
     { value: '100%', label: tStats('free'), icon: Gift },
+    { value: '< 15 min', label: 'Temps d\'installation moyen', icon: Clock },
   ];
 
   // Le OnboardingQuiz et le NewsletterForm gèrent maintenant leur propre état.
@@ -192,6 +193,33 @@ export default function HomePageClient({
               </button>
             ))}
           </motion.div>
+          {/* Ticker — résultats concrets */}
+          <div className="mt-8 overflow-hidden rounded-xl border border-primary-100 bg-white/80 backdrop-blur-sm py-2.5">
+            <motion.div
+              className="flex gap-8 whitespace-nowrap"
+              animate={{ x: ['0%', '-50%'] }}
+              transition={{ repeat: Infinity, duration: 20, ease: 'linear' }}
+            >
+              {[
+                '✅ +5h/semaine récupérées',
+                '✅ Leads qualifiés automatiquement',
+                '✅ CRM synchronisé sans effort',
+                '✅ Rapports générés à la demande',
+                '✅ Emails envoyés automatiquement',
+                '✅ Factures créées sans intervention',
+                '✅ Slack notifié en temps réel',
+                '✅ +5h/semaine récupérées',
+                '✅ Leads qualifiés automatiquement',
+                '✅ CRM synchronisé sans effort',
+                '✅ Rapports générés à la demande',
+                '✅ Emails envoyés automatiquement',
+                '✅ Factures créées sans intervention',
+                '✅ Slack notifié en temps réel',
+              ].map((item, i) => (
+                <span key={i} className="text-sm font-medium text-primary-700">{item}</span>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -199,7 +227,7 @@ export default function HomePageClient({
       <section className="relative border-y border-border bg-white py-8">
         <div className="absolute -top-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-200 to-transparent" />
         <div className="container-page">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {stats.map((stat) => (
               <div key={stat.label} className="flex flex-col items-center gap-1">
                 <stat.icon className="h-5 w-5 text-primary-500 mb-1" />
@@ -451,6 +479,40 @@ export default function HomePageClient({
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ═══════════ CTA AGENCES ═══════════ */}
+      <section className="py-12 md:py-16 border-t border-border">
+        <div className="container-page">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-700 px-8 py-10 text-center md:px-16 md:py-14"
+          >
+            <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 50%, white 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white/90 mb-4">
+              🏆 Réseau Expert Fluxteka
+            </span>
+            <h2 className="text-2xl font-heading font-bold text-white md:text-3xl">
+              Vous êtes une agence ou un expert en automatisation ?
+            </h2>
+            <p className="mt-3 text-indigo-200 max-w-xl mx-auto">
+              Rejoignez le réseau et recevez des missions qualifiées directement.
+              Les 50 premiers experts bénéficient d&apos;un accès gratuit.
+            </p>
+            <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <Link
+                href="/agences"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-indigo-700 shadow-lg transition-all hover:bg-indigo-50 hover:shadow-xl"
+                id="home-agency-cta"
+              >
+                Rejoindre le réseau <ArrowRight className="h-4 w-4" />
+              </Link>
+              <span className="text-sm text-indigo-200">50+ experts déjà actifs</span>
+            </div>
+          </motion.div>
         </div>
       </section>
 

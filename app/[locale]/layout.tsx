@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import CookieBanner from '@/components/layout/CookieBanner';
+import FluxtekaChat from '@/components/ai/FluxtekaChat';
+import AnalyticsProvider from '@/components/analytics/Analytics';
 import '../globals.css';
 
 const inter = Inter({
@@ -84,8 +86,10 @@ export default async function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
           <CookieBanner />
+          <FluxtekaChat />
         </NextIntlClientProvider>
         <Analytics />
+        <AnalyticsProvider />
       </body>
     </html>
   );
