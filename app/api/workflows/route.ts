@@ -28,11 +28,11 @@ export async function GET(request: NextRequest) {
     }
 
     if (tool) {
-      where.tool = { equals: tool };
+      where.tool = { equals: tool, mode: 'insensitive' };
     }
 
     if (category) {
-      where.category = { equals: category };
+      where.category = { equals: category, mode: 'insensitive' };
     }
 
     // Build order by

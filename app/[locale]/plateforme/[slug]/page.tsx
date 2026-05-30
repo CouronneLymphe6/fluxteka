@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { ArrowRight, ExternalLink, Zap, Users, Star, Shield } from 'lucide-react';
 
 // ── Platform data ────────────────────────────────────────────────────────────
